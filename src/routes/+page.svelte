@@ -3,8 +3,7 @@
 </script>
 
 <main>
-    <div class="pl-10 py-10 w-5/12 flex flex-col">
-        <Stats> </Stats>
+    <div class="">
     </div>
     
     <div class="center">
