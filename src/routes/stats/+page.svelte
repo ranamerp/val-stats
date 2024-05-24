@@ -122,6 +122,8 @@
 <br>
 <!-- Get data from selection[value] and place here, then start using it to style.  -->
 {console.log(selection[value])}
+<Stats playerData={selection[value]}></Stats>
+
 
 <!-- <div class="w-[1280px] h-[720px]"> -->
 <div class="w-[1920px] h-[1080px]">  
