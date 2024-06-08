@@ -90,8 +90,8 @@
                     <!-- Need to figure out how to make this a dynamic text size based on character length -->
                     <div class='mx-5 text-6xl' style="color: {primaryColor}">{blue_team.players[0].name.toUpperCase()}</div>
                 </div>
-                <div class="flex overflow-hidden">
-                    <img class="object-none" src="https://media.valorant-api.com/agents/a3bfb853-43b2-7238-a4f1-ad90e9e46bcc/fullportrait.png" alt="ur mom">
+                <div class="flex overflow-y-clip">
+                    <img class="object-contain scale-[4]" style="object-position: 50% 115%" src="https://media.valorant-api.com/agents/707eab51-4836-f488-046a-cda6bf494859/fullportrait.png" alt="ur mom">
                 </div>
                 <div class="mx-4 text-5xl flex flex-col flex-auto">
                     <div class="my-5 text-right" style="color: {tertiaryColor}">{blue_team.players[0].kills}/{blue_team.players[0].deaths}</div>
@@ -123,22 +123,38 @@
         <div class = "m-5">
             <!-- Above div to push it down (and have logo) -->
             <div class="h-[182px]"></div>
-            <div class=" bg-black bg-opacity-5 w-[212px] h-[842px]">
-                <div> K/D </div>
-                <div> ACS </div>
-                <div> First Kills </div>
-                <br>
-                <div> K/D </div>
-                <div> ACS </div>
-                <br>
-                <div> K/D </div>
-                <div> ACS </div>
-                <br>
-                <div> K/D </div>
-                <div> ACS </div>
-                <br>
-                <div> K/D </div>
-                <div> ACS </div>
+            <div class=" bg-black bg-opacity-5 w-[212px] h-[842px] text-center">
+                <div class= "h-[320px]">
+                    <div> K/D </div>
+                    <div> ACS </div>
+                    <div> First Kills </div>
+                </div>
+
+                <div class= "h-[114px] mb-[13.5px]">
+                    <div class = "align-text-bottom content-center grid">
+                        <div class ="text-center"> K/D </div>
+                        <div class = "text-center"> ACS </div>
+                    </div>
+                </div>
+
+                <div class= "h-[114px] mb-[13.5px]">
+                    <div class = "align-text-bottom content-center grid">
+                        <div class ="text-center"> K/D </div>
+                        <div class = "text-center"> ACS </div>
+                    </div>
+                </div>
+                <div class= "h-[114px] mb-[13.5px]">
+                    <div class = "align-text-bottom content-center grid">
+                        <div class="text-center"> K/D </div>
+                        <div class= "text-center"> ACS </div>
+                    </div>
+                </div>
+                <div class= "h-[114px] mb-[13.5px]">
+                    <div class = "align-text-bottom content-center grid">
+                        <div class ="text-center"> K/D </div>
+                        <div class = "text-center"> ACS </div>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -163,8 +179,8 @@
                     <div class="my-5 text-left" style="color: {tertiaryColor}">{red_team.players[0].acs}</div>
                     <div class="my-5 text-left" style="color: {tertiaryColor}">{red_team.players[0].firstkills}</div>
                 </div>
-                <div class="flex overflow-hidden">
-                    <img class="object-none" src="https://media.valorant-api.com/agents/a3bfb853-43b2-7238-a4f1-ad90e9e46bcc/fullportrait.png" alt="ur mom">
+                <div class="flex overflow-y-clip">
+                    <img class="object-contain scale-[4]" style="object-position: 50% 115%" src="https://media.valorant-api.com/agents/a3bfb853-43b2-7238-a4f1-ad90e9e46bcc/fullportrait.png" alt="ur mom">
                 </div>
                 <div class="flex justify items-end flex-col flex-auto">
                     <div class='my-8 w-11/12 text-6xl text-center' style = "background-color: {tertiaryColor}; color: {quadiaryColor}"> MVP </div>
