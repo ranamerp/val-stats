@@ -91,7 +91,7 @@
                     <div class='mx-5 text-6xl' style="color: {primaryColor}">{blue_team.players[0].name.toUpperCase()}</div>
                 </div>
                 <div class="flex overflow-y-clip">
-                    <img class="object-contain scale-[4]" style="object-position: 50% 115%" src="https://media.valorant-api.com/agents/707eab51-4836-f488-046a-cda6bf494859/fullportrait.png" alt="ur mom">
+                    <img class="object-contain scale-[4] z-0" style="object-position: 50% 115%" src="https://media.valorant-api.com/agents/707eab51-4836-f488-046a-cda6bf494859/fullportrait.png" alt="ur mom">
                 </div>
                 <div class="mx-4 text-5xl flex flex-col flex-auto">
                     <div class="my-5 text-right" style="color: {tertiaryColor}">{blue_team.players[0].kills}/{blue_team.players[0].deaths}</div>
@@ -120,39 +120,41 @@
         </div>
         
         <!-- Middle -->
-        <div class = "m-5">
+        <div class = "mx-5 py-5 grid grid-cols-1 gap-2 bg-green-400">
             <!-- Above div to push it down (and have logo) -->
-            <div class="h-[182px]"></div>
-            <div class=" bg-black bg-opacity-5 w-[212px] h-[842px] text-center">
-                <div class= "h-[320px]">
-                    <div> K/D </div>
-                    <div> ACS </div>
-                    <div> First Kills </div>
+            <div class="h-[157px] bg-yellow-200"></div>
+            <div class=" bg-black bg-opacity-5 w-[212px] text-center">
+                <div class= "h-[320px] text-3xl flex flex-col flex-auto">
+                    <div class="my-5" style="color: {tertiaryColor}"> K/D </div>
+                    <div class="my-5" style="color: {tertiaryColor}"> ACS </div>
+                    <div class="my-5" style="color: {tertiaryColor}"> First Kills </div>
                 </div>
 
                 <div class= "h-[114px] mb-[13.5px]">
                     <div class = "align-text-bottom content-center grid">
-                        <div class ="text-center"> K/D </div>
-                        <div class = "text-center"> ACS </div>
+                        <div class ="text-center text-2xl mb-5"> K/D </div>
+                        <div class = "text-center text-2xl mb-5"> ACS </div>
                     </div>
                 </div>
 
                 <div class= "h-[114px] mb-[13.5px]">
                     <div class = "align-text-bottom content-center grid">
-                        <div class ="text-center"> K/D </div>
-                        <div class = "text-center"> ACS </div>
+                        <div class ="text-center text-2xl mb-5"> K/D </div>
+                        <div class = "text-center text-2xl mb-5"> ACS </div>
                     </div>
                 </div>
+                
                 <div class= "h-[114px] mb-[13.5px]">
                     <div class = "align-text-bottom content-center grid">
-                        <div class="text-center"> K/D </div>
-                        <div class= "text-center"> ACS </div>
+                        <div class ="text-center text-2xl mb-5"> K/D </div>
+                        <div class = "text-center text-2xl mb-5"> ACS </div>
                     </div>
                 </div>
+
                 <div class= "h-[114px] mb-[13.5px]">
                     <div class = "align-text-bottom content-center grid">
-                        <div class ="text-center"> K/D </div>
-                        <div class = "text-center"> ACS </div>
+                        <div class ="text-center text-2xl mb-5"> K/D </div>
+                        <div class = "text-center text-2xl mb-5"> ACS </div>
                     </div>
                 </div>
             </div>
