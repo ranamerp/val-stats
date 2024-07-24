@@ -2,62 +2,107 @@
 
     import StatsPlayer from "./StatsPlayer.svelte";
     export let playerData;
-    let primaryColor = "#0196bb";
-    let secondaryColor = "#2a2c30";
-    let tertiaryColor = "#e9d98d";
-    let quadiaryColor = "#ffffff";
-    let btname = "SEN";
-    let rtname = "100T";
-    let blue_team = {
-        players: [],
-        name: btname
+    export let colors;
+    let blue_team = playerData.blue_team;
+    let red_team = playerData.red_team;
+    $: {
+        blue_team = playerData.blue_team;
+        red_team = playerData.red_team;
+    }
+    let primaryColor = colors.primaryColor;
+    let secondaryColor = colors.secondaryColor;
+    let tertiaryColor = colors.tertiaryColor;
+    let quadiaryColor = colors.quadiaryColor;
+    
+    // let blue_team = {
+    //     players: [],
+    //     name: btname
 
-    }
-    let red_team = {
-        players: [],
-        name: rtname
-    }
-    console.log(playerData)
-    playerData.teams.forEach(team =>{
-        console.log(team)
-        if (team.team_name == "blue") {
-            blue_team.rounds_won = team.rounds_won
-            if (team.won_bool) {
-                blue_team.won = "WIN"
-                blue_team.bg_color = primaryColor
-                blue_team.text_color = secondaryColor
-                blue_team.small_text_color = tertiaryColor
-            } else {
-                blue_team.won = "LOSS"
-                blue_team.bg_color = secondaryColor
-                blue_team.text_color = primaryColor
-                blue_team.small_text_color = quadiaryColor
-            }
-        } else if (team.team_name == "red") {
-            red_team.rounds_won = team.rounds_won
-            if (team.won_bool) {
-                red_team.won = "WIN"
-                red_team.bg_color = primaryColor
-                red_team.text_color = secondaryColor
-                red_team.small_text_color = tertiaryColor
-            } else {
-                red_team.won = "LOSS"
-                red_team.bg_color = secondaryColor
-                red_team.text_color = primaryColor
-                red_team.small_text_color = quadiaryColor
-            }
-        }
-    })
-    playerData.players.forEach(player => {
-        if (player.team == "Blue") {
-            blue_team['players'].push(player)
-        } else if (player.team == "Red") {
-            red_team['players'].push(player)
-        }
-    });
-    console.log(blue_team)
+    // };
+    // let red_team = {
+    //     players: [],
+    //     name: rtname
+    // };
+
+    // function calcData(data) {
+    //     data.teams.forEach(team =>{
+    //         if (team.team_name == "blue") {
+    //             blue_team.rounds_won = team.rounds_won
+    //             if (team.won_bool) {
+    //                 blue_team.won = "WIN"
+    //                 blue_team.bg_color = primaryColor
+    //                 blue_team.text_color = secondaryColor
+    //                 blue_team.small_text_color = tertiaryColor
+    //             } else {
+    //                 blue_team.won = "LOSS"
+    //                 blue_team.bg_color = secondaryColor
+    //                 blue_team.text_color = primaryColor
+    //                 blue_team.small_text_color = quadiaryColor
+    //             }
+    //         } else if (team.team_name == "red") {
+    //             red_team.rounds_won = team.rounds_won
+    //             if (team.won_bool) {
+    //                 red_team.won = "WIN"
+    //                 red_team.bg_color = primaryColor
+    //                 red_team.text_color = secondaryColor
+    //                 red_team.small_text_color = tertiaryColor
+    //             } else {
+    //                 red_team.won = "LOSS"
+    //                 red_team.bg_color = secondaryColor
+    //                 red_team.text_color = primaryColor
+    //                 red_team.small_text_color = quadiaryColor
+    //             }
+    //         }
+    //     })
+
+    //     data.players.forEach(player => {
+    //         if (player.team == "Blue") {
+    //             blue_team['players'].push(player)
+    //         } else if (player.team == "Red") {
+    //             red_team['players'].push(player)
+    //         }
+    //     });
+    
+    // }
 
     
+    // playerData.teams.forEach(team =>{
+    //     if (team.team_name == "blue") {
+    //         blue_team.rounds_won = team.rounds_won
+    //         if (team.won_bool) {
+    //             blue_team.won = "WIN"
+    //             blue_team.bg_color = primaryColor
+    //             blue_team.text_color = secondaryColor
+    //             blue_team.small_text_color = tertiaryColor
+    //         } else {
+    //             blue_team.won = "LOSS"
+    //             blue_team.bg_color = secondaryColor
+    //             blue_team.text_color = primaryColor
+    //             blue_team.small_text_color = quadiaryColor
+    //         }
+    //     } else if (team.team_name == "red") {
+    //         red_team.rounds_won = team.rounds_won
+    //         if (team.won_bool) {
+    //             red_team.won = "WIN"
+    //             red_team.bg_color = primaryColor
+    //             red_team.text_color = secondaryColor
+    //             red_team.small_text_color = tertiaryColor
+    //         } else {
+    //             red_team.won = "LOSS"
+    //             red_team.bg_color = secondaryColor
+    //             red_team.text_color = primaryColor
+    //             red_team.small_text_color = quadiaryColor
+    //         }
+    //     }
+    // })
+    // playerData.players.forEach(player => {
+    //     if (player.team == "Blue") {
+    //         blue_team['players'].push(player)
+    //     } else if (player.team == "Red") {
+    //         red_team['players'].push(player)
+    //     }
+    // });
+
     // let playerData = {
     //     primaryColor: "#0196bb",
     //     secondaryColor: "#2a2c30",
@@ -65,25 +110,27 @@
     // }
 </script>
 
+
+<!-- Have to find way to dynamically change width and height based on current screensize. All items need to stay at same proportions and take margin into account -->
 <main>
     <!-- Overall Container -->
-    <div class="flex flex-row w-[1920px] h-[1080px]">
+    <div class="flex flex-row w-full h-full">
         <!-- Left Side -->
-        <div class="pl-5 py-5 w-[820px] h-screen grid grid-cols-2 gap-2">
+        <div class="w-[42.7%] p-5 h-full flex flex-col flex-grow-0 flex-auto">
             <!-- Top Bar -->
-            <div class='col-span-2 grid grid-cols-3 w-[796px] h-[157px]' style="background-color: {blue_team.bg_color};">
+            <div class='h-[14.5%] grid grid-cols-3' style="background-color: {blue_team.bg_color};">
                 <div class="ml-8 my-5 items-center"> 
                     <!-- Need to make sure input here does not go past 5 characters -->
-                    <div class='text-7xl' style="color: {blue_team.text_color}">{blue_team.name} </div>
-                    <div class='text-4xl' style="color: {quadiaryColor}">{blue_team.won} </div> 
+                    <div class='text-6xl' style="color: {blue_team.text_color}">{blue_team.team_name} </div>
+                    <div class='text-3xl' style="color: {quadiaryColor}">{blue_team.won} </div> 
                 </div> 
                 <div class="flex justify-center items-center opacity-20">
-                    <img src="https://owcdn.net/img/65207bdae3e06.png" alt="ur mom" width="150" height="150">
+                    <img src="https://owcdn.net/img/65207bdae3e06.png" alt="ur mom" width=170 height=170>
                 </div>
-                <div class={'text-9xl text-right m-3'} style="color: {blue_team.text_color}"> {blue_team.rounds_won} </div>
+                <div class={'text-8xl text-right m-3'} style="color: {blue_team.text_color}"> {blue_team.rounds_won} </div>
             </div>
             <!-- MVP Section -->
-            <div class="col-span-2 grid grid-cols-3 bg-black bg-opacity-5 w-[796px] h-[320px] overflow-hidden">
+            <div class="h-[30%] my-5 grid grid-cols-3 bg-red-500 bg-opacity-2 overflow-hidden">
                 <div class="flex flex-col flex-auto">
                     <div class='my-8 w-11/12 text-6xl text-center' style = "background-color: {tertiaryColor}; color: {quadiaryColor}"> MVP </div>
                     <div class='mx-5 pt-9 text-3xl' style="color: {secondaryColor}">{blue_team.players[0].agent.toUpperCase()}</div>
@@ -91,7 +138,8 @@
                     <div class='mx-5 text-6xl' style="color: {primaryColor}">{blue_team.players[0].name.toUpperCase()}</div>
                 </div>
                 <div class="flex overflow-y-clip">
-                    <img class="object-contain scale-[4] z-0" style="object-position: 50% 115%" src="https://media.valorant-api.com/agents/707eab51-4836-f488-046a-cda6bf494859/fullportrait.png" alt="ur mom">
+                    <!-- This might need some JS or some code to make it fit. Like as the height of the box changes, the X coord of the image needs to change. For now keeping it as is -->
+                    <img class="object-contain scale-[4] z-0" style="object-position: 0% 245%" src="https://media.valorant-api.com/agents/707eab51-4836-f488-046a-cda6bf494859/fullportrait.png" alt="ur mom">
                 </div>
                 <div class="mx-4 text-5xl flex flex-col flex-auto">
                     <div class="my-5 text-right" style="color: {tertiaryColor}">{blue_team.players[0].kills}/{blue_team.players[0].deaths}</div>
@@ -101,16 +149,16 @@
             </div>
             
             <!-- Bottom Section -->
-            <div class="w-[796px] h-[497px] flex flex-row"> 
+            <div class="h-[50%] overflow-hidden flex flex-row"> 
                 <!-- Map Section -->
-                <div class="relative flex overflow-hidden w-[298px] h-[497px]">
+                <div class="relative w-[50%] flex overflow-hidden pr-3">
                     <img class="object-none" src="https://media.valorant-api.com/maps/7eaecc1b-4337-bbf6-6ab9-04b8f06b3319/splash.png" alt="ur mom">
                     <p class="absolute inset-x-0 bottom-0 pb-5 text-center text-6xl"style="color: {tertiaryColor}"> {playerData.mapName} </p>
     
                 </div>
                 <!--For loop using {#each}-->
                 <!-- Other Player Stats Section -->
-                <div class="flex flex-col  w-[485px] h-[497px] pl-[12px]">
+                <div class="flex flex-col min-w-[68%] w-[75%] gap-3">
                     {#each blue_team.players.slice(1) as player}
                         <StatsPlayer orientation="left" playerData={player} colorData={{bg: blue_team.bg_color, text: blue_team.text_color, smalltext: blue_team.small_text_color}}/>
                     {/each}
@@ -118,26 +166,33 @@
             </div>
         
         </div>
-        
-        <!-- Middle -->
-        <div class = "mx-5 py-5 grid grid-cols-1 gap-2 bg-green-400">
+
+        <!-- Middle Side -->
+        <div class = "w-[11.3%] mx-5 py-5 h-full flex flex-col flex-grow-0 flex-auto">
             <!-- Above div to push it down (and have logo) -->
-            <div class="h-[157px] bg-yellow-200"></div>
-            <div class=" bg-black bg-opacity-5 w-[212px] text-center">
-                <div class= "h-[320px] text-3xl flex flex-col flex-auto">
-                    <div class="my-5" style="color: {tertiaryColor}"> K/D </div>
-                    <div class="my-5" style="color: {tertiaryColor}"> ACS </div>
-                    <div class="my-5" style="color: {tertiaryColor}"> First Kills </div>
+             <!-- This needs to be fixed at some point, it's a small design detail I will work on later -->
+            <div class="relative flex h-[14.75%] bg-yellow-200 overflow-hidden"> 
+                <img class="object-contain" src="https://owcdn.net/img/63067806d167d.png" alt="vct" width=170 height="100">
+            </div>
+            <div class="h-full bg-black bg-opacity-8 overflow-hidden w-full mt-5 text-center">
+                <div class= "h-[35%] text-3xl mt-2 mb-5 flex flex-col flex-auto">
+                    <div class="my-6" style="color: {tertiaryColor}"> K/D </div>
+                    <div class="my-6" style="color: {tertiaryColor}"> ACS </div>
+                    <div class="my-6" style="color: {tertiaryColor}"> First Kills </div>
+                </div>
+                
+                <div class="flex flex-col flex-auto gap-2">
+                    {#each blue_team.players.slice(1) as player}
+                        <div class= "my-[4.3%]">
+                            <div class = "align-text-bottom content-center grid gap-y-4">
+                                <div class ="text-center text-2xl mb-[4.4%]"> K/D </div>
+                                <div class = "text-center text-2xl"> ACS </div>
+                            </div>
+                        </div>
+                    {/each}
                 </div>
 
-                <div class= "h-[114px] mb-[13.5px]">
-                    <div class = "align-text-bottom content-center grid">
-                        <div class ="text-center text-2xl mb-5"> K/D </div>
-                        <div class = "text-center text-2xl mb-5"> ACS </div>
-                    </div>
-                </div>
-
-                <div class= "h-[114px] mb-[13.5px]">
+                <!-- <div class= "h-[114px] mb-[13.5px]">
                     <div class = "align-text-bottom content-center grid">
                         <div class ="text-center text-2xl mb-5"> K/D </div>
                         <div class = "text-center text-2xl mb-5"> ACS </div>
@@ -156,60 +211,65 @@
                         <div class ="text-center text-2xl mb-5"> K/D </div>
                         <div class = "text-center text-2xl mb-5"> ACS </div>
                     </div>
-                </div>
+                </div> -->
             </div>
         </div>
 
-        <!-- Right Side (Eventually just left but mirrored) -->
-        <div class="pr-5 py-5 w-[820px] h-screen grid grid-cols-2 gap-2">
+        <!-- Right Side -->
+        <div class="w-[42.7%] p-5 h-full flex flex-col flex-grow-0 flex-auto">
             <!-- Top Bar -->
-            <div class="col-span-2 grid grid-cols-3 w-[796px] h-[157px]" style="background-color: {red_team.bg_color};">
-                <div class="text-9xl text-left m-3" style="color: {red_team.text_color}"> {red_team.rounds_won} </div>
+            <div class='h-[14.5%] grid grid-cols-3' style="background-color: {red_team.bg_color};">
+                <div class='text-8xl text-left m-3' style="color: {red_team.text_color}"> {red_team.rounds_won} </div>
                 <div class="flex justify-center items-center opacity-20">
-                    <img src="https://owcdn.net/img/65207bdae3e06.png" alt="ur mom" width="150" height="150">
+                    <img src="https://owcdn.net/img/65207bdae3e06.png" alt="ur mom" width=170 height=170>
                 </div>
                 <div class="mr-8 my-5 items-center justify-items-end"> 
                     <!-- Need to make sure input here does not go past 5 characters -->
-                    <div class="text-7xl text-right" style="color: {red_team.text_color}">{red_team.name} </div>
-                    <div class="text-4xl text-right" style="color: {quadiaryColor}">{red_team.won} </div> 
+                    <div class='text-6xl text-right' style="color: {red_team.text_color}">{red_team.team_name} </div>
+                    <div class='text-3xl text-right' style="color: {quadiaryColor}">{red_team.won} </div> 
                 </div> 
             </div>
             <!-- MVP Section -->
-            <div class="col-span-2 grid grid-cols-3 bg-black bg-opacity-5 w-[796px] h-[320px] overflow-hidden">
+            <div class="h-[30%] my-5 grid grid-cols-3 bg-red-500 bg-opacity-2 overflow-hidden">
                 <div class="mx-4 text-5xl flex flex-col flex-auto">
                     <div class="my-5 text-left" style="color: {tertiaryColor}">{red_team.players[0].kills}/{red_team.players[0].deaths}</div>
                     <div class="my-5 text-left" style="color: {tertiaryColor}">{red_team.players[0].acs}</div>
                     <div class="my-5 text-left" style="color: {tertiaryColor}">{red_team.players[0].firstkills}</div>
                 </div>
                 <div class="flex overflow-y-clip">
-                    <img class="object-contain scale-[4]" style="object-position: 50% 115%" src="https://media.valorant-api.com/agents/a3bfb853-43b2-7238-a4f1-ad90e9e46bcc/fullportrait.png" alt="ur mom">
+                    <!-- This might need some JS or some code to make it fit. Like as the height of the box changes, the X coord of the image needs to change. For now keeping it as is -->
+                    <img class="object-contain scale-[4] scale-x-[-4] z-0" style="object-position: 0% 245%" src="https://media.valorant-api.com/agents/707eab51-4836-f488-046a-cda6bf494859/fullportrait.png" alt="ur mom">
                 </div>
-                <div class="flex justify items-end flex-col flex-auto">
+                <div class="flex flex-col flex-auto justify items-end">
                     <div class='my-8 w-11/12 text-6xl text-center' style = "background-color: {tertiaryColor}; color: {quadiaryColor}"> MVP </div>
                     <div class='mx-5 pt-9 text-3xl' style="color: {secondaryColor}">{red_team.players[0].agent.toUpperCase()}</div>
                     <!-- Need to figure out how to make this a dynamic text size based on character length -->
                     <div class='mx-5 text-6xl' style="color: {primaryColor}">{red_team.players[0].name.toUpperCase()}</div>
                 </div>
+
+
             </div>
             
             <!-- Bottom Section -->
-            <div class="w-[796px] h-[497px] flex flex-row"> 
+            <div class="h-[50%] overflow-hidden flex flex-row"> 
                 <!--For loop using {#each}-->
                 <!-- Other Player Stats Section -->
-                <div class="flex flex-col  w-[485px] h-[497px] pr-[12px]">
+                <div class="flex flex-col min-w-[68%] w-[75%] gap-3">
                     {#each red_team.players.slice(1) as player}
-                        <StatsPlayer orientation="right" playerData={player}  colorData={{bg: red_team.bg_color, text: red_team.text_color, smalltext: red_team.small_text_color}}/>
+                        <StatsPlayer orientation="right" playerData={player} colorData={{bg: red_team.bg_color, text: red_team.text_color, smalltext: red_team.small_text_color}}/>
                     {/each}
                 </div>
+
                 <!-- Map Section -->
-                <div class="ml-5 relative flex overflow-hidden w-[298px] h-[497px]" style="background-color: {red_team.bg_color}">
-                    
-    
+                <div class="relative w-[50%] ml-3 justify items-end" style="background-color: {red_team.bg_color};">
+
                 </div>
+
             </div>
         
         </div>
-
+        
     </div>
+
 
 </main>

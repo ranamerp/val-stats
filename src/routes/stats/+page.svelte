@@ -9,16 +9,28 @@
     import Stats from "../../components/Stats.svelte";
 
     
+
+
     export let data;
     const { stats } = data
     let selection = [];
     let value = 0;
+    //These parts need to eventually be chosen by user via dropdown
+    let primaryColor = "#0da68c";
+    let secondaryColor = "#eff6f9";
+    let tertiaryColor = "#e9d98d";
+    let quadiaryColor = "#000000";
+    let btname = "SEN";
+    let rtname = "100T";
+
+    
+
     for (let item in stats) {
         let base = stats[item]
         let map = base['metadata']['map'];
         let startTime = base['metadata']['game_start_patched']
         let totalRounds = base['metadata']['rounds_played']
-        
+        let teams = []
         let firstkills = {};
         let currentRound = -1;
         //This syntax was done by chatgpt, I should maybe consider doing something similar. 
@@ -35,15 +47,10 @@
             }
             currentRound = itemRound;
         });
-        let teams = []
-        let players = []
-        for (let team in base['teams']) {
-            let teamData = {
-                "team_name": team,
-                "won_bool": base['teams'][team]['has_won'],
-                "rounds_won": base['teams'][team]['rounds_won']
-            };
+        //This logic probably has to change with v4 (and eventually with riot api). Sticking with v2 for now
+        for (let team in base['teams']) {       
             let playerBase = base['players'][team];
+            let localPlayers = [];
             for (let pindex in playerBase) {
                 let player = playerBase[pindex]
                 let kd = 1;
@@ -61,29 +68,49 @@
                     'acs': Math.round(player['stats']['score'] / totalRounds),
                     'firstkills': firstkills[player['puuid']]
                 }
-                players.push(playerData)
+                //players.push(playerData)
+                localPlayers.push(playerData)
             }
+            localPlayers.sort((a, b) => a.team.localeCompare(b.team) || b.acs - a.acs)
+            
+            let teamData = {
+                "team_id" : team,
+                "team_name": team === "red" ? rtname : (team === "blue" ? btname : "ATK"),
+                "won_bool": base['teams'][team]['has_won'],
+                "won": base['teams'][team]['has_won'] ? "WIN" : "LOSS",
+                "bg_color": base['teams'][team]['has_won'] ? primaryColor : secondaryColor,
+                "text_color": base['teams'][team]['has_won'] ? secondaryColor : primaryColor,
+                "small_text_color": base['teams'][team]['has_won'] ? tertiaryColor : quadiaryColor,
+                "rounds_won": base['teams'][team]['rounds_won'],
+                "players": localPlayers
+            };
             teams.push(teamData)
         }
-        
-        players.sort((a, b) => a.team.localeCompare(b.team) || b.acs - a.acs)
+        //I want all the data sorted by blue/red team instead of split into team/players
+        //players.sort((a, b) => a.team.localeCompare(b.team) || b.acs - a.acs)
+        //Now try and get the red and blue dicts from it and put it in the correct place
         selection.push(
             {
                 "index" : item,
                 "match_id": base['metadata']['match_id'], 
                 "mapName" : map,
                 "startTime" : startTime,
-                "teams": teams,
-                "players": players
-
+                "red_team": teams.find(team => team.team_id == 'red'),
+                "blue_team": teams.find(team => team.team_id == 'blue')
             }
         )
     }
+
+    let colors = {
+        primaryColor: primaryColor,
+        secondaryColor: secondaryColor,
+        tertiaryColor: tertiaryColor,
+        quadiaryColor: quadiaryColor,
+    }
+
 </script>
 
 <h1> Choose a match :</h1>
-
-
 <select bind:value>
     {#each selection as item}
         {#if stats[item.index]['metadata']['mode'] == "Custom Game"}
@@ -95,35 +122,12 @@
 <br>
 <!-- Get data from selection[value] and place here, then start using it to style.  -->
 {console.log(selection[value])}
-<Stats playerData={selection[value]}></Stats>
-<!-- { #each Object.entries(selection[value]['teams']) as [team, teamData] }
-<h2> Team {teamData['team_name']} Stats: </h2>
-Team Name: {teamData['team_name']}
-Winner? : { #if teamData['has_won'] == true} WON {:else} LOSS {/if}
-Rounds Won: {teamData['rounds_won']}
 
-<br>
-{#each Object.entries(selection[value]['players']) as [index, player] }
-{#if player['team'].toLowerCase() == teamData['team_name'].toLowerCase()}
-Player Name: {player['name']} 
-<br>
-Team: {player['team']}
-<br>
-Agent: {player['agent']}
-<br>
-K/D: {player['kd']}
-<br>
-Kills: {player['kills']}
-<br>
-First Kills: {player['firstkills']}
-{/if}
-{/each}
-
-<br>
-<br>
-{/each}
-
-
-Map: {stats[value]['metadata']['map']}
-<br>
-Time: {stats[value]['metadata']['game_start_patched']} -->
+<!-- <div class="w-[1280px] h-[720px]"> -->
+<div class="w-[1920px] h-[1080px]">  
+    <Stats 
+        playerData={selection[value]}
+        colors = {colors}
+    
+    />
+</div>
