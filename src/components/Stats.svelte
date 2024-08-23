@@ -64,7 +64,7 @@
                 <div class={'text-8xl text-right m-3'} style="color: {blue_team.text_color}"> {blue_team.rounds_won} </div>
             </div>
             <!-- MVP Section -->
-            <div class="h-[30%] my-5 grid grid-cols-3 bg-red-500 bg-opacity-4 overflow-hidden">
+            <div class="h-[30%] my-5 grid grid-cols-3 bg-black bg-opacity-45 overflow-hidden">
                 <div class="flex flex-col flex-auto">
                     <div class='my-8 w-11/12 text-6xl text-center' style = "background-color: {tertiaryColor}; color: {quadiaryColor}"> MVP </div>
                     <div class='mx-5 pt-9 text-3xl' style="color: {secondaryColor}">{blue_team.players[0].agent.toUpperCase()}</div>
@@ -108,7 +108,7 @@
             <div class="relative flex h-[14.75%] bg-yellow-200 overflow-hidden"> 
                 <img class="object-contain" src="https://owcdn.net/img/63067806d167d.png" alt="vct" width=170 height="100">
             </div>
-            <div class="h-full bg-black bg-opacity-8 overflow-hidden w-full mt-5 text-center">
+            <div class="h-full bg-black bg-opacity-45 overflow-hidden w-full mt-5 text-center">
                 <div class= "h-[35%] text-3xl mt-2 mb-5 flex flex-col flex-auto">
                     <div class="my-6" style="color: {tertiaryColor}"> K/D </div>
                     <div class="my-6" style="color: {tertiaryColor}"> ACS </div>
@@ -164,7 +164,7 @@
                 </div> 
             </div>
             <!-- MVP Section -->
-            <div class="h-[30%] my-5 grid grid-cols-3 bg-red-500 bg-opacity-2 overflow-hidden">
+            <div class="h-[30%] my-5 grid grid-cols-3 bg-black bg-opacity-45 overflow-hidden">
                 <div class="mx-4 text-5xl flex flex-col flex-auto">
                     <div class="my-5 text-left" style="color: {tertiaryColor}">{red_team.players[0].kills}/{red_team.players[0].deaths}</div>
                     <div class="my-5 text-left" style="color: {tertiaryColor}">{red_team.players[0].acs}</div>
