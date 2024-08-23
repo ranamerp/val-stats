@@ -32,8 +32,11 @@
             //matchData = await getMatchData('na', terms[0], terms[1]);
             const response = await fetch(`/api/match?region=${'na'}&name=${terms[0]}&tag=${terms[1]}`);
             const matchData = await response.json();
-            //This works, we now need to force the page to become a loading page and then update the rest of the matches
             console.log(matchData.data);
+            processMatch(matchData.data).then(result => {
+                selection = result
+                value = 0;
+            })
         } catch (err) {
             console.log(err.message);
         }
@@ -148,7 +151,7 @@
             class="py-3 px-4 pe-9 block w-full border-gray-200 
             rounded-lg text-sm text-black focus:border-blue-500 focus:ring-blue-500 
             disabled:opacity-50 disabled:pointer-events-none" 
-            bind:value
+            bind:value={value}
             on:change={(event) => {
                 console.log(event)
                 console.log(primaryColor)
