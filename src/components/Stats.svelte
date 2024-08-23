@@ -1,118 +1,52 @@
 <script>
 
     import StatsPlayer from "./StatsPlayer.svelte";
+    import agents from "../stores/Agents.js"
+    import maps from "../stores/Maps.js"
     export let playerData;
     export let colors;
     let blue_team = playerData.blue_team;
     let red_team = playerData.red_team;
-    $: {
-        blue_team = playerData.blue_team;
-        red_team = playerData.red_team;
-    }
+
+    //Thinking that this can be EITHER the selector or the dropdown. Dropdown updates based on current primary color and send that, but otherwise it'll be primary/secondary color
     let primaryColor = colors.primaryColor;
     let secondaryColor = colors.secondaryColor;
     let tertiaryColor = colors.tertiaryColor;
     let quadiaryColor = colors.quadiaryColor;
+    $: {
+        blue_team = playerData.blue_team;
+        red_team = playerData.red_team;
+        primaryColor = colors.primaryColor;
+        secondaryColor = colors.secondaryColor;
+        tertiaryColor = colors.tertiaryColor;
+        quadiaryColor = colors.quadiaryColor;
+    }
+
+    let mapData = {}
+
+
+    agents.subscribe(value => {
+        mapData['agentData'] = value;
+    });
+
+    maps.subscribe(value => {
+        mapData['mapData'] = value;
+    });
     
-    // let blue_team = {
-    //     players: [],
-    //     name: btname
-
-    // };
-    // let red_team = {
-    //     players: [],
-    //     name: rtname
-    // };
-
-    // function calcData(data) {
-    //     data.teams.forEach(team =>{
-    //         if (team.team_name == "blue") {
-    //             blue_team.rounds_won = team.rounds_won
-    //             if (team.won_bool) {
-    //                 blue_team.won = "WIN"
-    //                 blue_team.bg_color = primaryColor
-    //                 blue_team.text_color = secondaryColor
-    //                 blue_team.small_text_color = tertiaryColor
-    //             } else {
-    //                 blue_team.won = "LOSS"
-    //                 blue_team.bg_color = secondaryColor
-    //                 blue_team.text_color = primaryColor
-    //                 blue_team.small_text_color = quadiaryColor
-    //             }
-    //         } else if (team.team_name == "red") {
-    //             red_team.rounds_won = team.rounds_won
-    //             if (team.won_bool) {
-    //                 red_team.won = "WIN"
-    //                 red_team.bg_color = primaryColor
-    //                 red_team.text_color = secondaryColor
-    //                 red_team.small_text_color = tertiaryColor
-    //             } else {
-    //                 red_team.won = "LOSS"
-    //                 red_team.bg_color = secondaryColor
-    //                 red_team.text_color = primaryColor
-    //                 red_team.small_text_color = quadiaryColor
-    //             }
-    //         }
-    //     })
-
-    //     data.players.forEach(player => {
-    //         if (player.team == "Blue") {
-    //             blue_team['players'].push(player)
-    //         } else if (player.team == "Red") {
-    //             red_team['players'].push(player)
-    //         }
-    //     });
     
-    // }
+    //We want our team colors to react to our changes from the color picker
+    //Team colors are defined in the list
+    //We need to go to the list on every change and update it when a new color is chosen
+    //Or, we can do our team filtering/color changing here
+    //Thinking try on page.svelte first. 
 
     
-    // playerData.teams.forEach(team =>{
-    //     if (team.team_name == "blue") {
-    //         blue_team.rounds_won = team.rounds_won
-    //         if (team.won_bool) {
-    //             blue_team.won = "WIN"
-    //             blue_team.bg_color = primaryColor
-    //             blue_team.text_color = secondaryColor
-    //             blue_team.small_text_color = tertiaryColor
-    //         } else {
-    //             blue_team.won = "LOSS"
-    //             blue_team.bg_color = secondaryColor
-    //             blue_team.text_color = primaryColor
-    //             blue_team.small_text_color = quadiaryColor
-    //         }
-    //     } else if (team.team_name == "red") {
-    //         red_team.rounds_won = team.rounds_won
-    //         if (team.won_bool) {
-    //             red_team.won = "WIN"
-    //             red_team.bg_color = primaryColor
-    //             red_team.text_color = secondaryColor
-    //             red_team.small_text_color = tertiaryColor
-    //         } else {
-    //             red_team.won = "LOSS"
-    //             red_team.bg_color = secondaryColor
-    //             red_team.text_color = primaryColor
-    //             red_team.small_text_color = quadiaryColor
-    //         }
-    //     }
-    // })
-    // playerData.players.forEach(player => {
-    //     if (player.team == "Blue") {
-    //         blue_team['players'].push(player)
-    //     } else if (player.team == "Red") {
-    //         red_team['players'].push(player)
-    //     }
-    // });
-
-    // let playerData = {
-    //     primaryColor: "#0196bb",
-    //     secondaryColor: "#2a2c30",
-    //     tertiaryColor: "#ffffff"
-    // }
 </script>
 
 
 <!-- Have to find way to dynamically change width and height based on current screensize. All items need to stay at same proportions and take margin into account -->
 <main>
+
     <!-- Overall Container -->
     <div class="flex flex-row w-full h-full">
         <!-- Left Side -->
@@ -130,7 +64,7 @@
                 <div class={'text-8xl text-right m-3'} style="color: {blue_team.text_color}"> {blue_team.rounds_won} </div>
             </div>
             <!-- MVP Section -->
-            <div class="h-[30%] my-5 grid grid-cols-3 bg-red-500 bg-opacity-2 overflow-hidden">
+            <div class="h-[30%] my-5 grid grid-cols-3 bg-red-500 bg-opacity-4 overflow-hidden">
                 <div class="flex flex-col flex-auto">
                     <div class='my-8 w-11/12 text-6xl text-center' style = "background-color: {tertiaryColor}; color: {quadiaryColor}"> MVP </div>
                     <div class='mx-5 pt-9 text-3xl' style="color: {secondaryColor}">{blue_team.players[0].agent.toUpperCase()}</div>
@@ -139,7 +73,7 @@
                 </div>
                 <div class="flex overflow-y-clip">
                     <!-- This might need some JS or some code to make it fit. Like as the height of the box changes, the X coord of the image needs to change. For now keeping it as is -->
-                    <img class="object-contain scale-[4] z-0" style="object-position: 0% 245%" src="https://media.valorant-api.com/agents/707eab51-4836-f488-046a-cda6bf494859/fullportrait.png" alt="ur mom">
+                    <img class="object-contain scale-[4] z-0" style="object-position: 0% 245%" src={mapData.agentData[blue_team.players[0].agent].fullPortrait} alt="ur mom">
                 </div>
                 <div class="mx-4 text-5xl flex flex-col flex-auto">
                     <div class="my-5 text-right" style="color: {tertiaryColor}">{blue_team.players[0].kills}/{blue_team.players[0].deaths}</div>
@@ -152,7 +86,7 @@
             <div class="h-[50%] overflow-hidden flex flex-row"> 
                 <!-- Map Section -->
                 <div class="relative w-[50%] flex overflow-hidden pr-3">
-                    <img class="object-none" src="https://media.valorant-api.com/maps/7eaecc1b-4337-bbf6-6ab9-04b8f06b3319/splash.png" alt="ur mom">
+                    <img class="object-none" src={mapData.mapData[playerData.mapName].splash} alt={playerData.mapName}>
                     <p class="absolute inset-x-0 bottom-0 pb-5 text-center text-6xl"style="color: {tertiaryColor}"> {playerData.mapName} </p>
     
                 </div>
@@ -160,7 +94,7 @@
                 <!-- Other Player Stats Section -->
                 <div class="flex flex-col min-w-[68%] w-[75%] gap-3">
                     {#each blue_team.players.slice(1) as player}
-                        <StatsPlayer orientation="left" playerData={player} colorData={{bg: blue_team.bg_color, text: blue_team.text_color, smalltext: blue_team.small_text_color}}/>
+                        <StatsPlayer orientation="left" playerData={player} colorData={{bg: blue_team.bg_color, text: blue_team.text_color, smalltext: blue_team.small_text_color}} agentData={mapData.agentData}/>
                     {/each}
                 </div>
             </div>
@@ -238,7 +172,7 @@
                 </div>
                 <div class="flex overflow-y-clip">
                     <!-- This might need some JS or some code to make it fit. Like as the height of the box changes, the X coord of the image needs to change. For now keeping it as is -->
-                    <img class="object-contain scale-[4] scale-x-[-4] z-0" style="object-position: 0% 245%" src="https://media.valorant-api.com/agents/707eab51-4836-f488-046a-cda6bf494859/fullportrait.png" alt="ur mom">
+                    <img class="object-contain scale-[4] scale-x-[-4] z-0" style="object-position: 0% 245%" src={mapData.agentData[red_team.players[0].agent].fullPortrait} alt="ur mom">
                 </div>
                 <div class="flex flex-col flex-auto justify items-end">
                     <div class='my-8 w-11/12 text-6xl text-center' style = "background-color: {tertiaryColor}; color: {quadiaryColor}"> MVP </div>
@@ -256,7 +190,7 @@
                 <!-- Other Player Stats Section -->
                 <div class="flex flex-col min-w-[68%] w-[75%] gap-3">
                     {#each red_team.players.slice(1) as player}
-                        <StatsPlayer orientation="right" playerData={player} colorData={{bg: red_team.bg_color, text: red_team.text_color, smalltext: red_team.small_text_color}}/>
+                        <StatsPlayer orientation="right" playerData={player} colorData={{bg: red_team.bg_color, text: red_team.text_color, smalltext: red_team.small_text_color}} agentData={mapData.agentData}/>
                     {/each}
                 </div>
 

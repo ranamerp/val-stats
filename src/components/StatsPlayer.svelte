@@ -1,7 +1,8 @@
 <script> 
     export let orientation;
     export let playerData;
-    export let colorData; 
+    export let colorData;
+    export let agentData; 
 </script>
 
 <style>
@@ -14,9 +15,9 @@
     {#if orientation == "left"}
         <!-- This should be the agent background -->
         <div class="flex relative bg-black w-[25%] h-full justify-center items-center overflow-hidden">
-            <img class="object-cover h-full w-full" src="https://media.valorant-api.com/agents/e370fa57-4757-3604-3648-499e1f642d3f/displayicon.png" alt="Gekko">
+            <img class="object-cover h-full w-full" src={agentData[playerData.agent].displayIcon} alt={playerData.agent}>
             <div class="absolute inset-0">
-                <img class="absolute bottom-0 right-0 flex items-center z-10 w-[25%] h-[22%]" style="background-color: {colorData.bg}" src="https://media.valorant-api.com/agents/roles/1b47567f-8f7b-444b-aae3-b0c634622d10/displayicon.png" alt="Role">
+                <img class="absolute bottom-0 right-0 flex items-center z-10 w-[25%] h-[22%]" style="background-color: {colorData.bg}" src={agentData[playerData.agent].roleIcon} alt={agentData[playerData.agent].role}>
             </div>
         </div>
         <div class="w-full grid grid-cols-2">
@@ -47,9 +48,9 @@
 
     </div>
     <div class="flex relative bg-black w-[25%] h-full justify-center items-center overflow-hidden">
-        <img class="object-cover h-full min-w-full" src="https://media.valorant-api.com/agents/e370fa57-4757-3604-3648-499e1f642d3f/displayicon.png" alt="Gekko">
+        <img class="object-cover h-full min-w-full" src={agentData[playerData.agent].displayIcon} alt={playerData.agent}>
         <div class="absolute inset-0">
-            <img class="absolute bottom-0 left-0 flex items-center z-10 w-[25%] h-[22%]" style="background-color: {colorData.bg}" src="https://media.valorant-api.com/agents/roles/1b47567f-8f7b-444b-aae3-b0c634622d10/displayicon.png" alt="Role">
+            <img class="absolute bottom-0 left-0 flex items-center z-10 w-[25%] h-[22%]" style="background-color: {colorData.bg}" src={agentData[playerData.agent].roleIcon} alt={agentData[playerData.agent].role}>
         </div>
     </div>
 {/if}

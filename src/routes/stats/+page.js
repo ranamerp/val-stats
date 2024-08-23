@@ -1,16 +1,45 @@
-export const load = async ( { fetch }) => {
-    const region = 'na'
-    const name = 'katsumi'
-    const tag = 'fps'
-    //Needs to be error checking here to see if api is correctly getting data. For now download json and use that as basis for program. 
-    //const matchreq = await fetch(`https://api.henrikdev.xyz/valorant/v3/matches/${region}/${name}/${tag}`)
-    //const matchData = await matchreq.json()
-    const matchreq = await fetch('ref.json')
-    const matchData = await matchreq.json()
-    const data = matchData.data
+// import { agents } from "../../stores/Agents.js";
+//import { getMatchData } from '../../lib/match.js'
 
-    //From here, this needs to send all the match objects where mode is custom (maybe in a list? Can js iterate through a json?)
+// async function getMatchData(region, name, tag) {
+//     const url = `https://api.henrikdev.xyz/valorant/v3/matches/${region}/${name}/${tag}?mode=custom`;
+//     try {
+//         const response = await fetch(url, {
+//           method: 'GET',
+//           headers: {
+//             'Authorization': 'HDEV-de097c2b-bc59-4f35-a19b-f9308d212407',
+//           },
+//         });
+    
+//         if (!response.ok) {
+//           throw new Error(`API request failed with status ${response.status}`);
+//         }
+    
+//         const data = await response.json();
+
+//         if (!data.data || data.data.length === 0) {
+//             //This eventually needs to be a popup sent back to the user
+//             console.warn('No matching data found.')
+//             return null;
+//         }
+
+//         return data.data;
+//     } catch (error) {
+//         console.error('Error fetching match data:', error);
+//         return null;
+//     }
+// }    
+
+
+export async function load({ fetch }) {
+    const region = 'na';
+    const name = 'MXS v1c';
+    const tag = '11111';
+
+    const response = await fetch(`/api/match?region=${region}&name=${name}&tag=${tag}`);
+    const data = await response.json();
+    
     return {
-        stats: data
+        stats: data.data
     }
 }
