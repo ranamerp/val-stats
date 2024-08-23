@@ -176,9 +176,9 @@
                 </div>
                 <div class="flex flex-col flex-auto justify items-end">
                     <div class='my-8 w-11/12 text-6xl text-center' style = "background-color: {tertiaryColor}; color: {quadiaryColor}"> MVP </div>
-                    <div class='mx-5 pt-9 text-3xl' style="color: {secondaryColor}">{red_team.players[0].agent.toUpperCase()}</div>
+                    <div class='mx-5 pt-9 text-3xl text-right' style="color: {secondaryColor}">{red_team.players[0].agent.toUpperCase()}</div>
                     <!-- Need to figure out how to make this a dynamic text size based on character length -->
-                    <div class='mx-5 text-6xl' style="color: {primaryColor}">{red_team.players[0].name.toUpperCase()}</div>
+                    <div class='mx-5 text-6xl text-right' style="color: {primaryColor}">{red_team.players[0].name.toUpperCase()}</div>
                 </div>
 
 
