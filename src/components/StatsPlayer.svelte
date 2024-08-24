@@ -23,7 +23,7 @@
         <div class="w-full grid grid-cols-2">
             <div class="pl-5 align-text-bottom content-end"> 
                 <div class="text-l" style="color: {colorData.smalltext}"> {playerData.agent.toUpperCase()} </div>
-                <div class="text-3xl" style="color: {colorData.text}"> {playerData.name.toUpperCase()} </div>
+                <div class="text-2xl" style="color: {colorData.text}"> {playerData.name.toUpperCase()} </div>
             </div>
 
             <div class="pr-5 align-text-bottom content-center grid"> 
@@ -42,7 +42,7 @@
 
         <div class="pr-5 align-text-bottom content-end"> 
             <div class="text-right text-l" style="color: {colorData.smalltext}"> {playerData.agent.toUpperCase()} </div>
-            <div class="text-right text-3xl" style="color: {colorData.text}"> {playerData.name.toUpperCase()} </div>
+            <div class="text-right text-2xl" style="color: {colorData.text}"> {playerData.name.toUpperCase()} </div>
         </div>
 
 

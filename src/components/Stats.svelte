@@ -67,9 +67,9 @@
             <div class="h-[30%] my-5 grid grid-cols-3 bg-black bg-opacity-45 overflow-hidden">
                 <div class="flex flex-col flex-auto">
                     <div class='my-8 w-11/12 text-6xl text-center' style = "background-color: {tertiaryColor}; color: {quadiaryColor}"> MVP </div>
-                    <div class='mx-5 pt-9 text-3xl' style="color: {secondaryColor}">{blue_team.players[0].agent.toUpperCase()}</div>
+                    <div class='mx-5 pt-12 text-2xl' style="color: {secondaryColor}">{blue_team.players[0].agent.toUpperCase()}</div>
                     <!-- Need to figure out how to make this a dynamic text size based on character length -->
-                    <div class='mx-5 text-6xl' style="color: {primaryColor}">{blue_team.players[0].name.toUpperCase()}</div>
+                    <div class='mx-5 text-4xl' style="color: {primaryColor}">{blue_team.players[0].name.toUpperCase()}</div>
                 </div>
                 <div class="flex overflow-y-clip">
                     <!-- This might need some JS or some code to make it fit. Like as the height of the box changes, the X coord of the image needs to change. For now keeping it as is -->
@@ -176,9 +176,9 @@
                 </div>
                 <div class="flex flex-col flex-auto justify items-end">
                     <div class='my-8 w-11/12 text-6xl text-center' style = "background-color: {tertiaryColor}; color: {quadiaryColor}"> MVP </div>
-                    <div class='mx-5 pt-9 text-3xl text-right' style="color: {secondaryColor}">{red_team.players[0].agent.toUpperCase()}</div>
+                    <div class='mx-5 pt-12 text-2xl text-right' style="color: {secondaryColor}">{red_team.players[0].agent.toUpperCase()}</div>
                     <!-- Need to figure out how to make this a dynamic text size based on character length -->
-                    <div class='mx-5 text-6xl text-right' style="color: {primaryColor}">{red_team.players[0].name.toUpperCase()}</div>
+                    <div class='mx-5 text-4xl text-right' style="color: {primaryColor}">{red_team.players[0].name.toUpperCase()}</div>
                 </div>
 
 
