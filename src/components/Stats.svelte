@@ -55,7 +55,7 @@
             <div class='h-[14.5%] grid grid-cols-3' style="background-color: {blue_team.bg_color};">
                 <div class="ml-8 my-5 items-center"> 
                     <!-- Need to make sure input here does not go past 5 characters -->
-                    <div class='text-6xl' style="color: {blue_team.text_color}">{blue_team.team_name} </div>
+                    <div class='text-6xl' style="color: {blue_team.text_color}">{blue_team.team_name.toUpperCase()} </div>
                     <div class='text-3xl' style="color: {quadiaryColor}">{blue_team.won} </div> 
                 </div> 
                 <div class="flex justify-center items-center opacity-20">
@@ -67,7 +67,7 @@
             <div class="h-[30%] my-5 grid grid-cols-3 bg-black bg-opacity-45 overflow-hidden">
                 <div class="flex flex-col flex-auto">
                     <div class='my-8 w-11/12 text-6xl text-center' style = "background-color: {tertiaryColor}; color: {quadiaryColor}"> MVP </div>
-                    <div class='mx-5 pt-12 text-2xl' style="color: {secondaryColor}">{blue_team.players[0].agent.toUpperCase()}</div>
+                    <div class='mx-5 pt-12 text-2xl' style="color: {secondaryColor}">{blue_team.players[0].agent.toUpperCase().substring(0, 5)}</div>
                     <!-- Need to figure out how to make this a dynamic text size based on character length -->
                     <div class='mx-5 text-4xl' style="color: {primaryColor}">{blue_team.players[0].name.toUpperCase()}</div>
                 </div>
@@ -159,7 +159,7 @@
                 </div>
                 <div class="mr-8 my-5 items-center justify-items-end"> 
                     <!-- Need to make sure input here does not go past 5 characters -->
-                    <div class='text-6xl text-right' style="color: {red_team.text_color}">{red_team.team_name} </div>
+                    <div class='text-6xl text-right' style="color: {red_team.text_color}">{red_team.team_name.toUpperCase().substring(0, 5)} </div>
                     <div class='text-3xl text-right' style="color: {quadiaryColor}">{red_team.won} </div> 
                 </div> 
             </div>
