@@ -7,7 +7,6 @@
 
     export let data;
     const { stats } = data;
-    let matchData;
     let value = 0;
     //These parts need to eventually be chosen by user via dropdown
     let primaryColor = "#0da68c";
@@ -131,6 +130,7 @@
     $: if (!isLoading && stats) {
         processMatch(stats).then(result => {
             selection = result;
+            
 
         });
     }
@@ -258,6 +258,30 @@
         hex = {quadiaryColor}
 
         />
+        </div>
+
+        <div class="flex flex-row">
+            <!-- Team A -->
+             <div class="px-8">
+                <!-- Edit Players Name -->
+                <div>
+                    <label for="blue_team" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Left Team</label>
+                    <input type="text" bind:value={btname} id="blue_team" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="John" required />
+                </div>
+                <!-- Change Logo -->
+                <div>
+
+                </div>
+             </div>
+
+            <!-- Team B -->
+             <div>
+                <div>
+                    <label for="red_team" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Right Team</label>
+                    <input type="text" bind:value={rtname} id="red_team" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="John" required />
+                </div>
+                
+             </div>
         </div>
 
         <form

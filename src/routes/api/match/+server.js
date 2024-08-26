@@ -21,6 +21,7 @@ export async function GET({ url }) {
 
         const data = await response.json();
         return json(data);
+        //Need an error for when data is empty or player can't be found.
     } catch (error) {
         console.error('Error fetching match data:', error);
         return json({ error: 'Failed to fetch match data' }, { status: 500 });

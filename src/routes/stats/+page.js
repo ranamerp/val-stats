@@ -33,8 +33,8 @@
 
 export async function load({ fetch }) {
     const region = 'na';
-    const name = 'MXS v1c';
-    const tag = '11111';
+    const name = 'katsumi';
+    const tag = 'fps';
 
     const response = await fetch(`/api/match?region=${region}&name=${name}&tag=${tag}`);
     const data = await response.json();
