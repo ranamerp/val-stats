@@ -144,6 +144,7 @@
     <p>Loading...</p>
 {:else}
     <div class="flex flex-row">
+        <!-- Match Selection -->
         <div>
             <h1> Choose a match :</h1>
             
@@ -152,11 +153,8 @@
             rounded-lg text-sm text-black focus:border-blue-500 focus:ring-blue-500 
             disabled:opacity-50 disabled:pointer-events-none" 
             bind:value={value}
+            placeholder = "Test"
             on:change={(event) => {
-                console.log(event)
-                console.log(primaryColor)
-                console.log(colors.primaryColor)
-                console.log()
                 if (selection[event.target.selectedIndex].red_team.won_bool) {
                     selection[event.target.selectedIndex].red_team.bg_color = colors.primaryColor;
                     selection[event.target.selectedIndex].red_team.text_color = colors.secondaryColor;
@@ -186,87 +184,16 @@
             </select>
         </div>
         
-        <div>
-        <ColorPicker
-            on:input={(event) => {
-                // Need to figure out a way to update our team colors whenever this is selected
-                colors.primaryColor = event.detail.hex;
-                if (selection[value].red_team.won_bool) {
-                    selection[value].red_team.bg_color = event.detail.hex;
-                    selection[value].blue_team.text_color = event.detail.hex;
-                } else if (selection[value].blue_team.won_bool) {
-                    selection[value].blue_team.bg_color = event.detail.hex;
-                    selection[value].red_team.text_color = event.detail.hex;
-                };
-            }}
-            label = "Primary"
-            components={ChromeVariant} 
-            sliderDirection="horizontal"
-            hex = {primaryColor}
-
-        />
-
-        <ColorPicker
-        on:input={(event) => {
-            // Need to figure out a way to update our team colors whenever this is selected
-            colors.secondaryColor = event.detail.hex;
-            if (selection[value].red_team.won_bool) {
-                selection[value].red_team.text_color = event.detail.hex;
-                selection[value].blue_team.bg_color = event.detail.hex;
-            } else if (selection[value].blue_team.won_bool) {
-                selection[value].blue_team.text_color = event.detail.hex;
-                selection[value].red_team.bg_color = event.detail.hex;
-            };
-        }}
-        label = "Secondary"
-        components={ChromeVariant} 
-        sliderDirection="horizontal"
-        hex = {secondaryColor}
-
-        />
-
-        <ColorPicker
-        on:input={(event) => {
-            // Need to figure out a way to update our team colors whenever this is selected
-            colors.tertiaryColor = event.detail.hex;
-            if (selection[value].red_team.won_bool) {
-                selection[value].red_team.small_text_color = event.detail.hex;
-            } else if (selection[value].blue_team.won_bool) {
-                selection[value].blue_team.small_text_color = event.detail.hex;
-            };
-        }}
-        label = "Tertiary"
-        components={ChromeVariant} 
-        sliderDirection="horizontal"
-        hex = {tertiaryColor}
-
-        />
-
-        <ColorPicker
-        on:input={(event) => {
-            // Need to figure out a way to update our team colors whenever this is selected
-            colors.quadiaryColor = event.detail.hex;
-            if (!selection[value].red_team.won_bool) {
-                selection[value].red_team.small_text_color = event.detail.hex;
-            } else if (!selection[value].blue_team.won_bool) {
-                selection[value].blue_team.small_text_color = event.detail.hex;
-            };
-        }}
-        label = "Quadiary"
-        components={ChromeVariant} 
-        sliderDirection="horizontal"
-        hex = {quadiaryColor}
-
-        />
-        </div>
-
+        <!-- Team Selection -->
         <div class="flex flex-row">
             <!-- Team A -->
              <div class="px-8">
                 <!-- Edit Players Name -->
                 <div>
                     <label for="blue_team" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Left Team</label>
-                    <input type="text" bind:value={btname} id="blue_team" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="John" required />
+                    <input type="text" bind:value={btname} on:input={() => {
+                        selection[value].blue_team.team_name = btname.substring(0,5);
+                    }} id="blue_team" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="John" required />
                 </div>
                 <!-- Change Logo -->
                 <div>
@@ -278,12 +205,15 @@
              <div>
                 <div>
                     <label for="red_team" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Right Team</label>
-                    <input type="text" bind:value={rtname} id="red_team" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="John" required />
+                    <input type="text" bind:value={rtname} on:input={() => {
+                        selection[value].red_team.team_name = rtname.substring(0,5);
+                    }} id="red_team" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="John" required />
                 </div>
                 
              </div>
         </div>
 
+        <!-- Search Bar -->
         <form
         class="w-1/4 mx-auto"
         >   
@@ -306,10 +236,90 @@
     <!-- Get data from selection[value] and place here, then start using it to style.  -->
 
     <!-- <div class="w-[1280px] h-[720px]"> -->
-    <div class="w-[1920px] h-[1080px]">
-        <Stats 
-            playerData={selection[value]}
-            colors = {colors}
-        />
+    <div class="flex flex-row">
+        <!-- Colors -->
+        <div class="bg-slate-600 flex flex-col">
+            <ColorPicker
+                on:input={(event) => {
+                    // Need to figure out a way to update our team colors whenever this is selected
+                    colors.primaryColor = event.detail.hex;
+                    if (selection[value].red_team.won_bool) {
+                        selection[value].red_team.bg_color = event.detail.hex;
+                        selection[value].blue_team.text_color = event.detail.hex;
+                    } else if (selection[value].blue_team.won_bool) {
+                        selection[value].blue_team.bg_color = event.detail.hex;
+                        selection[value].red_team.text_color = event.detail.hex;
+                    };
+                }}
+                label = "Primary"
+                components={ChromeVariant} 
+                sliderDirection="horizontal"
+                hex = {primaryColor}
+                style = "background-color: {primaryColor}"
+    
+            />
+    
+            <ColorPicker
+            on:input={(event) => {
+                // Need to figure out a way to update our team colors whenever this is selected
+                colors.secondaryColor = event.detail.hex;
+                if (selection[value].red_team.won_bool) {
+                    selection[value].red_team.text_color = event.detail.hex;
+                    selection[value].blue_team.bg_color = event.detail.hex;
+                } else if (selection[value].blue_team.won_bool) {
+                    selection[value].blue_team.text_color = event.detail.hex;
+                    selection[value].red_team.bg_color = event.detail.hex;
+                };
+            }}
+            label = "Secondary"
+            components={ChromeVariant} 
+            sliderDirection="horizontal"
+            hex = {secondaryColor}
+    
+            />
+    
+            <ColorPicker
+            on:input={(event) => {
+                // Need to figure out a way to update our team colors whenever this is selected
+                colors.tertiaryColor = event.detail.hex;
+                if (selection[value].red_team.won_bool) {
+                    selection[value].red_team.small_text_color = event.detail.hex;
+                } else if (selection[value].blue_team.won_bool) {
+                    selection[value].blue_team.small_text_color = event.detail.hex;
+                };
+            }}
+            label = "Tertiary"
+            components={ChromeVariant} 
+            sliderDirection="horizontal"
+            hex = {tertiaryColor}
+    
+            />
+    
+            <ColorPicker
+            on:input={(event) => {
+                // Need to figure out a way to update our team colors whenever this is selected
+                colors.quadiaryColor = event.detail.hex;
+                if (!selection[value].red_team.won_bool) {
+                    selection[value].red_team.small_text_color = event.detail.hex;
+                } else if (!selection[value].blue_team.won_bool) {
+                    selection[value].blue_team.small_text_color = event.detail.hex;
+                };
+            }}
+            label = "Quadiary"
+            components={ChromeVariant} 
+            sliderDirection="horizontal"
+            hex = {quadiaryColor}
+    
+            />
+        </div>
+        
+        <!-- Stats -->
+        <div class="w-[1920px] h-[1080px]">
+            <Stats 
+                playerData={selection[value]}
+                colors = {colors}
+            />
+        </div>
+
     </div>
 {/if}
