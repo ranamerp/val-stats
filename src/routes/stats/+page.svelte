@@ -1,9 +1,10 @@
 <script>
 
     import Stats from "../../components/Stats.svelte";
+    import LoadingPopup from "../../components/LoadingPopup.svelte";
     import ColorPicker, { ChromeVariant } from 'svelte-awesome-color-picker';
-    //import { getMatchData } from '../../lib/match.js'
     import { onMount } from 'svelte'
+
 
     export let data;
     const { stats } = data;
@@ -23,23 +24,32 @@
         tertiaryColor,
         quadiaryColor,
     }
+    let showPopup = false;
+    let popupMessage = "";
 
     async function searchPlayers() {
         let terms = searchTerm.split("#");
-        
+
+
+        showPopup = true;
+        popupMessage = `"Loading player data for ${searchTerm}"`
+
         try{
-            //matchData = await getMatchData('na', terms[0], terms[1]);
             const response = await fetch(`/api/match?region=${'na'}&name=${terms[0]}&tag=${terms[1]}`);
             const matchData = await response.json();
-            console.log(matchData.data);
             processMatch(matchData.data).then(result => {
                 selection = result
                 value = 0;
             })
         } catch (err) {
+            console.log("ERROR!")
             console.log(err.message);
+        } finally {
+            showPopup = false;
         }
     }
+
+
 
     async function processMatch(stats) {
         let selection = []
@@ -84,7 +94,7 @@
                         'kills': player['stats']['kills'],
                         'deaths': player['stats']['deaths'],
                         'acs': Math.round(player['stats']['score'] / totalRounds),
-                        'firstkills': firstkills[player['puuid']]
+                        'firstkills': (firstkills[player['puuid']] === undefined ) ? 0 : firstkills[player['puuid']]
                     }
                     //players.push(playerData)
                     localPlayers.push(playerData)
@@ -119,6 +129,10 @@
         }
         return selection;
     }
+
+    async function outputMatch() {
+        //This should get the current data, and then send this data over to output. 
+    }
     
     let selection = [];
     let isLoading = true;
@@ -141,8 +155,9 @@
 
 </script>
 {#if isLoading}
-    <p>Loading...</p>
+   <p> Loading...</p>
 {:else}
+    <LoadingPopup {showPopup} message= {popupMessage} />
     <div class="flex flex-row">
         <!-- Match Selection -->
         <div>
@@ -314,12 +329,22 @@
         </div>
         
         <!-- Stats -->
-        <div class="w-[1920px] h-[1080px]">
-            <Stats 
-                playerData={selection[value]}
-                colors = {colors}
-            />
-        </div>
+         <div class="flex flex-col">
+             <div class="w-[1920px] h-[1080px]">
+                 <Stats 
+                     playerData={selection[value]}
+                     colors = {colors}
+                 />
+             </div>
+
+             <div> 
+                <!-- This will be where we send users to the page that they can pull their image.  -->
+                <!-- For now start with just an output page but then eventually need to do user auth. -->
+                <button type="submit" class="text-white absolute end-2.5 bottom-2.5 bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">Export to Page</button>
+                
+            </div>
+
+         </div>
 
     </div>
 {/if}

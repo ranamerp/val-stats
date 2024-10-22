@@ -33,11 +33,14 @@
 
 export async function load({ fetch }) {
     const region = 'na';
-    const name = 'katsumi';
-    const tag = 'fps';
+    const name = 'kaoticcc';
+    const tag = '555';
 
     const response = await fetch(`/api/match?region=${region}&name=${name}&tag=${tag}`);
     const data = await response.json();
+    //Need error checking here (maybe an error popup component?)
+    //We should have all the error codes caught here
+    
     
     return {
         stats: data.data
