@@ -2,8 +2,10 @@
 
     import Stats from "../../components/Stats.svelte";
     import LoadingPopup from "../../components/LoadingPopup.svelte";
+    import { selectedmatch } from "../../stores/SelectedMatch.js"
     import ColorPicker, { ChromeVariant } from 'svelte-awesome-color-picker';
     import { onMount } from 'svelte'
+    import { goto } from '$app/navigation'
 
 
     export let data;
@@ -49,7 +51,15 @@
         }
     }
 
+    async function outputMatch(currentmatch, colors) {
+        selectedmatch.set({
+            match: currentmatch,
+            colors: colors
+    })
+        //once set, need to redirect
+        goto('/output')
 
+    }
 
     async function processMatch(stats) {
         let selection = []
@@ -128,10 +138,6 @@
             )
         }
         return selection;
-    }
-
-    async function outputMatch() {
-        //This should get the current data, and then send this data over to output. 
     }
     
     let selection = [];
@@ -340,7 +346,7 @@
              <div> 
                 <!-- This will be where we send users to the page that they can pull their image.  -->
                 <!-- For now start with just an output page but then eventually need to do user auth. -->
-                <button type="submit" class="text-white absolute end-2.5 bottom-2.5 bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">Export to Page</button>
+                <button type="submit" on:click={outputMatch(selection[value], colors)} class="text-white absolute end-2.5 bottom-2.5 bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">Export to Page</button>
                 
             </div>
 
