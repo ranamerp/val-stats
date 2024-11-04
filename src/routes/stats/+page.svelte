@@ -10,6 +10,7 @@
 
     export let data;
     const { stats } = data;
+    let player = data.player
     let value = 0;
     //These parts need to eventually be chosen by user via dropdown
     let primaryColor = "#0da68c";
@@ -19,7 +20,7 @@
     let btname = "SEN";
     let rtname = "100T";
     let searchTerm = "";
-    //let hex = "#f6f0dc"
+
     let colors = {
         primaryColor,
         secondaryColor,
@@ -42,6 +43,7 @@
             processMatch(matchData.data).then(result => {
                 selection = result
                 value = 0;
+                player = terms[0];
             })
         } catch (err) {
             console.log("ERROR!")
@@ -164,7 +166,7 @@
    <p> Loading...</p>
 {:else}
     <LoadingPopup {showPopup} message= {popupMessage} />
-    <div class="flex flex-row">
+    <div class="flex flex-row space-x-8">
         <!-- Match Selection -->
         <div>
             <h1> Choose a match :</h1>
@@ -232,6 +234,11 @@
                 </div>
                 
              </div>
+        </div>
+
+        <!-- Current Player -->
+        <div class="p-5"> 
+            Current Player: {player}
         </div>
 
         <!-- Search Bar -->
@@ -351,6 +358,82 @@
             </div>
 
          </div>
+
+        <!-- Other Dropdowns -->
+        <div class="bg-slate-600 flex flex-col">
+            <ColorPicker
+                on:input={(event) => {
+                    // Need to figure out a way to update our team colors whenever this is selected
+                    colors.primaryColor = event.detail.hex;
+                    if (selection[value].red_team.won_bool) {
+                        selection[value].red_team.bg_color = event.detail.hex;
+                        selection[value].blue_team.text_color = event.detail.hex;
+                    } else if (selection[value].blue_team.won_bool) {
+                        selection[value].blue_team.bg_color = event.detail.hex;
+                        selection[value].red_team.text_color = event.detail.hex;
+                    };
+                }}
+                label = "Primary"
+                components={ChromeVariant} 
+                sliderDirection="horizontal"
+                hex = {primaryColor}
+                style = "background-color: {primaryColor}"
+    
+            />
+    
+            <ColorPicker
+            on:input={(event) => {
+                // Need to figure out a way to update our team colors whenever this is selected
+                colors.secondaryColor = event.detail.hex;
+                if (selection[value].red_team.won_bool) {
+                    selection[value].red_team.text_color = event.detail.hex;
+                    selection[value].blue_team.bg_color = event.detail.hex;
+                } else if (selection[value].blue_team.won_bool) {
+                    selection[value].blue_team.text_color = event.detail.hex;
+                    selection[value].red_team.bg_color = event.detail.hex;
+                };
+            }}
+            label = "Secondary"
+            components={ChromeVariant} 
+            sliderDirection="horizontal"
+            hex = {secondaryColor}
+    
+            />
+    
+            <ColorPicker
+            on:input={(event) => {
+                // Need to figure out a way to update our team colors whenever this is selected
+                colors.tertiaryColor = event.detail.hex;
+                if (selection[value].red_team.won_bool) {
+                    selection[value].red_team.small_text_color = event.detail.hex;
+                } else if (selection[value].blue_team.won_bool) {
+                    selection[value].blue_team.small_text_color = event.detail.hex;
+                };
+            }}
+            label = "Tertiary"
+            components={ChromeVariant} 
+            sliderDirection="horizontal"
+            hex = {tertiaryColor}
+    
+            />
+    
+            <ColorPicker
+            on:input={(event) => {
+                // Need to figure out a way to update our team colors whenever this is selected
+                colors.quadiaryColor = event.detail.hex;
+                if (!selection[value].red_team.won_bool) {
+                    selection[value].red_team.small_text_color = event.detail.hex;
+                } else if (!selection[value].blue_team.won_bool) {
+                    selection[value].blue_team.small_text_color = event.detail.hex;
+                };
+            }}
+            label = "Quadiary"
+            components={ChromeVariant} 
+            sliderDirection="horizontal"
+            hex = {quadiaryColor}
+    
+            />
+        </div>
 
     </div>
 {/if}
