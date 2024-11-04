@@ -37,9 +37,20 @@ export async function load({ fetch }) {
     const tag = '555';
 
     const response = await fetch(`/api/match?region=${region}&name=${name}&tag=${tag}`);
-    const data = await response.json();
-    //Need error checking here (maybe an error popup component?)
-    //We should have all the error codes caught here
+    let data = {};
+
+    // This is for when we can't get a player json, so we use our reference one. 
+    // Will need to update this to v4, but for now this works
+    if (response.status === 500) {
+        const req = await fetch('ref.json')
+        data = await req.json()
+    }
+    else {
+        data = await response.json();
+    }
+
+    //Add error catching here, we probably need to create a "mock" json that's stored as a reference
+    
     
     
     return {

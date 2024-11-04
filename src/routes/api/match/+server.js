@@ -15,11 +15,14 @@ export async function GET({ url }) {
             },
         });
 
-        if (!response.ok) {
-            throw new Error(`API request failed with status ${response.status}`);
-        }
+        if (!response.ok) throw new Error(`API request failed with status ${response.status}`);
+    
+        
 
         const data = await response.json();
+        
+        if (data.data.length === 0) throw new Error('Unable to find custom match, please try again later!')
+
         return json(data);
         //Need an error for when data is empty or player can't be found.
     } catch (error) {
