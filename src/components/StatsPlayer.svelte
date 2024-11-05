@@ -2,7 +2,9 @@
     export let orientation;
     export let playerData;
     export let colorData;
-    export let agentData; 
+    export let agentData;
+    console.log(orientation); 
+    console.log(colorData);
 </script>
 
 <style>
@@ -17,7 +19,16 @@
         <div class="flex relative bg-black w-[25%] h-full justify-center items-center overflow-hidden">
             <img class="object-cover h-full w-full" src={agentData[playerData.agent].displayIcon} alt={playerData.agent}>
             <div class="absolute inset-0">
-                <img class="absolute bottom-0 right-0 flex items-center z-10 w-[25%] h-[22%]" style="background-color: {colorData.bg}" src={agentData[playerData.agent].roleIcon} alt={agentData[playerData.agent].role}>
+                <div class="absolute bottom-0 right-0 z-10 w-[25%] h-[22%]" style="background-color: {colorData.bg}">
+                    <div 
+                        class="w-full h-full"
+                        style="mask-image: url({agentData[playerData.agent].roleIcon}); 
+                               -webkit-mask-image: url({agentData[playerData.agent].roleIcon});
+                               mask-size: 100% 100%;
+                               -webkit-mask-size: 100% 100%;
+                               background-color: {colorData.text};"
+                    ></div>
+                </div>
             </div>
         </div>
         <div class="w-full grid grid-cols-2">
@@ -50,9 +61,18 @@
     <div class="flex relative bg-black w-[25%] h-full justify-center items-center overflow-hidden">
         <img class="object-cover h-full min-w-full" src={agentData[playerData.agent].displayIcon} alt={playerData.agent}>
         <div class="absolute inset-0">
-            <img class="absolute bottom-0 left-0 flex items-center z-10 w-[25%] h-[22%]" style="background-color: {colorData.bg}" src={agentData[playerData.agent].roleIcon} alt={agentData[playerData.agent].role}>
+            <div class="absolute bottom-0 left-0 z-10 w-[25%] h-[22%]" style="background-color: {colorData.bg}">
+                <div 
+                    class="w-full h-full"
+                    style="mask-image: url({agentData[playerData.agent].roleIcon}); 
+                           -webkit-mask-image: url({agentData[playerData.agent].roleIcon});
+                           mask-size: 100% 100%;
+                           -webkit-mask-size: 100% 100%;
+                           background-color: {colorData.text};"
+                ></div>
+            </div>
         </div>
     </div>
-{/if}
+    {/if}
 </div>
 
