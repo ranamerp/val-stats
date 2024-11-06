@@ -53,7 +53,7 @@
         }
     }
 
-    async function outputMatch(currentmatch, colors) {
+    function outputMatch(currentmatch, colors) {
         selectedmatch.set({
             match: currentmatch,
             colors: colors
@@ -141,8 +141,29 @@
         }
         return selection;
     }
+
+    function matchHandler(selectedMatch) {
+        // All of these are just immediate object property assignments
+        const { red_team, blue_team } = selectedMatch;
+        const winningTeam = red_team.won_bool ? red_team : blue_team;
+        const losingTeam = red_team.won_bool ? blue_team : red_team;
+        
+        // These updates happen immediately
+        winningTeam.bg_color = colors.primaryColor;
+        winningTeam.text_color = colors.secondaryColor;
+        winningTeam.small_text_color = colors.tertiaryColor;
+        
+        losingTeam.bg_color = colors.secondaryColor;
+        losingTeam.text_color = colors.primaryColor;
+        losingTeam.small_text_color = colors.quadiaryColor;
+    }
+
     
     let selection = [];
+    $: customGames = selection?.filter(item => 
+        stats[item.index]?.metadata?.mode === "Custom Game"
+    ) ?? [];
+
     let isLoading = true;
     onMount(async () => {
         selection = await processMatch(stats);
@@ -156,9 +177,16 @@
 
         });
     }
-    
- 
 
+
+
+    // Set default value when customGames changes
+    $: if (customGames.length > 0 && !value) {
+        value = customGames[0].index;
+        matchHandler(customGames[0]);
+    }
+        
+ 
 
 
 </script>
@@ -177,33 +205,13 @@
             disabled:opacity-50 disabled:pointer-events-none" 
             bind:value={value}
             placeholder = "Test"
-            on:change={(event) => {
-                if (selection[event.target.selectedIndex].red_team.won_bool) {
-                    selection[event.target.selectedIndex].red_team.bg_color = colors.primaryColor;
-                    selection[event.target.selectedIndex].red_team.text_color = colors.secondaryColor;
-                    selection[event.target.selectedIndex].red_team.small_text_color = colors.tertiaryColor;
-                    
-                    selection[event.target.selectedIndex].blue_team.bg_color = colors.secondaryColor;
-                    selection[event.target.selectedIndex].blue_team.text_color = colors.primaryColor;
-                    selection[event.target.selectedIndex].blue_team.small_text_color = colors.quadiaryColor;
-                } else if (selection[event.target.selectedIndex].blue_team.won_bool) {
-                    selection[event.target.selectedIndex].blue_team.bg_color = colors.primaryColor;
-                    selection[event.target.selectedIndex].blue_team.text_color = colors.secondaryColor;
-                    selection[event.target.selectedIndex].blue_team.small_text_color = colors.tertiaryColor;
-                    
-                    selection[event.target.selectedIndex].red_team.bg_color = colors.secondaryColor;
-                    selection[event.target.selectedIndex].red_team.text_color = colors.primaryColor;
-                    selection[event.target.selectedIndex].red_team.small_text_color = colors.quadiaryColor;
-                };
-            }}
+            on:change={(event) => matchHandler(selection[event.target.selectedIndex])}
             >
-            {#if selection && selection.length > 0}
-                {#each selection as item}
-                    {#if stats[item.index]['metadata']['mode'] == "Custom Game"}
-                        <option value = {item.index}>"{item.mapName} ({item.startTime})"</option>
-                    {/if}
-                {/each}
-            {/if}
+            {#each customGames as item}
+                <option value={item.index}>
+                    {item.mapName} ({item.startTime})
+                </option>
+            {/each}
             </select>
         </div>
         
@@ -361,78 +369,15 @@
 
         <!-- Other Dropdowns -->
         <div class="bg-slate-600 flex flex-col">
-            <ColorPicker
-                on:input={(event) => {
-                    // Need to figure out a way to update our team colors whenever this is selected
-                    colors.primaryColor = event.detail.hex;
-                    if (selection[value].red_team.won_bool) {
-                        selection[value].red_team.bg_color = event.detail.hex;
-                        selection[value].blue_team.text_color = event.detail.hex;
-                    } else if (selection[value].blue_team.won_bool) {
-                        selection[value].blue_team.bg_color = event.detail.hex;
-                        selection[value].red_team.text_color = event.detail.hex;
-                    };
-                }}
-                label = "Primary"
-                components={ChromeVariant} 
-                sliderDirection="horizontal"
-                hex = {primaryColor}
-                style = "background-color: {primaryColor}"
-    
-            />
-    
-            <ColorPicker
-            on:input={(event) => {
-                // Need to figure out a way to update our team colors whenever this is selected
-                colors.secondaryColor = event.detail.hex;
-                if (selection[value].red_team.won_bool) {
-                    selection[value].red_team.text_color = event.detail.hex;
-                    selection[value].blue_team.bg_color = event.detail.hex;
-                } else if (selection[value].blue_team.won_bool) {
-                    selection[value].blue_team.text_color = event.detail.hex;
-                    selection[value].red_team.bg_color = event.detail.hex;
-                };
+            <select
+            class="py-3 px-4 pe-9 block w-full border-gray-200 
+            rounded-lg text-sm text-black focus:border-blue-500 focus:ring-blue-500 
+            disabled:opacity-50 disabled:pointer-events-none" 
+            placeholder = "Test"
+            on:change={(event) => {
             }}
-            label = "Secondary"
-            components={ChromeVariant} 
-            sliderDirection="horizontal"
-            hex = {secondaryColor}
-    
-            />
-    
-            <ColorPicker
-            on:input={(event) => {
-                // Need to figure out a way to update our team colors whenever this is selected
-                colors.tertiaryColor = event.detail.hex;
-                if (selection[value].red_team.won_bool) {
-                    selection[value].red_team.small_text_color = event.detail.hex;
-                } else if (selection[value].blue_team.won_bool) {
-                    selection[value].blue_team.small_text_color = event.detail.hex;
-                };
-            }}
-            label = "Tertiary"
-            components={ChromeVariant} 
-            sliderDirection="horizontal"
-            hex = {tertiaryColor}
-    
-            />
-    
-            <ColorPicker
-            on:input={(event) => {
-                // Need to figure out a way to update our team colors whenever this is selected
-                colors.quadiaryColor = event.detail.hex;
-                if (!selection[value].red_team.won_bool) {
-                    selection[value].red_team.small_text_color = event.detail.hex;
-                } else if (!selection[value].blue_team.won_bool) {
-                    selection[value].blue_team.small_text_color = event.detail.hex;
-                };
-            }}
-            label = "Quadiary"
-            components={ChromeVariant} 
-            sliderDirection="horizontal"
-            hex = {quadiaryColor}
-    
-            />
+            >
+            </select>
         </div>
 
     </div>

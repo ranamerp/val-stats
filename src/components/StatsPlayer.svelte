@@ -3,8 +3,6 @@
     export let playerData;
     export let colorData;
     export let agentData;
-    console.log(orientation); 
-    console.log(colorData);
 </script>
 
 <style>
