@@ -204,7 +204,6 @@
             rounded-lg text-sm text-black focus:border-blue-500 focus:ring-blue-500 
             disabled:opacity-50 disabled:pointer-events-none" 
             bind:value={value}
-            placeholder = "Test"
             on:change={(event) => matchHandler(selection[event.target.selectedIndex])}
             >
             {#each customGames as item}
@@ -368,15 +367,34 @@
          </div>
 
         <!-- Other Dropdowns -->
-        <div class="bg-slate-600 flex flex-col">
+        <div class="bg-slate-600 flex flex-col gap-y-5">
             <select
             class="py-3 px-4 pe-9 block w-full border-gray-200 
             rounded-lg text-sm text-black focus:border-blue-500 focus:ring-blue-500 
             disabled:opacity-50 disabled:pointer-events-none" 
-            placeholder = "Test"
             on:change={(event) => {
             }}
             >
+            <option> Color Presets </option>
+            <!-- Save up to 3 presets unpaid -->
+            <option> Save a Preset </option>
+            <option> VCT Champs </option>
+            <option> VCT Masters </option>
+            <option> Challengers NA </option>
+            <option> Red Bull Home Ground </option>
+            <option> Sentinels </option>
+            </select>
+
+            <select
+            class="py-3 px-4 pe-9 block w-full border-gray-200 
+            rounded-lg text-sm text-black focus:border-blue-500 focus:ring-blue-500 
+            disabled:opacity-50 disabled:pointer-events-none" 
+            on:change={(event) => {
+            }}
+            >
+            <!-- This should be a search bar that lets you search for fonts (much like realtimecolors.com does) -->
+            <!-- Paid option lets you add local fonts, otherwise it's google -->
+            <option> Fonts </option>
             </select>
         </div>
 
