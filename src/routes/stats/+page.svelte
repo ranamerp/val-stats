@@ -3,6 +3,7 @@
     import Stats from "../../components/Stats.svelte";
     import LoadingPopup from "../../components/LoadingPopup.svelte";
     import { selectedmatch } from "../../stores/SelectedMatch.js"
+    import { presets } from "../../stores/Presets.js"
     import ColorPicker, { ChromeVariant } from 'svelte-awesome-color-picker';
     import { onMount } from 'svelte'
     import { goto } from '$app/navigation'
@@ -13,22 +14,39 @@
     let player = data.player
     let value = 0;
     //These parts need to eventually be chosen by user via dropdown
+
+    let btname = "SEN";
+    let rtname = "100T";
+    let searchTerm = "";
+
+    //For now this will work, but I think adding more options (like left background, small text, etc) may be a good advanced paid option
+    let showPopup = false;
+    let popupMessage = "";
+
+    let preset = 'Champs 24'
     let primaryColor = "#0da68c";
     let secondaryColor = "#eff6f9";
     let tertiaryColor = "#e9d98d";
     let quadiaryColor = "#000000";
-    let btname = "SEN";
-    let rtname = "100T";
-    let searchTerm = "";
 
     let colors = {
         primaryColor,
         secondaryColor,
         tertiaryColor,
-        quadiaryColor,
+        quadiaryColor
     }
-    let showPopup = false;
-    let popupMessage = "";
+
+    $: presetColors = $presets[preset];
+
+    // If you want to update your current colors with preset values:
+    $: if (presetColors) {
+        primaryColor = presetColors.primaryColor;
+        secondaryColor = presetColors.secondaryColor;
+        tertiaryColor = presetColors.tertiaryColor;
+        quadiaryColor = presetColors.quadiaryColor;
+        colors = presetColors;
+    }
+    
 
     async function searchPlayers() {
         let terms = searchTerm.split("#");
@@ -185,8 +203,8 @@
         value = customGames[0].index;
         matchHandler(customGames[0]);
     }
-        
- 
+    
+
 
 
 </script>
@@ -371,18 +389,23 @@
             <select
             class="py-3 px-4 pe-9 block w-full border-gray-200 
             rounded-lg text-sm text-black focus:border-blue-500 focus:ring-blue-500 
-            disabled:opacity-50 disabled:pointer-events-none" 
+            disabled:opacity-50 disabled:pointer-events-none"
+            bind:value={preset} 
             on:change={(event) => {
+                if (event.target.value && $presets[event.target.value]) {
+                    presetColors = $presets[event.target.value];
+                }
             }}
             >
-            <option> Color Presets </option>
-            <!-- Save up to 3 presets unpaid -->
-            <option> Save a Preset </option>
-            <option> VCT Champs </option>
-            <option> VCT Masters </option>
-            <option> Challengers NA </option>
-            <option> Red Bull Home Ground </option>
-            <option> Sentinels </option>
+                <option value="" disabled selected> Color Presets </option>
+                <!-- Save up to 3 presets unpaid -->
+                <option> Save a Preset </option>
+
+                <option value="Champs 24"> VCT Champions 2024 </option>
+                <option value="Masters"> VCT Masters </option>
+                <option value="VCL NA"> Challengers NA </option>
+                <option value="Red Bull"> Red Bull Home Ground </option>
+                <option value="SEN"> Sentinels </option>
             </select>
 
             <select
