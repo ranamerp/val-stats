@@ -44,7 +44,7 @@ export async function load({ fetch }) {
     if (response.status === 500) {
         const req = await fetch('ref.json');
         data = await req.json();
-        name = 'katsumi';
+        name = 'katsumi#fps';
     }
     else {
         data = await response.json();

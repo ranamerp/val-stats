@@ -11,13 +11,13 @@
 
     export let data;
     const { stats } = data;
-    let player = data.player
+    let player = data.player.split('#')[0]
     let value = 0;
     //These parts need to eventually be chosen by user via dropdown
 
     let btname = "SEN";
     let rtname = "100T";
-    let searchTerm = "";
+    let searchTerm = data.player;
 
     //For now this will work, but I think adding more options (like left background, small text, etc) may be a good advanced paid option
     let showPopup = false;
@@ -176,6 +176,12 @@
         losingTeam.small_text_color = colors.quadiaryColor;
     }
 
+    async function savePreset() {
+        // This code should do the following:
+        // Check that the store doesn't exist already
+        // Take the current colors and put it in the store
+        // Show a popup that lets you write the name of the preset
+    }
     
     let selection = [];
     $: customGames = selection?.filter(item => 
@@ -283,18 +289,23 @@
             </div>
         </form>
 
+        <!-- Add Match Reload Button -->
+         <div>
+            <button type="submit" on:click={searchPlayers} class="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">Reload Matches</button>
+         </div>
+         
     </div>
 
     <br>
-    <!-- Get data from selection[value] and place here, then start using it to style.  -->
+    
 
     <!-- <div class="w-[1280px] h-[720px]"> -->
     <div class="flex flex-row">
         <!-- Colors -->
         <div class="bg-slate-600 flex flex-col">
+            <!-- We can make this custom, refer to doc for creating custom components. -->
             <ColorPicker
                 on:input={(event) => {
-                    // Need to figure out a way to update our team colors whenever this is selected
                     colors.primaryColor = event.detail.hex;
                     if (selection[value].red_team.won_bool) {
                         selection[value].red_team.bg_color = event.detail.hex;
@@ -308,7 +319,10 @@
                 components={ChromeVariant} 
                 sliderDirection="horizontal"
                 hex = {primaryColor}
-                style = "background-color: {primaryColor}"
+                --cp-bg-color="{primaryColor}"
+                --cp-text-color="black"
+                --picker-indicator-size="10px"
+                --input-size="25px"
     
             />
     
@@ -375,10 +389,10 @@
                  />
              </div>
 
-             <div> 
+             <div class="flex justify-center items-center"> 
                 <!-- This will be where we send users to the page that they can pull their image.  -->
                 <!-- For now start with just an output page but then eventually need to do user auth. -->
-                <button type="submit" on:click={outputMatch(selection[value], colors)} class="text-white absolute end-2.5 bottom-2.5 bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">Export to Page</button>
+                <button type="submit" on:click={outputMatch(selection[value], colors)} class="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">Export to Page</button>
                 
             </div>
 
@@ -392,6 +406,9 @@
             disabled:opacity-50 disabled:pointer-events-none"
             bind:value={preset} 
             on:change={(event) => {
+                if (event.target.value === "preset") {
+                    console.log("Placeholder")
+                }
                 if (event.target.value && $presets[event.target.value]) {
                     presetColors = $presets[event.target.value];
                 }
@@ -399,7 +416,7 @@
             >
                 <option value="" disabled selected> Color Presets </option>
                 <!-- Save up to 3 presets unpaid -->
-                <option> Save a Preset </option>
+                <option value="preset"> Save a Preset </option>
 
                 <option value="Champs 24"> VCT Champions 2024 </option>
                 <option value="Masters"> VCT Masters </option>
