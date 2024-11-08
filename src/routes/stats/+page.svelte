@@ -24,27 +24,27 @@
     let popupMessage = "";
 
     let preset = 'Champs 24'
-    let primaryColor = "#0da68c";
-    let secondaryColor = "#eff6f9";
-    let tertiaryColor = "#e9d98d";
-    let quadiaryColor = "#000000";
+    // let primaryColor = "#0da68c";
+    // let secondaryColor = "#eff6f9";
+    // let tertiaryColor = "#e9d98d";
+    // let quadiaryColor = "#000000";
+
+    let presetColors = $presets[preset];
 
     let colors = {
-        primaryColor,
-        secondaryColor,
-        tertiaryColor,
-        quadiaryColor
+        primaryColor: presetColors.primaryColor ?? "#0da68c",
+        secondaryColor: presetColors.secondaryColor ?? "#eff6f9",
+        tertiaryColor: presetColors.tertiaryColor ?? "#e9d98d",
+        quadiaryColor: presetColors.quadiaryColor ?? "#000000"
     }
 
-    $: presetColors = $presets[preset];
 
-    // If you want to update your current colors with preset values:
     $: if (presetColors) {
-        primaryColor = presetColors.primaryColor;
-        secondaryColor = presetColors.secondaryColor;
-        tertiaryColor = presetColors.tertiaryColor;
-        quadiaryColor = presetColors.quadiaryColor;
-        colors = presetColors;
+        colors.primaryColor = presetColors.primaryColor;
+        colors.secondaryColor = presetColors.secondaryColor;
+        colors.tertiaryColor = presetColors.tertiaryColor;
+        colors.quadiaryColor = presetColors.quadiaryColor;
+        //colors = presetColors;
     }
     
 
@@ -135,9 +135,9 @@
                     "team_name": team === "red" ? rtname : (team === "blue" ? btname : "ATK"),
                     "won_bool": base['teams'][team]['has_won'],
                     "won": base['teams'][team]['has_won'] ? "WIN" : "LOSS",
-                    "bg_color": base['teams'][team]['has_won'] ? primaryColor : secondaryColor,
-                    "text_color": base['teams'][team]['has_won'] ? secondaryColor : primaryColor,
-                    "small_text_color": base['teams'][team]['has_won'] ? tertiaryColor : quadiaryColor,
+                    "bg_color": base['teams'][team]['has_won'] ? colors.primaryColor : colors.secondaryColor,
+                    "text_color": base['teams'][team]['has_won'] ? colors.secondaryColor : colors.primaryColor,
+                    "small_text_color": base['teams'][team]['has_won'] ? colors.tertiaryColor : colors.quadiaryColor,
                     "rounds_won": base['teams'][team]['rounds_won'],
                     "players": localPlayers
                 };
@@ -306,20 +306,15 @@
             <!-- We can make this custom, refer to doc for creating custom components. -->
             <ColorPicker
                 on:input={(event) => {
+                    //currently when I click this, the previous value is the one that gets sent. This means that we aren't reactive enough
+                    // need to change this
                     colors.primaryColor = event.detail.hex;
-                    if (selection[value].red_team.won_bool) {
-                        selection[value].red_team.bg_color = event.detail.hex;
-                        selection[value].blue_team.text_color = event.detail.hex;
-                    } else if (selection[value].blue_team.won_bool) {
-                        selection[value].blue_team.bg_color = event.detail.hex;
-                        selection[value].red_team.text_color = event.detail.hex;
-                    };
                 }}
                 label = "Primary"
                 components={ChromeVariant} 
                 sliderDirection="horizontal"
-                hex = {primaryColor}
-                --cp-bg-color="{primaryColor}"
+                hex = {colors.primaryColor}
+                --cp-bg-color="{colors.primaryColor}"
                 --cp-text-color="black"
                 --picker-indicator-size="10px"
                 --input-size="25px"
@@ -330,18 +325,11 @@
             on:input={(event) => {
                 // Need to figure out a way to update our team colors whenever this is selected
                 colors.secondaryColor = event.detail.hex;
-                if (selection[value].red_team.won_bool) {
-                    selection[value].red_team.text_color = event.detail.hex;
-                    selection[value].blue_team.bg_color = event.detail.hex;
-                } else if (selection[value].blue_team.won_bool) {
-                    selection[value].blue_team.text_color = event.detail.hex;
-                    selection[value].red_team.bg_color = event.detail.hex;
-                };
             }}
             label = "Secondary"
             components={ChromeVariant} 
             sliderDirection="horizontal"
-            hex = {secondaryColor}
+            hex = {colors.secondaryColor}
     
             />
     
@@ -349,16 +337,11 @@
             on:input={(event) => {
                 // Need to figure out a way to update our team colors whenever this is selected
                 colors.tertiaryColor = event.detail.hex;
-                if (selection[value].red_team.won_bool) {
-                    selection[value].red_team.small_text_color = event.detail.hex;
-                } else if (selection[value].blue_team.won_bool) {
-                    selection[value].blue_team.small_text_color = event.detail.hex;
-                };
             }}
             label = "Tertiary"
             components={ChromeVariant} 
             sliderDirection="horizontal"
-            hex = {tertiaryColor}
+            hex = {colors.tertiaryColor}
     
             />
     
@@ -366,16 +349,11 @@
             on:input={(event) => {
                 // Need to figure out a way to update our team colors whenever this is selected
                 colors.quadiaryColor = event.detail.hex;
-                if (!selection[value].red_team.won_bool) {
-                    selection[value].red_team.small_text_color = event.detail.hex;
-                } else if (!selection[value].blue_team.won_bool) {
-                    selection[value].blue_team.small_text_color = event.detail.hex;
-                };
             }}
             label = "Quadiary"
             components={ChromeVariant} 
             sliderDirection="horizontal"
-            hex = {quadiaryColor}
+            hex = {colors.quadiaryColor}
     
             />
         </div>
@@ -406,9 +384,8 @@
             disabled:opacity-50 disabled:pointer-events-none"
             bind:value={preset} 
             on:change={(event) => {
-                if (event.target.value === "preset") {
-                    console.log("Placeholder")
-                }
+                console.log("Dropdown");
+                console.log(event);
                 if (event.target.value && $presets[event.target.value]) {
                     presetColors = $presets[event.target.value];
                 }

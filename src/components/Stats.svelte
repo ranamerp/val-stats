@@ -8,7 +8,7 @@
     let blue_team = playerData.blue_team;
     let red_team = playerData.red_team;
 
-    //Thinking that this can be EITHER the selector or the dropdown. Dropdown updates based on current primary color and send that, but otherwise it'll be primary/secondary color
+
     let primaryColor = colors.primaryColor;
     let secondaryColor = colors.secondaryColor;
     let tertiaryColor = colors.tertiaryColor;
@@ -16,6 +16,11 @@
     $: {
         blue_team = playerData.blue_team;
         red_team = playerData.red_team;
+        [blue_team, red_team].forEach(team => {
+            team.bg_color = team.won_bool ? primaryColor : secondaryColor
+            team.text_color = team.won_bool ? secondaryColor : primaryColor
+            team.small_text_color = team.won_bool ? tertiaryColor : quadiaryColor
+        })
         primaryColor = colors.primaryColor;
         secondaryColor = colors.secondaryColor;
         tertiaryColor = colors.tertiaryColor;
