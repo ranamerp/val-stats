@@ -14,6 +14,10 @@
     let tertiaryColor = colors.tertiaryColor;
     let quadiaryColor = colors.quadiaryColor;
     $: {
+        primaryColor = colors.primaryColor;
+        secondaryColor = colors.secondaryColor;
+        tertiaryColor = colors.tertiaryColor;
+        quadiaryColor = colors.quadiaryColor;
         blue_team = playerData.blue_team;
         red_team = playerData.red_team;
         [blue_team, red_team].forEach(team => {
@@ -21,10 +25,6 @@
             team.text_color = team.won_bool ? secondaryColor : primaryColor
             team.small_text_color = team.won_bool ? tertiaryColor : quadiaryColor
         })
-        primaryColor = colors.primaryColor;
-        secondaryColor = colors.secondaryColor;
-        tertiaryColor = colors.tertiaryColor;
-        quadiaryColor = colors.quadiaryColor;
     }
 
     let mapData = {}
