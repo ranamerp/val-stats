@@ -24,10 +24,6 @@
     let popupMessage = "";
 
     let preset = 'Champs 24'
-    // let primaryColor = "#0da68c";
-    // let secondaryColor = "#eff6f9";
-    // let tertiaryColor = "#e9d98d";
-    // let quadiaryColor = "#000000";
 
     let presetColors = $presets[preset];
 
@@ -44,7 +40,6 @@
         colors.secondaryColor = presetColors.secondaryColor;
         colors.tertiaryColor = presetColors.tertiaryColor;
         colors.quadiaryColor = presetColors.quadiaryColor;
-        //colors = presetColors;
     }
     
 
@@ -181,6 +176,9 @@
         // Check that the store doesn't exist already
         // Take the current colors and put it in the store
         // Show a popup that lets you write the name of the preset
+        console.log(colors);
+        
+
     }
     
     let selection = [];
@@ -384,11 +382,10 @@
             disabled:opacity-50 disabled:pointer-events-none"
             bind:value={preset} 
             on:change={(event) => {
-                console.log("Dropdown");
-                console.log(event);
                 if (event.target.value && $presets[event.target.value]) {
                     presetColors = $presets[event.target.value];
                 }
+                if (event.target.value === "preset") {savePreset()}
             }}
             >
                 <option value="" disabled selected> Color Presets </option>

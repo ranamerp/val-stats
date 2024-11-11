@@ -39,6 +39,7 @@ export async function load({ fetch }) {
     const response = await fetch(`/api/match?region=${region}&name=${name}&tag=${tag}`);
     let data = {};
 
+
     // This is for when we can't get a player json, so we use our reference one. 
     // Will need to update this to v4, but for now this works
     if (response.status === 500) {
