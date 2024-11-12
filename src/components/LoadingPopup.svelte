@@ -1,7 +1,7 @@
-<script>
-    export let showPopup = false;
-    export let message = "Loading...";
-  </script>
+<script lang="ts">
+    export let showPopup: boolean = false;
+    export let message: string = "Loading...";
+</script>
   
   {#if showPopup}
     <div class="fixed top-0 left-0 w-full h-full flex justify-center items-center z-50">

@@ -1,5 +1,4 @@
-<script>
-
+<script lang="ts">
     import StatsPlayer from "./StatsPlayer.svelte";
     import agents from "../stores/Agents.js"
     import maps from "../stores/Maps.js"
@@ -27,15 +26,17 @@
         })
     }
 
-    let mapData = {}
 
 
+    let mapData: Record<string, (App.ValorantAgent | App.ValorantMap)> = {};
+
+    
     agents.subscribe(value => {
-        mapData['agentData'] = value;
+        mapData['agentData'] = value as App.ValorantAgent;
     });
 
     maps.subscribe(value => {
-        mapData['mapData'] = value;
+        mapData['mapData'] = value as App.ValorantMap;
     });
     
     
