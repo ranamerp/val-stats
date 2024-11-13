@@ -8,10 +8,10 @@
     let red_team = playerData.red_team;
 
 
-    let primaryColor = colors.primaryColor;
-    let secondaryColor = colors.secondaryColor;
-    let tertiaryColor = colors.tertiaryColor;
-    let quadiaryColor = colors.quadiaryColor;
+    let primaryColor: string = colors.primaryColor;
+    let secondaryColor: string = colors.secondaryColor;
+    let tertiaryColor: string = colors.tertiaryColor;
+    let quadiaryColor: string = colors.quadiaryColor;
     $: {
         primaryColor = colors.primaryColor;
         secondaryColor = colors.secondaryColor;
@@ -31,13 +31,20 @@
     let mapData: Record<string, (App.ValorantAgent | App.ValorantMap)> = {};
 
     
-    agents.subscribe(value => {
-        mapData['agentData'] = value as App.ValorantAgent;
+    agents.subscribe(value => { 
+        const firstAgentKey = Object.keys(value)[0]; 
+        if (firstAgentKey) { 
+            mapData['agentData'] = value[firstAgentKey] as App.ValorantAgent; 
+        }
     });
 
-    maps.subscribe(value => {
-        mapData['mapData'] = value as App.ValorantMap;
+    maps.subscribe(value => { 
+        const firstMapKey = Object.keys(value)[0]; 
+        if (firstMapKey) { 
+            mapData['mapData'] = value[firstMapKey] as App.ValorantMap; 
+        }
     });
+
     
     
     //We want our team colors to react to our changes from the color picker
