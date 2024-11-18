@@ -136,7 +136,11 @@
             //I want all the data sorted by blue/red team instead of split into team/players
             //players.sort((a, b) => a.team.localeCompare(b.team) || b.acs - a.acs)
             //Now try and get the red and blue dicts from it and put it in the correct place
-            
+            for (const team of teams) {
+                const filteredPlayers = team.players?.filter(player => player.team.toLowerCase() === team.team_id.toLowerCase());
+                team.players = filteredPlayers;
+            }
+
             selection.push(
                 {
                     index : index,
@@ -179,9 +183,11 @@
     
     let selection: App.LocalMatch[] = [];
     $: customGames = selection?.filter((item, index) => 
-        stats[index]?.metadata?.queue?.id === "custom"
+        // svelte-ignore reactive_declaration_non_reactive_property
+                stats[index]?.metadata?.queue?.id === "custom"
     ) ?? [];
 
+    //I think this is processing the match twice. need to redo this at some point
     let isLoading = true;
     onMount(async () => {
         selection = await processMatch(stats);
