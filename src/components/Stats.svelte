@@ -1,18 +1,17 @@
-<script>
-
+<script lang="ts">
     import StatsPlayer from "./StatsPlayer.svelte";
     import agents from "../stores/Agents.js"
     import maps from "../stores/Maps.js"
-    export let playerData;
-    export let colors;
+    export let playerData: App.LocalMatch;
+    export let colors: App.ColorPreset;
     let blue_team = playerData.blue_team;
     let red_team = playerData.red_team;
 
 
-    let primaryColor = colors.primaryColor;
-    let secondaryColor = colors.secondaryColor;
-    let tertiaryColor = colors.tertiaryColor;
-    let quadiaryColor = colors.quadiaryColor;
+    let primaryColor: string = colors.primaryColor;
+    let secondaryColor: string = colors.secondaryColor;
+    let tertiaryColor: string = colors.tertiaryColor;
+    let quadiaryColor: string = colors.quadiaryColor;
     $: {
         primaryColor = colors.primaryColor;
         secondaryColor = colors.secondaryColor;
@@ -27,23 +26,23 @@
         })
     }
 
-    let mapData = {}
 
+    let mapData: {
+        agentData: Record<string, App.ValorantAgent>;
+        mapData: Record<string, App.ValorantMap>;
+    } = {
+        agentData: {},
+        mapData: {}
+    };
 
-    agents.subscribe(value => {
-        mapData['agentData'] = value;
+    
+    agents.subscribe(value => { 
+        mapData['agentData'] = value; 
     });
 
-    maps.subscribe(value => {
-        mapData['mapData'] = value;
+    maps.subscribe(value => { 
+        mapData['mapData'] = value; 
     });
-    
-    
-    //We want our team colors to react to our changes from the color picker
-    //Team colors are defined in the list
-    //We need to go to the list on every change and update it when a new color is chosen
-    //Or, we can do our team filtering/color changing here
-    //Thinking try on page.svelte first. 
 
     
 </script>

@@ -1,12 +1,15 @@
 import { json } from '@sveltejs/kit';
-//import { getMatchData } from '$lib/match.js';
+
+
+
 
 export async function GET({ url }) {
     const region = url.searchParams.get('region');
     const name = url.searchParams.get('name');
     const tag = url.searchParams.get('tag');
 
-    const apiUrl = `https://api.henrikdev.xyz/valorant/v3/matches/${region}/${name}/${tag}?mode=custom`;
+    //Temp removing custom game from this list, this probably will change
+    const apiUrl = `https://api.henrikdev.xyz/valorant/v4/matches/${region}/pc/${name}/${tag}?mode=custom`;
 
     try {
         const response = await fetch(apiUrl, {
@@ -19,7 +22,7 @@ export async function GET({ url }) {
     
         
 
-        const data = await response.json();
+        const data: App.APIResponse = await response.json();
         
         if (data.data.length === 0) throw new Error('Unable to find custom match, please try again later!')
 

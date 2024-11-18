@@ -1,8 +1,9 @@
-//This store should be used to persist the selected match. It'll be referred to in the output route. 
-import { writable } from 'svelte/store'
+import { writable, type Writable } from "svelte/store";
 
 
-export const presets = writable ({
+
+
+export const presets: Writable<Record<string, App.ColorPreset>> = writable ({
     'Champs 24': {
         primaryColor: '#c2ae75',
         secondaryColor: '#131313',
@@ -32,6 +33,5 @@ export const presets = writable ({
         secondaryColor: '#0c0b14',
         tertiaryColor: '#e9da8d',
         quadiaryColor: '#ffffff'
-    },
-
+    }
 })

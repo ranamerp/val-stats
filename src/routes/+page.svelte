@@ -1,9 +1,9 @@
-<script>
+<script lang="ts">
 
     import Stats from "../components/Stats.svelte";
     import LoadingPopup from "../components/LoadingPopup.svelte";
-    import { selectedmatch } from "../stores/SelectedMatch.js";
-    import { presets } from "../stores/Presets.js";
+    import { selectedmatch } from "../stores/SelectedMatch";
+    import { presets } from "../stores/Presets";
     import ColorPicker, { ChromeVariant } from 'svelte-awesome-color-picker';
     import { onMount } from 'svelte';
     import { goto } from '$app/navigation';
@@ -58,7 +58,8 @@
                 value = 0;
                 player = terms[0];
             })
-        } catch (err) {
+            //Need to find this type later, for now any should be fine
+        } catch (err: any) {
             console.log("ERROR!")
             console.log(err.message);
         } finally {
@@ -66,7 +67,7 @@
         }
     }
 
-    function outputMatch(currentmatch, colors) {
+    function outputMatch(currentmatch: App.LocalMatch, colors: App.ColorPreset) {
         selectedmatch.set({
             match: currentmatch,
             colors: colors
@@ -76,86 +77,85 @@
 
     }
 
-    async function processMatch(stats) {
-        let selection = []
-        for (let item in stats) {
-            let base = stats[item]
-            let map = base['metadata']['map'];
-            let startTime = base['metadata']['game_start_patched']
-            let totalRounds = base['metadata']['rounds_played']
-            let teams = []
-            let firstkills = {};
+    async function processMatch(stats: Array<App.ValorantMatch>) {
+        const selection: Array<App.LocalMatch> = []
+        for (const [index, item] of stats.entries()) {
+            const base = item
+            const map = base.metadata.map.name;
+            const startTime = base.metadata.started_at
+            const totalRounds = base.rounds.length
+            const teams: App.LocalTeam[] = []
+            const firstkills: any = {};
             let currentRound = -1;
             //This syntax was done by chatgpt, I should maybe consider doing something similar. 
-            base.kills.forEach(kill => {
-                let itemRound = kill.round;
+            base.kills.forEach((kill) => {
+                const itemRound = kill.round;
                 if (currentRound === itemRound) {
                     return;
                 }
-                let killer = kill.killer_puuid;
-                if (killer in firstkills) {
-                    firstkills[killer] += 1;
-                } else {
-                    firstkills[killer] = 1;
-                }
+                const killer = kill.killer.puuid;
+                firstkills[killer] = (firstkills[killer] || 0) + 1;
                 currentRound = itemRound;
             });
-            //This logic probably has to change with v4 (and eventually with riot api). Sticking with v2 for now
-            for (let team in base['teams']) {       
-                let playerBase = base['players'][team];
-                let localPlayers = [];
-                for (let pindex in playerBase) {
-                    let player = playerBase[pindex]
+            for (const team of base.teams) {       
+                const playerBase = base.players;
+                const localPlayers: App.LocalPlayer[] = [];
+                for (const player of playerBase) {
                     let kd = 1;
-                    if(player['stats']['deaths'] != 0) {
-                        kd = Number(parseFloat(player['stats']['kills'] / player['stats']['deaths']).toFixed(2))
+                    if(player.stats.deaths != 0) {
+                        kd = +(player.stats.kills / player.stats.deaths).toFixed(2);
                     }
-                    let playerData = {
-                        "puuid": player['puuid'],
-                        "name": player['name'],
-                        "team": player['team'],
-                        "agent": player['character'],
-                        'kd': kd,
-                        'kills': player['stats']['kills'],
-                        'deaths': player['stats']['deaths'],
-                        'acs': Math.round(player['stats']['score'] / totalRounds),
-                        'firstkills': (firstkills[player['puuid']] === undefined ) ? 0 : firstkills[player['puuid']]
+                    const playerData = {
+                        puuid: player.puuid,
+                        name: player.name,
+                        team: player.team_id,
+                        agent: player.agent.name,
+                        kd: kd,
+                        kills: player.stats.kills,
+                        deaths: player.stats.deaths,
+                        acs: Math.round(player.stats.score / totalRounds),
+                        firstkills: (firstkills[player.puuid] === undefined ) ? 0 : firstkills[player.puuid]
                     }
                     //players.push(playerData)
                     localPlayers.push(playerData)
                 }
                 localPlayers.sort((a, b) => a.team.localeCompare(b.team) || b.acs - a.acs)
                 let teamData = {
-                    "team_id" : team,
-                    "team_name": team === "red" ? rtname : (team === "blue" ? btname : "ATK"),
-                    "won_bool": base['teams'][team]['has_won'],
-                    "won": base['teams'][team]['has_won'] ? "WIN" : "LOSS",
-                    "bg_color": base['teams'][team]['has_won'] ? colors.primaryColor : colors.secondaryColor,
-                    "text_color": base['teams'][team]['has_won'] ? colors.secondaryColor : colors.primaryColor,
-                    "small_text_color": base['teams'][team]['has_won'] ? colors.tertiaryColor : colors.quadiaryColor,
-                    "rounds_won": base['teams'][team]['rounds_won'],
-                    "players": localPlayers
+                    team_id : team.team_id,
+                    team_name: team.team_id === "red" ? rtname : (team.team_id === "blue" ? btname : "ATK"),
+                    won_bool: team.won,
+                    won: team.won ? "WIN" : "LOSS",
+                    bg_color: team.won ? colors.primaryColor : colors.secondaryColor,
+                    text_color: team.won ? colors.secondaryColor : colors.primaryColor,
+                    small_text_color: team.won ? colors.tertiaryColor : colors.quadiaryColor,
+                    rounds_won: team.rounds.won,
+                    players: localPlayers
                 };
                 teams.push(teamData)
             }
             //I want all the data sorted by blue/red team instead of split into team/players
             //players.sort((a, b) => a.team.localeCompare(b.team) || b.acs - a.acs)
             //Now try and get the red and blue dicts from it and put it in the correct place
+            for (const team of teams) {
+                const filteredPlayers = team.players?.filter(player => player.team.toLowerCase() === team.team_id.toLowerCase());
+                team.players = filteredPlayers;
+            }
+
             selection.push(
                 {
-                    "index" : item,
-                    "match_id": base['metadata']['matchid'], 
-                    "mapName" : map,
-                    "startTime" : startTime,
-                    "red_team": teams.find(team => team.team_id == 'red'),
-                    "blue_team": teams.find(team => team.team_id == 'blue')
+                    index : index,
+                    match_id: base.metadata.match_id, 
+                    mapName : map,
+                    startTime : startTime,
+                    red_team: teams?.find(team => team.team_id.toLowerCase() === 'red') as App.LocalTeam,
+                    blue_team: teams?.find(team => team.team_id.toLowerCase() === 'blue') as App.LocalTeam
                 }
             )
         }
         return selection;
     }
 
-    function matchHandler(selectedMatch) {
+    function matchHandler(selectedMatch: App.LocalMatch) {
         // All of these are just immediate object property assignments
         const { red_team, blue_team } = selectedMatch;
         const winningTeam = red_team.won_bool ? red_team : blue_team;
@@ -181,11 +181,13 @@
 
     }
     
-    let selection = [];
-    $: customGames = selection?.filter(item => 
-        stats[item.index]?.metadata?.mode === "Custom Game"
+    let selection: App.LocalMatch[] = [];
+    $: customGames = selection?.filter((item, index) => 
+        // svelte-ignore reactive_declaration_non_reactive_property
+                stats[index]?.metadata?.queue?.id === "custom"
     ) ?? [];
 
+    //I think this is processing the match twice. need to redo this at some point
     let isLoading = true;
     onMount(async () => {
         selection = await processMatch(stats);
@@ -226,7 +228,7 @@
             rounded-lg text-sm text-black focus:border-blue-500 focus:ring-blue-500 
             disabled:opacity-50 disabled:pointer-events-none" 
             bind:value={value}
-            on:change={(event) => matchHandler(selection[event.target.selectedIndex])}
+            on:change={(event) => matchHandler(selection[(event.target as any).selectedIndex])}
             >
             {#each customGames as item}
                 <option value={item.index}>
@@ -306,7 +308,7 @@
                 on:input={(event) => {
                     //currently when I click this, the previous value is the one that gets sent. This means that we aren't reactive enough
                     // need to change this
-                    colors.primaryColor = event.detail.hex;
+                    colors.primaryColor = event.detail.hex as string;
                 }}
                 label = "Primary"
                 components={ChromeVariant} 
@@ -322,7 +324,7 @@
             <ColorPicker
             on:input={(event) => {
                 // Need to figure out a way to update our team colors whenever this is selected
-                colors.secondaryColor = event.detail.hex;
+                colors.secondaryColor = event.detail.hex as string;
             }}
             label = "Secondary"
             components={ChromeVariant} 
@@ -334,7 +336,7 @@
             <ColorPicker
             on:input={(event) => {
                 // Need to figure out a way to update our team colors whenever this is selected
-                colors.tertiaryColor = event.detail.hex;
+                colors.tertiaryColor = event.detail.hex as string;
             }}
             label = "Tertiary"
             components={ChromeVariant} 
@@ -346,7 +348,7 @@
             <ColorPicker
             on:input={(event) => {
                 // Need to figure out a way to update our team colors whenever this is selected
-                colors.quadiaryColor = event.detail.hex;
+                colors.quadiaryColor = event.detail.hex as string;
             }}
             label = "Quadiary"
             components={ChromeVariant} 
@@ -368,7 +370,7 @@
              <div class="flex justify-center items-center"> 
                 <!-- This will be where we send users to the page that they can pull their image.  -->
                 <!-- For now start with just an output page but then eventually need to do user auth. -->
-                <button type="submit" on:click={outputMatch(selection[value], colors)} class="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">Export to Page</button>
+                <button type="submit" on:click={() => outputMatch(selection[value], colors)} class="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">Export to Page</button>
                 
             </div>
 
@@ -382,10 +384,11 @@
             disabled:opacity-50 disabled:pointer-events-none"
             bind:value={preset} 
             on:change={(event) => {
-                if (event.target.value && $presets[event.target.value]) {
-                    presetColors = $presets[event.target.value];
+                const target: any = event.target;
+                if (target.value && $presets[target.value]) {
+                    presetColors = $presets[target.value];
                 }
-                if (event.target.value === "preset") {savePreset()}
+                if (target.value === "preset") {savePreset()}
             }}
             >
                 <option value="" disabled selected> Color Presets </option>
