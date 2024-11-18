@@ -9,7 +9,7 @@ export async function GET({ url }) {
     const tag = url.searchParams.get('tag');
 
     //Temp removing custom game from this list, this probably will change
-    const apiUrl = `https://api.henrikdev.xyz/valorant/v3/matches/${region}/${name}/${tag}`;
+    const apiUrl = `https://api.henrikdev.xyz/valorant/v4/matches/${region}/pc/${name}/${tag}?mode=custom`;
 
     try {
         const response = await fetch(apiUrl, {

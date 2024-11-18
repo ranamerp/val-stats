@@ -37,52 +37,87 @@ declare global {
 
 		interface APIResponse {
 			status: number;
-			data: Array<Object>;
+			data: ValorantMatch[];
+			errors?: {
+				message: string;
+				details: string;
+			}
 		}
 
 		interface ValorantMatch {
-			metadata: Object;
-			players: MatchPlayer;
-			observers?: Object;
-			coaches?: Object;
-			teams: MatchTeam;
-			rounds: Array<MatchRound>;
-			kills: Array<MatchKill>;
+			metadata: {
+				match_id:          string;
+				map:               {
+					id: string;
+					name: string;
+				};
+				game_version:      string;
+				game_length_in_ms: number;
+				started_at:        Date;
+				is_completed:      boolean;
+				queue:             {
+					id: string;
+					name: string;
+					mode_type: string;
+				};
+				season:            {
+					id: string;
+					short: string;
+				};
+				platform:          string;
+				party_rr_penaltys: {
+					party_id: string;
+				}[];
+				region:            string;
+				cluster:           string;
+			};
+			players: MatchPlayer[];
+			observers?: {
+				puuid:    string;
+				name:     string;
+				tag:      string;
+				card_id:  string;
+				title_id: string;
+				party_id: string;
+			}[];
+			coaches?: {
+				puuid: string;
+				team_id: string;
+			}[];
+			teams: MatchTeam[];
+			rounds: MatchRound[];
+			kills: MatchKill[];
 		}
 
 		interface MatchPlayer {
 			puuid: string;
 			name: string;
 			tag: string;
-			team: string;
-			level: string;
-			character: string;
-			currenttier: number;
-			currenttier_patched: string;
-			player_card: string;
-			player_title: string;
-			assets: {
-				agent: {
-					small: string;
-					full: string;
-					bust: string;
-					killfeed: string;
+			team_id: string;
+			platform: string;
+			party_id: string;
+			agent: {
+				id: string;
+				name: string;
+			};
+			stats: {
+				score: number;
+				kills: number;
+				deaths: number;
+				assists: number;
+				headshots: number;
+				bodyshots: number;
+				legshots: number;
+				damage: {
+					dealt: number;
+					recieved: numbber;
 				}
 			};
 			ability_casts: {
-				c_cast: number;
-				q_cast: number;
-				e_cast: number;
-				x_cast: number;
-			};
-			stats: {
-				score: number,
-				kills: number,
-				deaths: number,
-				assists: number,
-				bodyshots: number,
-				headshots: number,
-				legshots: number
+				grenade: number;
+				ability1: number;
+				ability2: number;
+				ultimate: number;
 			};
 			economy: {
 				spent: {
@@ -99,15 +134,74 @@ declare global {
 		}
 
 		interface MatchTeam {
-
-		}
+			team_id: string;
+			rounds: {
+				won: number;
+				lost: number;
+			};
+			won: boolean;
+		};
 
 		interface MatchRound {
+			id: number;
+			result: string;
+			ceremony: string;
+			winning_team: string;
+			//Doing bare minimum for this, it is not needed
+			stats: {
+				player: PlayerBasic;
+			}
 
 		}
 
 		interface MatchKill {
-			
+			time_in_round_in_ms: number;
+			time_in_match_in_ms: number;
+			round: number;
+			killer: PlayerBasic;
+			victim: PlayerBasic;
+			assistants: PlayerBasic[];
+		}
+
+		interface PlayerBasic {
+			puuid: string;
+			name: string;
+			tag: string;
+			team: string;
+		}
+
+		interface LocalMatch {
+			index: number;
+			match_id: string;
+			mapName: string;
+			startTime: Date;
+			red_team: LocalTeam;
+			blue_team: LocalTeam;
+
+		}
+
+		interface LocalTeam{
+			team_id: string;
+			team_name: string;
+			won_bool: boolean;
+			won: string;
+			bg_color: string;
+			text_color: string;
+			small_text_color: string;
+			rounds_won: number;
+			players: LocalPlayer[]
+		}
+
+		interface LocalPlayer {
+			puuid: string;
+			name: string;
+			team: string;
+			agent: string;
+			kd: number;
+			kills: number;
+			deaths: number;
+			acs: number;
+			firstkills: number;
 		}
 
 

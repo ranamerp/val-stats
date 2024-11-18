@@ -33,7 +33,7 @@ async function updateAgents() {
                 roleIcon: item.rawRole?.displayIcon
             }
         });
-        agents.set(newdata); 
+        agents.set(newdata);
     } catch(error) {
         console.error('Error fetching data:', error);
     }
@@ -42,6 +42,7 @@ async function updateAgents() {
 
 //Want this to only run when theres a diff in agents
 await updateAgents()
+
 
 
 export default agents;
