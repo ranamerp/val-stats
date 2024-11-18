@@ -1,4 +1,5 @@
 import { json } from '@sveltejs/kit';
+import { env } from '$env/dynamic/private';
 
 
 
@@ -14,7 +15,7 @@ export async function GET({ url }) {
     try {
         const response = await fetch(apiUrl, {
             headers: {
-                'Authorization': 'HDEV-de097c2b-bc59-4f35-a19b-f9308d212407',
+                'Authorization': env.API_KEY,
             },
         });
 
