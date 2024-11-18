@@ -27,16 +27,21 @@
     }
 
 
-
-    let mapData: Record<string, (App.ValorantAgent | App.ValorantMap)> = {};
+    let mapData: {
+        agentData: Record<string, App.ValorantAgent>;
+        mapData: Record<string, App.ValorantMap>;
+    } = {
+        agentData: {},
+        mapData: {}
+    };
 
     
     agents.subscribe(value => { 
-        mapData['agentData'] = value as unknown as App.ValorantAgent; 
+        mapData['agentData'] = value; 
     });
 
     maps.subscribe(value => { 
-        mapData['mapData'] = value as unknown as App.ValorantMap; 
+        mapData['mapData'] = value; 
     });
 
     
