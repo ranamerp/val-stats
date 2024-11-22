@@ -15,7 +15,7 @@ export async function GET({ url }) {
     try {
         const response = await fetch(apiUrl, {
             headers: {
-                'Authorization': env.API_KEY,
+                'Authorization': env.VALORANT_API_KEY,
             },
         });
 

@@ -171,6 +171,7 @@
         losingTeam.small_text_color = colors.quadiaryColor;
     }
 
+
     async function savePreset() {
         // This code should do the following:
         // Check that the store doesn't exist already
