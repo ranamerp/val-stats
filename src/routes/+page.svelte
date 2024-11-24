@@ -5,12 +5,12 @@
     import { selectedmatch } from "../stores/SelectedMatch";
     import { presets } from "../stores/Presets";
     import ColorPicker, { ChromeVariant } from 'svelte-awesome-color-picker';
-    import { onMount } from 'svelte';
+    import { onMount, onDestroy } from 'svelte';
     import { goto } from '$app/navigation';
-
+    import { invalidate } from '$app/navigation';
 
     export let data;
-    const { stats } = data;
+    const { supabase, session, user, stats } = data;
     let player = data.player.split('#')[0]
     let value = 0;
     //These parts need to eventually be chosen by user via dropdown
@@ -42,6 +42,13 @@
         colors.quadiaryColor = presetColors.quadiaryColor;
     }
     
+    async function signInWithDiscord() {
+        const { data, error } = await supabase.auth.signInWithOAuth({
+            provider: 'discord',
+        })
+    }
+
+
 
     async function searchPlayers() {
         let terms = searchTerm.split("#");
@@ -193,6 +200,19 @@
     onMount(async () => {
         selection = await processMatch(stats);
         isLoading = false;
+        const { data: supadata } = supabase.auth.onAuthStateChange((_, newSession) => {
+            if (newSession?.expires_at !== session?.expires_at) {
+                invalidate('supabase:auth');
+            }
+        });
+
+        // Store the unsubscribe function for cleanup
+        const unsubscribe = supadata.subscription.unsubscribe;
+
+        // Clean up on component destroy
+        onDestroy(() => {
+            unsubscribe();
+        });
     });
     
     $: if (!isLoading && stats) {
@@ -228,8 +248,8 @@
             class="py-3 px-4 pe-9 block w-full border-gray-200 
             rounded-lg text-sm text-black focus:border-blue-500 focus:ring-blue-500 
             disabled:opacity-50 disabled:pointer-events-none" 
-            bind:value={value}
-            on:change={(event) => matchHandler(selection[(event.target as any).selectedIndex])}
+            value={value}
+            onchange={(event) => matchHandler(selection[(event.target as any).selectedIndex])}
             >
             {#each customGames as item}
                 <option value={item.index}>
@@ -246,7 +266,7 @@
                 <!-- Edit Players Name -->
                 <div>
                     <label for="blue_team" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Left Team</label>
-                    <input type="text" bind:value={btname} on:input={() => {
+                    <input type="text" bind:value={btname} oninput={() => {
                         selection[value].blue_team.team_name = btname.substring(0,5);
                     }} id="blue_team" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="John" required />
                 </div>
@@ -260,7 +280,7 @@
              <div>
                 <div>
                     <label for="red_team" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Right Team</label>
-                    <input type="text" bind:value={rtname} on:input={() => {
+                    <input type="text" bind:value={rtname} oninput={() => {
                         selection[value].red_team.team_name = rtname.substring(0,5);
                     }} id="red_team" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="John" required />
                 </div>
@@ -286,14 +306,22 @@
                     </svg>
                 </div>
                 <input type="search"  bind:value={searchTerm} id="default-search" class="block w-full p-4 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Search Players..." required />
-                <button on:click={searchPlayers} type="submit" class="text-white absolute end-2.5 bottom-2.5 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Search</button>
+                <button onclick={searchPlayers} type="submit" class="text-white absolute end-2.5 bottom-2.5 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Search</button>
             </div>
         </form>
 
         <!-- Add Match Reload Button -->
          <div>
-            <button type="submit" on:click={searchPlayers} class="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">Reload Matches</button>
+            <button type="submit" onclick={searchPlayers} class="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">Reload Matches</button>
          </div>
+
+        <div>
+            {#if user}
+                <p> Hello {user.user_metadata.full_name}</p>
+            {:else}
+                <button type="submit" onclick={signInWithDiscord} class="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">Login with Discord</button>
+            {/if}
+        </div>
          
     </div>
 
@@ -371,7 +399,7 @@
              <div class="flex justify-center items-center"> 
                 <!-- This will be where we send users to the page that they can pull their image.  -->
                 <!-- For now start with just an output page but then eventually need to do user auth. -->
-                <button type="submit" on:click={() => outputMatch(selection[value], colors)} class="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">Export to Page</button>
+                <button type="submit" onclick={() => outputMatch(selection[value], colors)} class="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">Export to Page</button>
                 
             </div>
 
@@ -384,7 +412,7 @@
             rounded-lg text-sm text-black focus:border-blue-500 focus:ring-blue-500 
             disabled:opacity-50 disabled:pointer-events-none"
             bind:value={preset} 
-            on:change={(event) => {
+            onchange={(event) => {
                 const target: any = event.target;
                 if (target.value && $presets[target.value]) {
                     presetColors = $presets[target.value];
@@ -407,7 +435,7 @@
             class="py-3 px-4 pe-9 block w-full border-gray-200 
             rounded-lg text-sm text-black focus:border-blue-500 focus:ring-blue-500 
             disabled:opacity-50 disabled:pointer-events-none" 
-            on:change={(event) => {
+            onchange={(event) => {
             }}
             >
             <!-- This should be a search bar that lets you search for fonts (much like realtimecolors.com does) -->
