@@ -1,8 +1,11 @@
-<script> 
+<script lang='ts'> 
     export let orientation;
-    export let playerData;
+    export let playerData: App.LocalPlayer;
     export let colorData;
-    export let agentData;
+    export let agentData: Record<string, App.ValorantAgent>;
+
+    console.log(agentData);
+
 </script>
 
 <style>

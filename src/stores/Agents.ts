@@ -1,37 +1,27 @@
 import { writable, type Writable } from 'svelte/store'
 
-interface ValorantAgent {
-    uuid: string;
-    displayName: string;
-    displayIcon: string;
-    fullPortrait: string;
-    rawRole?: {
-        displayName: string;
-        displayIcon: string;
-    };
-    role?: string;
-    roleIcon?: string;
 
-}
-
-
-
-const agents: Writable<Record<string, ValorantAgent>> = writable({});
+const agents: Writable<Record<string, App.ValorantAgent>> = writable({});
 
 async function updateAgents() {
-    const newdata: Record<string, ValorantAgent> = {};
+    const newdata: Record<string, App.ValorantAgent> = {};
     try {
         const response = await fetch('https://valorant-api.com/v1/agents');
         const data = await response.json();
-        data.data.forEach((item: ValorantAgent) => {
+        data.data.forEach((item: App.ValorantAgent) => {
             newdata[item.displayName] = {
                 uuid: item.uuid,
                 displayName: item.displayName,
                 displayIcon: item.displayIcon,
                 fullPortrait: item.fullPortrait,
-                role: item.rawRole?.displayName,
-                roleIcon: item.rawRole?.displayIcon
+                role: typeof item.role === 'string' 
+                    ? item.role 
+                    : item.role?.displayName,
+                roleIcon: typeof item.role === 'string'
+                    ? undefined
+                    : item.role?.displayIcon
             }
+            console.log()
         });
         agents.set(newdata);
     } catch(error) {

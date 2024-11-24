@@ -19,11 +19,10 @@ declare global {
 			displayName: string;
 			displayIcon: string;
 			fullPortrait: string;
-			rawRole?: {
+			role?: string | {
 				displayName: string;
 				displayIcon: string;
 			};
-			role?: string;
 			roleIcon?: string;
 		}
 
