@@ -1,13 +1,14 @@
 <script lang="ts">
     import StatsPlayer from "./StatsPlayer.svelte";
-    import agents from "../stores/Agents.js"
-    import maps from "../stores/Maps.js"
+    import agents from "../stores/Agents";
+    import maps from "../stores/Maps";
+    import { globalFont } from "../stores/Fonts";
     export let playerData: App.LocalMatch;
     export let colors: App.ColorPreset;
     let blue_team = playerData.blue_team;
     let red_team = playerData.red_team;
 
-
+    console.log($globalFont)    
     let primaryColor: string = colors.primaryColor;
     let secondaryColor: string = colors.secondaryColor;
     let tertiaryColor: string = colors.tertiaryColor;
@@ -50,7 +51,6 @@
 
 <!-- Have to find way to dynamically change width and height based on current screensize. All items need to stay at same proportions and take margin into account -->
 <main>
-
     <!-- Overall Container -->
     <div class="flex flex-row w-full h-full">
         <!-- Left Side -->
@@ -129,27 +129,6 @@
                         </div>
                     {/each}
                 </div>
-
-                <!-- <div class= "h-[114px] mb-[13.5px]">
-                    <div class = "align-text-bottom content-center grid">
-                        <div class ="text-center text-2xl mb-5"> K/D </div>
-                        <div class = "text-center text-2xl mb-5"> ACS </div>
-                    </div>
-                </div>
-                
-                <div class= "h-[114px] mb-[13.5px]">
-                    <div class = "align-text-bottom content-center grid">
-                        <div class ="text-center text-2xl mb-5"> K/D </div>
-                        <div class = "text-center text-2xl mb-5"> ACS </div>
-                    </div>
-                </div>
-
-                <div class= "h-[114px] mb-[13.5px]">
-                    <div class = "align-text-bottom content-center grid">
-                        <div class ="text-center text-2xl mb-5"> K/D </div>
-                        <div class = "text-center text-2xl mb-5"> ACS </div>
-                    </div>
-                </div> -->
             </div>
         </div>
 
@@ -211,3 +190,9 @@
 
 
 </main>
+
+<style>
+    *{
+        font-family: '`{globalFont.family}`, sans-serif';
+    }
+</style>

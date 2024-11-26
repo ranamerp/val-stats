@@ -1,6 +1,7 @@
 <script lang="ts">
 
     import Stats from "../components/Stats.svelte";
+    import FontPopup from "../components/FontPopup.svelte";
     import LoadingPopup from "../components/LoadingPopup.svelte";
     import { selectedmatch } from "../stores/SelectedMatch";
     import { presets } from "../stores/Presets";
@@ -259,6 +260,7 @@
             </select>
         </div>
         
+
         <!-- Team Selection -->
         <div class="flex flex-row">
             <!-- Team A -->
@@ -431,18 +433,9 @@
                 <option value="SEN"> Sentinels </option>
             </select>
 
-            <select
-            class="py-3 px-4 pe-9 block w-full border-gray-200 
-            rounded-lg text-sm text-black focus:border-blue-500 focus:ring-blue-500 
-            disabled:opacity-50 disabled:pointer-events-none" 
-            onchange={(event) => {
-            }}
-            >
-            <!-- This should be a search bar that lets you search for fonts (much like realtimecolors.com does) -->
-            <!-- Paid option lets you add local fonts, otherwise it's google -->
-            <option> Fonts </option>
-            </select>
+            <FontPopup/>
         </div>
 
     </div>
 {/if}
+

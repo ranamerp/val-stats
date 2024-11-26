@@ -3,9 +3,6 @@
     export let playerData: App.LocalPlayer;
     export let colorData;
     export let agentData: Record<string, App.ValorantAgent>;
-
-    console.log(agentData);
-
 </script>
 
 <style>
