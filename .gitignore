@@ -5,6 +5,9 @@ node_modules
 /package
 .env
 .env.*
+.vscode
+static/ref_old.json
+supabase
 !.env.example
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
