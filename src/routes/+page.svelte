@@ -166,6 +166,7 @@
     function matchHandler(selectedMatch: App.LocalMatch) {
         // All of these are just immediate object property assignments
         const { red_team, blue_team } = selectedMatch;
+        value = selectedMatch.index
         const winningTeam = red_team.won_bool ? red_team : blue_team;
         const losingTeam = red_team.won_bool ? blue_team : red_team;
         
