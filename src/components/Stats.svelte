@@ -8,7 +8,6 @@
     let blue_team = playerData.blue_team;
     let red_team = playerData.red_team;
 
-    console.log($globalFont)    
     //New colors that will come in soon
     let leftbgcolor: string = colors.leftbgcolor
     let leftbigtextcolor: string = colors.leftbigtextcolor

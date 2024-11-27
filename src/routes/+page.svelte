@@ -113,7 +113,7 @@
             const teams: App.LocalTeam[] = []
             const firstkills: any = {};
             let currentRound = -1;
-            //This syntax was done by chatgpt, I should maybe consider doing something similar. 
+            
             base.kills.forEach((kill) => {
                 const itemRound = kill.round;
                 if (currentRound === itemRound) {
@@ -142,13 +142,13 @@
                         acs: Math.round(player.stats.score / totalRounds),
                         firstkills: (firstkills[player.puuid] === undefined ) ? 0 : firstkills[player.puuid]
                     }
-                    //players.push(playerData)
+                    
                     localPlayers.push(playerData)
                 }
                 localPlayers.sort((a, b) => a.team.localeCompare(b.team) || b.acs - a.acs)
                 let teamData = {
                     team_id : team.team_id,
-                    team_name: team.team_id === "red" ? rtname : (team.team_id === "blue" ? btname : "ATK"),
+                    team_name: team.team_id.toLowerCase() === "red" ? (rtname || "ATK") : (team.team_id.toLowerCase() === "blue" ? (btname || "DEF") : ""),
                     won_bool: team.won,
                     won: team.won ? "WIN" : "LOSS",
                     rounds_won: team.rounds.won,
@@ -156,9 +156,7 @@
                 };
                 teams.push(teamData)
             }
-            //I want all the data sorted by blue/red team instead of split into team/players
-            //players.sort((a, b) => a.team.localeCompare(b.team) || b.acs - a.acs)
-            //Now try and get the red and blue dicts from it and put it in the correct place
+
             for (const team of teams) {
                 const filteredPlayers = team.players?.filter(player => player.team.toLowerCase() === team.team_id.toLowerCase());
                 team.players = filteredPlayers;
@@ -373,6 +371,9 @@
             hex = {colors.leftsmalltextcolor}
     
             />
+
+            <br>
+            <br>
     
             <ColorPicker
             on:input={(event) => {
@@ -523,7 +524,9 @@
                 hex = {colors.rightsmalltextcolor}
         
                 />
-        
+                <br>
+                <br>
+                
                 <ColorPicker
                 on:input={(event) => {
                     
