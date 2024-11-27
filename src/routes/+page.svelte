@@ -29,18 +29,36 @@
     let presetColors = $presets[preset];
 
     let colors = {
-        primaryColor: presetColors.primaryColor ?? "#0da68c",
-        secondaryColor: presetColors.secondaryColor ?? "#eff6f9",
-        tertiaryColor: presetColors.tertiaryColor ?? "#e9d98d",
-        quadiaryColor: presetColors.quadiaryColor ?? "#000000"
+        leftbgcolor: presetColors.leftbgcolor ?? '#c2ae75',
+        leftbigtextcolor: presetColors.leftbigtextcolor ??'#131313',
+        leftsmalltextcolor: presetColors.leftsmalltextcolor ?? '#db3131',
+        
+        rightbgcolor: presetColors.rightbgcolor ?? '#131313',
+        rightbigtextcolor: presetColors.rightbigtextcolor ?? '#c2ae75',
+        rightsmalltextcolor:  presetColors.rightsmalltextcolor ?? '#ffffff',
+
+        mvpbannerbgcolor: presetColors.mvpbannerbgcolor ?? '#db3131',
+        mvpbannertextcolor:  presetColors.mvpbannertextcolor ?? '#131313',
+        mvpagentcolor:  presetColors.mvpagentcolor ?? '#ffffff',
+        mvptextcolor: presetColors.mvptextcolor ?? '#c2ae75',
+        globaltextcolor: presetColors.globaltextcolor ?? '#c2ae75'
     }
 
 
     $: if (presetColors) {
-        colors.primaryColor = presetColors.primaryColor;
-        colors.secondaryColor = presetColors.secondaryColor;
-        colors.tertiaryColor = presetColors.tertiaryColor;
-        colors.quadiaryColor = presetColors.quadiaryColor;
+        colors.leftbgcolor = presetColors.leftbgcolor
+        colors.leftbigtextcolor = presetColors.leftbigtextcolor
+        colors.leftsmalltextcolor = presetColors.leftsmalltextcolor
+
+        colors.rightbgcolor = presetColors.rightbgcolor
+        colors.rightbigtextcolor = presetColors.rightbigtextcolor
+        colors.rightsmalltextcolor = presetColors.rightsmalltextcolor
+
+        colors.mvpbannerbgcolor = presetColors.mvpbannerbgcolor
+        colors.mvpbannertextcolor = presetColors.mvpbannertextcolor
+        colors.mvpagentcolor = presetColors.mvpagentcolor
+        colors.mvptextcolor = presetColors.mvptextcolor
+        colors.globaltextcolor = presetColors.globaltextcolor
     }
     
     async function signInWithDiscord() {
@@ -133,9 +151,6 @@
                     team_name: team.team_id === "red" ? rtname : (team.team_id === "blue" ? btname : "ATK"),
                     won_bool: team.won,
                     won: team.won ? "WIN" : "LOSS",
-                    bg_color: team.won ? colors.primaryColor : colors.secondaryColor,
-                    text_color: team.won ? colors.secondaryColor : colors.primaryColor,
-                    small_text_color: team.won ? colors.tertiaryColor : colors.quadiaryColor,
                     rounds_won: team.rounds.won,
                     players: localPlayers
                 };
@@ -163,22 +178,6 @@
         return selection;
     }
 
-    function matchHandler(selectedMatch: App.LocalMatch) {
-        // All of these are just immediate object property assignments
-        const { red_team, blue_team } = selectedMatch;
-        value = selectedMatch.index
-        const winningTeam = red_team.won_bool ? red_team : blue_team;
-        const losingTeam = red_team.won_bool ? blue_team : red_team;
-        
-        // These updates happen immediately
-        winningTeam.bg_color = colors.primaryColor;
-        winningTeam.text_color = colors.secondaryColor;
-        winningTeam.small_text_color = colors.tertiaryColor;
-        
-        losingTeam.bg_color = colors.secondaryColor;
-        losingTeam.text_color = colors.primaryColor;
-        losingTeam.small_text_color = colors.quadiaryColor;
-    }
 
 
     async function savePreset() {
@@ -230,7 +229,7 @@
     // Set default value when customGames changes
     $: if (customGames.length > 0 && !value) {
         value = customGames[0].index;
-        matchHandler(customGames[0]);
+        //matchHandler(customGames[0]);
     }
     
 
@@ -251,7 +250,7 @@
             rounded-lg text-sm text-black focus:border-blue-500 focus:ring-blue-500 
             disabled:opacity-50 disabled:pointer-events-none" 
             value={value}
-            onchange={(event) => matchHandler(selection[(event.target as any).selectedIndex])}
+            onchange={(event) => value = (event.target as any).selectedIndex}
             >
             {#each customGames as item}
                 <option value={item.index}>
@@ -338,15 +337,13 @@
             <!-- We can make this custom, refer to doc for creating custom components. -->
             <ColorPicker
                 on:input={(event) => {
-                    //currently when I click this, the previous value is the one that gets sent. This means that we aren't reactive enough
-                    // need to change this
-                    colors.primaryColor = event.detail.hex as string;
+                    colors.leftbgcolor = event.detail.hex as string;
                 }}
-                label = "Primary"
+                label = "Left Background"
                 components={ChromeVariant} 
                 sliderDirection="horizontal"
-                hex = {colors.primaryColor}
-                --cp-bg-color="{colors.primaryColor}"
+                hex = {colors.leftbgcolor}
+                --cp-bg-color="{colors.leftbgcolor}"
                 --cp-text-color="black"
                 --picker-indicator-size="10px"
                 --input-size="25px"
@@ -355,37 +352,85 @@
     
             <ColorPicker
             on:input={(event) => {
-                // Need to figure out a way to update our team colors whenever this is selected
-                colors.secondaryColor = event.detail.hex as string;
+                
+                colors.leftbigtextcolor = event.detail.hex as string;
             }}
-            label = "Secondary"
+            label = "Left Text"
             components={ChromeVariant} 
             sliderDirection="horizontal"
-            hex = {colors.secondaryColor}
+            hex = {colors.leftbigtextcolor}
     
             />
     
             <ColorPicker
             on:input={(event) => {
-                // Need to figure out a way to update our team colors whenever this is selected
-                colors.tertiaryColor = event.detail.hex as string;
+                
+                colors.leftsmalltextcolor = event.detail.hex as string;
             }}
-            label = "Tertiary"
+            label = "Left Small Text"
             components={ChromeVariant} 
             sliderDirection="horizontal"
-            hex = {colors.tertiaryColor}
+            hex = {colors.leftsmalltextcolor}
     
             />
     
             <ColorPicker
             on:input={(event) => {
-                // Need to figure out a way to update our team colors whenever this is selected
-                colors.quadiaryColor = event.detail.hex as string;
+                
+                colors.mvpbannerbgcolor = event.detail.hex as string;
             }}
-            label = "Quadiary"
+            label = "MVP Banner Background"
             components={ChromeVariant} 
             sliderDirection="horizontal"
-            hex = {colors.quadiaryColor}
+            hex = {colors.mvpbannerbgcolor}
+    
+            />
+
+            <ColorPicker
+            on:input={(event) => {
+                
+                colors.mvpbannertextcolor = event.detail.hex as string;
+            }}
+            label = "MVP Banner Text"
+            components={ChromeVariant} 
+            sliderDirection="horizontal"
+            hex = {colors.mvpbannertextcolor}
+    
+            />
+
+            <ColorPicker
+            on:input={(event) => {
+                
+                colors.mvpagentcolor = event.detail.hex as string;
+            }}
+            label = "MVP Agent Text Color"
+            components={ChromeVariant} 
+            sliderDirection="horizontal"
+            hex = {colors.mvpagentcolor}
+    
+            />
+
+            <ColorPicker
+            on:input={(event) => {
+                
+                colors.mvptextcolor = event.detail.hex as string;
+            }}
+            label = "MVP Name Color"
+            components={ChromeVariant} 
+            sliderDirection="horizontal"
+            hex = {colors.mvptextcolor}
+    
+            />
+
+            <ColorPicker
+            on:input={(event) => {
+                
+                colors.globaltextcolor = event.detail.hex as string;
+            }}
+            label = "Numbers Color"
+            components={ChromeVariant} 
+            sliderDirection="horizontal"
+            hex = {colors.globaltextcolor}
     
             />
         </div>
@@ -410,6 +455,7 @@
 
         <!-- Other Dropdowns -->
         <div class="bg-slate-600 flex flex-col gap-y-5">
+            <!-- These 2 are temp for now, will have to move towards bottom -->
             <select
             class="py-3 px-4 pe-9 block w-full border-gray-200 
             rounded-lg text-sm text-black focus:border-blue-500 focus:ring-blue-500 
@@ -435,6 +481,109 @@
             </select>
 
             <FontPopup/>
+
+            <!-- Right colors -->
+            <div class="flex flex-col">
+                <!-- We can make this custom, refer to doc for creating custom components. -->
+                <ColorPicker
+                on:input={(event) => {
+                    colors.rightbgcolor = event.detail.hex as string;
+                }}
+                label = "Right Background"
+                components={ChromeVariant} 
+                sliderDirection="horizontal"
+                hex = {colors.rightbgcolor}
+                --cp-bg-color="{colors.rightbgcolor}"
+                --cp-text-color="black"
+                --picker-indicator-size="10px"
+                --input-size="25px"
+    
+                />
+    
+                <ColorPicker
+                on:input={(event) => {
+                    
+                    colors.rightbigtextcolor = event.detail.hex as string;
+                }}
+                label = "Right Text"
+                components={ChromeVariant} 
+                sliderDirection="horizontal"
+                hex = {colors.rightbigtextcolor}
+        
+                />
+        
+                <ColorPicker
+                on:input={(event) => {
+                    
+                    colors.rightsmalltextcolor = event.detail.hex as string;
+                }}
+                label = "Right Small Text"
+                components={ChromeVariant} 
+                sliderDirection="horizontal"
+                hex = {colors.rightsmalltextcolor}
+        
+                />
+        
+                <ColorPicker
+                on:input={(event) => {
+                    
+                    colors.mvpbannerbgcolor = event.detail.hex as string;
+                }}
+                label = "MVP Banner Background"
+                components={ChromeVariant} 
+                sliderDirection="horizontal"
+                hex = {colors.mvpbannerbgcolor}
+        
+                />
+
+                <ColorPicker
+                on:input={(event) => {
+                    
+                    colors.mvpbannertextcolor = event.detail.hex as string;
+                }}
+                label = "MVP Banner Text"
+                components={ChromeVariant} 
+                sliderDirection="horizontal"
+                hex = {colors.mvpbannertextcolor}
+        
+                />
+
+                <ColorPicker
+                on:input={(event) => {
+                    
+                    colors.mvpagentcolor = event.detail.hex as string;
+                }}
+                label = "MVP Agent Text Color"
+                components={ChromeVariant} 
+                sliderDirection="horizontal"
+                hex = {colors.mvpagentcolor}
+        
+                />
+
+                <ColorPicker
+                on:input={(event) => {
+                    
+                    colors.mvptextcolor = event.detail.hex as string;
+                }}
+                label = "MVP Name Color"
+                components={ChromeVariant} 
+                sliderDirection="horizontal"
+                hex = {colors.mvptextcolor}
+        
+                />
+
+                <ColorPicker
+                on:input={(event) => {
+                    
+                    colors.globaltextcolor = event.detail.hex as string;
+                }}
+                label = "Numbers Color"
+                components={ChromeVariant} 
+                sliderDirection="horizontal"
+                hex = {colors.globaltextcolor}
+        
+                />
+            </div>
         </div>
 
     </div>

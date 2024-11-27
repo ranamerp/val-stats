@@ -28,10 +28,19 @@ declare global {
 
 		//This will most likely need an update to handle more unique color options
 		interface ColorPreset {
-			primaryColor: string;
-			secondaryColor: string;
-			tertiaryColor: string;
-			quadiaryColor: string;
+			leftbgcolor: string;
+			leftbigtextcolor: string;
+			leftsmalltextcolor: string;
+			
+			rightbgcolor: string;
+			rightbigtextcolor: string;
+			rightsmalltextcolor:  string;
+	
+			mvpbannerbgcolor: string;
+			mvpbannertextcolor:  string;
+			mvpagentcolor:  string;
+			mvptextcolor: string;
+			globaltextcolor: string;
 		}
 
 		interface APIResponse {
@@ -184,9 +193,6 @@ declare global {
 			team_name: string;
 			won_bool: boolean;
 			won: string;
-			bg_color: string;
-			text_color: string;
-			small_text_color: string;
 			rounds_won: number;
 			players: LocalPlayer[]
 		}
