@@ -5,8 +5,6 @@
 
 
     const { supabase, session, user } = propsData;
-
-	console.log(user)
 	
 	$effect(() => {
 		const { data } = supabase.auth.onAuthStateChange((_, newSession) => {
