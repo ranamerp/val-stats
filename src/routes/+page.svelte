@@ -3,12 +3,12 @@
     import Stats from "../components/Stats.svelte";
     import FontPopup from "../components/FontPopup.svelte";
     import LoadingPopup from "../components/LoadingPopup.svelte";
+    import PresetPopup from "../components/PresetPopup.svelte";
     import { selectedmatch } from "../stores/SelectedMatch";
     import { presets } from "../stores/Presets";
     import ColorPicker, { ChromeVariant } from 'svelte-awesome-color-picker';
-    import { onMount, onDestroy } from 'svelte';
+    import { onMount } from 'svelte';
     import { goto } from '$app/navigation';
-    import { invalidate } from '$app/navigation';
 
     export let data;
     const { stats } = data;
@@ -461,6 +461,8 @@
             </select>
 
             <FontPopup/>
+
+            <PresetPopup/>
 
             <!-- Right colors -->
             <div class="flex flex-col">

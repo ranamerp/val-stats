@@ -68,6 +68,7 @@
     
     {#if isOpen}
         <div class="absolute w-full mt-1 bg-white border rounded-lg shadow-lg z-50">
+            <!-- This div is for selecting fonts -->
             <div class="p-2">
                 <input
                     type="text"
@@ -83,6 +84,7 @@
                 </button>
             </div>
             
+            <!-- This div is for choosing from the -->
             <div class="max-h-60 overflow-y-auto">
                 {#each filteredFonts as font}
                     <button
