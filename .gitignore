@@ -13,3 +13,4 @@ vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
 package-lock.json
 package.json
+bun.lockb
