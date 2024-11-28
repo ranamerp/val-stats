@@ -11,7 +11,7 @@
     import { invalidate } from '$app/navigation';
 
     export let data;
-    const { supabase, session, user, stats } = data;
+    const { stats } = data;
     let player = data.player.split('#')[0]
     let value = 0;
     //These parts need to eventually be chosen by user via dropdown
@@ -61,11 +61,11 @@
         colors.globaltextcolor = presetColors.globaltextcolor
     }
     
-    async function signInWithDiscord() {
-        const { data, error } = await supabase.auth.signInWithOAuth({
-            provider: 'discord',
-        })
-    }
+    // async function signInWithDiscord() {
+    //     const { data, error } = await supabase.auth.signInWithOAuth({
+    //         provider: 'discord',
+    //     })
+    // }
 
 
 
@@ -199,19 +199,6 @@
     onMount(async () => {
         selection = await processMatch(stats);
         isLoading = false;
-        const { data: supadata } = supabase.auth.onAuthStateChange((_, newSession) => {
-            if (newSession?.expires_at !== session?.expires_at) {
-                invalidate('supabase:auth');
-            }
-        });
-
-        // Store the unsubscribe function for cleanup
-        const unsubscribe = supadata.subscription.unsubscribe;
-
-        // Clean up on component destroy
-        onDestroy(() => {
-            unsubscribe();
-        });
     });
     
     $: if (!isLoading && stats) {
@@ -314,14 +301,6 @@
          <div>
             <button type="submit" onclick={searchPlayers} class="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">Reload Matches</button>
          </div>
-
-        <div>
-            {#if user}
-                <p> Hello {user.user_metadata.full_name}</p>
-            {:else}
-                <button type="submit" onclick={signInWithDiscord} class="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">Login with Discord</button>
-            {/if}
-        </div>
          
     </div>
 
