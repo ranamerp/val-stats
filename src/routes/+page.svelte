@@ -61,13 +61,6 @@
         colors.globaltextcolor = presetColors.globaltextcolor
     }
     
-    // async function signInWithDiscord() {
-    //     const { data, error } = await supabase.auth.signInWithOAuth({
-    //         provider: 'discord',
-    //     })
-    // }
-
-
 
     async function searchPlayers() {
         let terms = searchTerm.split("#");
@@ -176,18 +169,6 @@
         return selection;
     }
 
-
-
-    async function savePreset() {
-        // This code should do the following:
-        // Check that the store doesn't exist already
-        // Take the current colors and put it in the store
-        // Show a popup that lets you write the name of the preset
-        console.log(colors);
-        
-
-    }
-    
     let selection: App.LocalMatch[] = [];
     $: customGames = selection?.filter((item, index) => 
         // svelte-ignore reactive_declaration_non_reactive_property
@@ -446,7 +427,7 @@
                 if (target.value && $presets[target.value]) {
                     presetColors = $presets[target.value];
                 }
-                if (target.value === "preset") {savePreset()}
+                if (target.value === "preset") {console.log(colors)}
             }}
             >
                 <option value="" disabled selected> Color Presets </option>
@@ -462,7 +443,7 @@
 
             <FontPopup/>
 
-            <PresetPopup/>
+            <PresetPopup presets = {$presets}/>
 
             <!-- Right colors -->
             <div class="flex flex-col">

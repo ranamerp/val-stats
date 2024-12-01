@@ -1,9 +1,8 @@
 <script lang="ts">
-    let currentPreset = "VCT Champions 2024"
     let searchQuery: string = '';
-    // let presets: { family: string; category: string }[] = [];
+    export let presets: Record<string, App.ColorPreset>;
     let isOpen = false;
-    // let filteredFonts: { family: string; category: string }[] = [];
+
     
     // There's 2 parts to this. First part is main button. Will have Search, Dropdown, Save, and Delete.
     // Dropdown, if paid, will show user presets first and then suggested ones. Otherwise show just suggested
@@ -11,6 +10,7 @@
     // Save replaces current page with Input box to put name, and then a big save button
     // Note: If name already exists (name.lower), just overwrite
     // Delete replaces with text that says "Are you sure you want to delete, and a yes/no button"
+    // I could also pass through the store and user from root. Would make it easier to work with?
 
 </script>
 
@@ -48,8 +48,16 @@
 
 
             </div>
-
+            <!-- This is listing all the stored presets. Get presets from user and then append to presets from store -->
             <div class="max-h-60 overflow-y-auto">
+                {#each Object.entries(presets) as [presetname, preset]}
+                    <button
+                    class="w-full px-4 py-2 text-left hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
+                    on:click={() => console.log(preset)}
+                >
+                    {presetname}
+                </button>
+                {/each}
                 
             </div>
         </div>
