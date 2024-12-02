@@ -1,10 +1,14 @@
 <script lang="ts">
 	import '../app.css';
 	import { goto, invalidate } from '$app/navigation'
+	import { setContext } from 'svelte';
 	const { data: propsData, children } = $props();
-
-
     const { supabase, session, user } = propsData;
+
+	setContext('supabase', supabase);
+	setContext('session', session);
+	setContext('user', user);
+
 	
 	$effect(() => {
 		const { data } = supabase.auth.onAuthStateChange((_, newSession) => {

@@ -28,7 +28,7 @@
 
     let presetColors = $presets[preset];
 
-    let colors = {
+    let colors: App.ColorPreset = {
         leftbgcolor: presetColors.leftbgcolor ?? '#c2ae75',
         leftbigtextcolor: presetColors.leftbigtextcolor ??'#131313',
         leftsmalltextcolor: presetColors.leftsmalltextcolor ?? '#db3131',
@@ -443,7 +443,10 @@
 
             <FontPopup/>
 
-            <PresetPopup presets = {$presets}/>
+            <PresetPopup 
+                presets = {$presets} 
+                currentColors={colors}
+            />
 
             <!-- Right colors -->
             <div class="flex flex-col">

@@ -3,7 +3,7 @@
 import { writable, type Writable } from 'svelte/store'
 
 //I'm going to ignore the TS error here since this is going to be eventually removed
-export const selectedmatch: Writable<{match: App.LocalMatch, colors: App.ColorPreset}> = writable ({
+export const selectedmatch: any = writable ({
     match: {},
     colors: {}
 })

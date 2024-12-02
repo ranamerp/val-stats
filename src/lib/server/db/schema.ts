@@ -17,10 +17,10 @@ export const presets = pgTable('presets', {
 	rightbgcolor: char("right_background", {length: 7}),
 	rightbigtextcolor: char("right_bigtext", {length: 7}),
 	rightsmalltextcolor:  char("right_smalltext", {length: 7}),
-
 	mvpbannerbgcolor: char("mvpbanner_background", {length: 7}),
 	mvpbannertextcolor:  char("mvpbanner_text", {length: 7}),
 	mvpagentcolor:  char("mvp_agent", {length: 7}),
 	mvptextcolor: char("mvp_text", {length: 7}),
-	globaltextcolor: char("global_text", {length: 7})
+	globaltextcolor: char("global_text", {length: 7}),
+	font: text("font)")
 });
