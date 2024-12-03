@@ -1,7 +1,5 @@
 import { writable, type Writable } from "svelte/store";
 
-//New Color Scheme:
-        // BGColor, BigTextColor, SmallTextColor, MVPBannerBG, MVPBannerText, MVPAgent, MVPText 
 
 
 export const presets: Writable<Record<string, App.ColorPreset>> = writable ({
@@ -81,3 +79,22 @@ export const presets: Writable<Record<string, App.ColorPreset>> = writable ({
         globaltextcolor: '#e9d98d'
     }
 })
+
+
+export const currentColor: Writable<App.ColorPreset> = writable (
+    {
+        leftbgcolor: '#c2ae75',
+        leftbigtextcolor: '#131313',
+        leftsmalltextcolor: '#db3131',
+        
+        rightbgcolor: '#131313',
+        rightbigtextcolor: '#c2ae75',
+        rightsmalltextcolor:  '#ffffff',
+
+        mvpbannerbgcolor: '#db3131',
+        mvpbannertextcolor:  '#131313',
+        mvpagentcolor:  '#ffffff',
+        mvptextcolor: '#c2ae75',
+        globaltextcolor: '#c2ae75'
+    }
+)

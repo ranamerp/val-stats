@@ -5,10 +5,11 @@
     import LoadingPopup from "../components/LoadingPopup.svelte";
     import PresetPopup from "../components/PresetPopup.svelte";
     import { selectedmatch } from "../stores/SelectedMatch";
-    import { presets } from "../stores/Presets";
+    import { presets, currentColor } from "../stores/Presets";
     import ColorPicker, { ChromeVariant } from 'svelte-awesome-color-picker';
-    import { onMount } from 'svelte';
+    import { getContext, onMount } from 'svelte';
     import { goto } from '$app/navigation';
+    import { setContext } from 'svelte';
 
     export let data;
     const { stats } = data;
@@ -29,38 +30,39 @@
     let presetColors = $presets[preset];
 
     let colors: App.ColorPreset = {
-        leftbgcolor: presetColors.leftbgcolor ?? '#c2ae75',
-        leftbigtextcolor: presetColors.leftbigtextcolor ??'#131313',
-        leftsmalltextcolor: presetColors.leftsmalltextcolor ?? '#db3131',
+        leftbgcolor: $currentColor.leftbgcolor ?? '#c2ae75',
+        leftbigtextcolor: $currentColor.leftbigtextcolor ??'#131313',
+        leftsmalltextcolor: $currentColor.leftsmalltextcolor ?? '#db3131',
         
-        rightbgcolor: presetColors.rightbgcolor ?? '#131313',
-        rightbigtextcolor: presetColors.rightbigtextcolor ?? '#c2ae75',
-        rightsmalltextcolor:  presetColors.rightsmalltextcolor ?? '#ffffff',
+        rightbgcolor: $currentColor.rightbgcolor ?? '#131313',
+        rightbigtextcolor: $currentColor.rightbigtextcolor ?? '#c2ae75',
+        rightsmalltextcolor:  $currentColor.rightsmalltextcolor ?? '#ffffff',
 
-        mvpbannerbgcolor: presetColors.mvpbannerbgcolor ?? '#db3131',
-        mvpbannertextcolor:  presetColors.mvpbannertextcolor ?? '#131313',
-        mvpagentcolor:  presetColors.mvpagentcolor ?? '#ffffff',
-        mvptextcolor: presetColors.mvptextcolor ?? '#c2ae75',
-        globaltextcolor: presetColors.globaltextcolor ?? '#c2ae75'
+        mvpbannerbgcolor: $currentColor.mvpbannerbgcolor ?? '#db3131',
+        mvpbannertextcolor:  $currentColor.mvpbannertextcolor ?? '#131313',
+        mvpagentcolor:  $currentColor.mvpagentcolor ?? '#ffffff',
+        mvptextcolor: $currentColor.mvptextcolor ?? '#c2ae75',
+        globaltextcolor: $currentColor.globaltextcolor ?? '#c2ae75'
     }
 
+    $: if ($currentColor) {
+        colors.leftbgcolor = $currentColor.leftbgcolor
+        colors.leftbigtextcolor = $currentColor.leftbigtextcolor
+        colors.leftsmalltextcolor = $currentColor.leftsmalltextcolor
 
-    $: if (presetColors) {
-        colors.leftbgcolor = presetColors.leftbgcolor
-        colors.leftbigtextcolor = presetColors.leftbigtextcolor
-        colors.leftsmalltextcolor = presetColors.leftsmalltextcolor
+        colors.rightbgcolor = $currentColor.rightbgcolor
+        colors.rightbigtextcolor = $currentColor.rightbigtextcolor
+        colors.rightsmalltextcolor = $currentColor.rightsmalltextcolor
 
-        colors.rightbgcolor = presetColors.rightbgcolor
-        colors.rightbigtextcolor = presetColors.rightbigtextcolor
-        colors.rightsmalltextcolor = presetColors.rightsmalltextcolor
+        colors.mvpbannerbgcolor = $currentColor.mvpbannerbgcolor
+        colors.mvpbannertextcolor = $currentColor.mvpbannertextcolor
+        colors.mvpagentcolor = $currentColor.mvpagentcolor
+        colors.mvptextcolor = $currentColor.mvptextcolor
+        colors.globaltextcolor = $currentColor.globaltextcolor
 
-        colors.mvpbannerbgcolor = presetColors.mvpbannerbgcolor
-        colors.mvpbannertextcolor = presetColors.mvpbannertextcolor
-        colors.mvpagentcolor = presetColors.mvpagentcolor
-        colors.mvptextcolor = presetColors.mvptextcolor
-        colors.globaltextcolor = presetColors.globaltextcolor
     }
     
+    currentColor.set(colors)
 
     async function searchPlayers() {
         let terms = searchTerm.split("#");
@@ -416,37 +418,11 @@
 
         <!-- Other Dropdowns -->
         <div class="bg-slate-600 flex flex-col gap-y-5">
-            <!-- These 2 are temp for now, will have to move towards bottom -->
-            <select
-            class="py-3 px-4 pe-9 block w-full border-gray-200 
-            rounded-lg text-sm text-black focus:border-blue-500 focus:ring-blue-500 
-            disabled:opacity-50 disabled:pointer-events-none"
-            bind:value={preset} 
-            onchange={(event) => {
-                const target: any = event.target;
-                if (target.value && $presets[target.value]) {
-                    presetColors = $presets[target.value];
-                }
-                if (target.value === "preset") {console.log(colors)}
-            }}
-            >
-                <option value="" disabled selected> Color Presets </option>
-                <!-- Save up to 3 presets unpaid -->
-                <option value="preset"> Save a Preset </option>
-
-                <option value="Champs 24"> VCT Champions 2024 </option>
-                <option value="Masters"> VCT Masters </option>
-                <option value="VCL NA"> Challengers NA </option>
-                <option value="Red Bull"> Red Bull Home Ground </option>
-                <option value="SEN"> Sentinels </option>
-            </select>
-
+            
             <FontPopup/>
+            
+            <PresetPopup/>
 
-            <PresetPopup 
-                presets = {$presets} 
-                currentColors={colors}
-            />
 
             <!-- Right colors -->
             <div class="flex flex-col">
