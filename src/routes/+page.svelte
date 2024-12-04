@@ -30,6 +30,7 @@
     let presetColors = $presets[preset];
 
     let colors: App.ColorPreset = {
+        preset_id: $currentColor.preset_id ?? 0,
         leftbgcolor: $currentColor.leftbgcolor ?? '#c2ae75',
         leftbigtextcolor: $currentColor.leftbigtextcolor ??'#131313',
         leftsmalltextcolor: $currentColor.leftsmalltextcolor ?? '#db3131',
@@ -42,7 +43,8 @@
         mvpbannertextcolor:  $currentColor.mvpbannertextcolor ?? '#131313',
         mvpagentcolor:  $currentColor.mvpagentcolor ?? '#ffffff',
         mvptextcolor: $currentColor.mvptextcolor ?? '#c2ae75',
-        globaltextcolor: $currentColor.globaltextcolor ?? '#c2ae75'
+        globaltextcolor: $currentColor.globaltextcolor ?? '#c2ae75',
+        font: $currentColor.font ?? 'Arial'
     }
 
     $: if ($currentColor) {

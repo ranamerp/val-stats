@@ -4,6 +4,7 @@ import { writable, type Writable } from "svelte/store";
 
 export const presets: Writable<Record<string, App.ColorPreset>> = writable ({
     'Champs 24': {
+        preset_id: 1,
         leftbgcolor: '#c2ae75',
         leftbigtextcolor: '#131313',
         leftsmalltextcolor: '#db3131',
@@ -16,9 +17,11 @@ export const presets: Writable<Record<string, App.ColorPreset>> = writable ({
         mvpbannertextcolor:  '#131313',
         mvpagentcolor:  '#ffffff',
         mvptextcolor: '#c2ae75',
-        globaltextcolor: '#c2ae75'
+        globaltextcolor: '#c2ae75',
+        font: 'Arial'
     },
     'Masters': {
+        preset_id: 2,
         leftbgcolor: '#6644bb',
         leftbigtextcolor: '#dad9e4',
         leftsmalltextcolor: '#c2ae75',
@@ -31,9 +34,11 @@ export const presets: Writable<Record<string, App.ColorPreset>> = writable ({
         mvpbannertextcolor:  '#000000',
         mvpagentcolor:  '#ffffff',
         mvptextcolor: '#6644bb',
-        globaltextcolor: '#e9d98d'
+        globaltextcolor: '#e9d98d',
+        font: 'Arial'
     },
     'VCL NA': {
+        preset_id: 3,
         leftbgcolor: '#0da68c',
         leftbigtextcolor: '#eff6f9',
         leftsmalltextcolor: '#e9d98d',
@@ -46,9 +51,11 @@ export const presets: Writable<Record<string, App.ColorPreset>> = writable ({
         mvpbannertextcolor:  '#000000',
         mvpagentcolor:  '#ffffff',
         mvptextcolor: '#0da68c',
-        globaltextcolor: '#e9d98d'
+        globaltextcolor: '#e9d98d',
+        font: 'Arial'
     },
     'Red Bull': {
+        preset_id: 4,
         leftbgcolor: '#bb4e52',
         leftbigtextcolor: '#163558',
         leftsmalltextcolor: '#ffffff',
@@ -61,9 +68,11 @@ export const presets: Writable<Record<string, App.ColorPreset>> = writable ({
         mvpbannertextcolor:  '#000000',
         mvpagentcolor:  '#bb4e52',
         mvptextcolor: '#bb4e52',
-        globaltextcolor: '#ffffff'
+        globaltextcolor: '#ffffff',
+        font: 'Arial'
     },
     'SEN': {
+        preset_id: 5,
         leftbgcolor: '#d4062c',
         leftbigtextcolor: '#ffffff',
         leftsmalltextcolor: '#e9d98d',
@@ -76,13 +85,15 @@ export const presets: Writable<Record<string, App.ColorPreset>> = writable ({
         mvpbannertextcolor:  '#000000',
         mvpagentcolor:  '#ffffff',
         mvptextcolor: '#d4062c',
-        globaltextcolor: '#e9d98d'
+        globaltextcolor: '#e9d98d',
+        font: 'Arial'
     }
 })
 
 
 export const currentColor: Writable<App.ColorPreset> = writable (
     {
+        preset_id: 1,
         leftbgcolor: '#c2ae75',
         leftbigtextcolor: '#131313',
         leftsmalltextcolor: '#db3131',
@@ -95,6 +106,7 @@ export const currentColor: Writable<App.ColorPreset> = writable (
         mvpbannertextcolor:  '#131313',
         mvpagentcolor:  '#ffffff',
         mvptextcolor: '#c2ae75',
-        globaltextcolor: '#c2ae75'
+        globaltextcolor: '#c2ae75',
+        font: 'Arial'
     }
 )

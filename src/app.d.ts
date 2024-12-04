@@ -26,8 +26,8 @@ declare global {
 			roleIcon?: string;
 		}
 
-		//This will most likely need an update to handle more unique color options
 		interface ColorPreset {
+			preset_id: number;
 			leftbgcolor: string;
 			leftbigtextcolor: string;
 			leftsmalltextcolor: string;
@@ -41,6 +41,7 @@ declare global {
 			mvpagentcolor:  string;
 			mvptextcolor: string;
 			globaltextcolor: string;
+			font: string;
 		}
 
 		interface APIResponse {

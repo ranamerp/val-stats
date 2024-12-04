@@ -15,20 +15,68 @@
     // Fix SavePreset saving wrong version
     // Finish Delete Preset
     // Clean up where needed
-    async function deletePreset(selectedPreset: App.ColorPreset) {
+
+    async function updateStore() {
+        const { data: fetchedData, error } = await supabase
+        .from('presets')
+        .select('*')
+        .eq("user_id", user.id);
+        
+        if (fetchedData) {
+            //Need to get preset type from schema at some point.
+            fetchedData.forEach((preset: any) => {
+                //If it already exists, pass
+
+                if ($presets.find((pre: Record<string, App.ColorPreset>) => pre.preset_id === preset.preset_id)) {
+                    continue
+                }
+                //If it exists in store, has an id greater than 100, and doesnt exist in this list, remove
+                //If not exists in store, add
+                presets.update((currentPreset) => ({
+                    [preset.preset_name]: {
+                        preset_id: preset.preset_id,
+                        leftbgcolor: preset.left_background,
+                        leftbigtextcolor: preset.left_bigtext,
+                        leftsmalltextcolor: preset.left_smalltext,
+                        rightbgcolor: preset.right_background,
+                        rightbigtextcolor: preset.right_bigtext,
+                        rightsmalltextcolor: preset.right_smalltext,
+                        mvpagentcolor: preset.mvp_agent,
+                        mvpbannerbgcolor: preset.mvpbanner_background,
+                        mvpbannertextcolor: preset.mvpbanner_text,
+                        mvptextcolor: preset.mvp_text,
+                        globaltextcolor: preset.global_text,
+                        font: preset.font
+                    },
+                    ...currentPreset
+                    }));
+                
+            });
+        }
+    }
+    async function deletePreset() {
         //Make sure they can't delete default presets
         // 
+        if ($currentColor.preset_id < 100) {
+            //Popup saying u cant delete. For now just a console and a return
+            console.log("You cannot delete this preset!")
+            return
+        }
+
         try {
+        console.log($currentColor)
         const { data, error } = await supabase
             .from("presets")
             .delete()
             .eq('user_id', user.id)
-            .ilike("preset_id", selectedPreset.preset_id);
+            .eq("preset_id", $currentColor.preset_id);
 
         if (error) {
             console.error(error);
         } else {
             console.log(data);
+            updateStore();
+            
         }
         } catch (error) {
         console.error(error);
@@ -49,7 +97,7 @@
         let finalObject = {
             user_id: user.id,
             preset_name: presetName,
-            last_updated: '2024-01-01',
+            last_updated: Date.now(),
             left_background: $currentColor.leftbgcolor,
             left_bigtext: $currentColor.leftbigtextcolor,
             left_smalltext: $currentColor.leftsmalltextcolor,
@@ -88,6 +136,7 @@
                     console.error(error);
                 } else {
                     console.log(data);
+                    updateStore()
                 }
                 } catch (error) {
                 console.error(error);
@@ -100,33 +149,7 @@
         currentColor.set(selectedPreset)
     }
     onMount(async () => {
-        const { data: fetchedData, error } = await supabase
-        .from('presets')
-        .select('*')
-        .eq("user_id", user.id);
-        
-        if (fetchedData) {
-            //Need to get preset type from schema at some point.
-            fetchedData.forEach((preset: any) => {
-                presets.update((currentPreset) => ({
-                    [preset.preset_name]: {
-                        leftbgcolor: preset.left_background,
-                        leftbigtextcolor: preset.left_bigtext,
-                        leftsmalltextcolor: preset.left_smalltext,
-                        rightbgcolor: preset.right_background,
-                        rightbigtextcolor: preset.right_bigtext,
-                        rightsmalltextcolor: preset.right_smalltext,
-                        mvpagentcolor: preset.mvp_agent,
-                        mvpbannerbgcolor: preset.mvpbanner_background,
-                        mvpbannertextcolor: preset.mvpbanner_text,
-                        mvptextcolor: preset.mvp_text,
-                        globaltextcolor: preset.global_text
-                    },
-                    ...currentPreset
-                    }));
-                
-            });
-        }
+        await updateStore();
     })
     // There's 2 parts to this. First part is main button. Will have Search, Dropdown, Save, and Delete.
     // Dropdown, if paid, will show user presets first and then suggested ones. Otherwise show just suggested
@@ -180,14 +203,14 @@
                     
                     <button
                         class="w-full mt-2 px-3 py-2 text-white bg-red-500 rounded-lg hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500"
-                        on:click={() => savePreset()}
+                        on:click={() => deletePreset()}
                     >
                         Delete Preset
                     </button>
 
                     <button
                         class="w-full mt-2 px-3 py-2 text-white bg-blue-500 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        on:click={() => saveBox = !saveBox}
+                        on:click={() => deleteBox = !deleteBox}
                     >
                         Back
                     </button>
@@ -206,7 +229,11 @@
                 <!-- These should only save if user is paid. But for now keep -->
                 <button
                     class="w-full mt-2 px-3 py-2 text-white bg-blue-500 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    on:click={() => saveBox = !saveBox}
+                    on:click={() => 
+                    {
+                        saveBox = !saveBox;
+                        
+                    }}
                 >
                 
                     Save Preset
@@ -214,6 +241,7 @@
 
                 <button
                     class="w-full mt-2 px-3 py-2 text-white bg-red-500 rounded-lg hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500"
+                    on:click={() => deleteBox = !deleteBox}
                 >
                     Delete Preset
                 </button>
