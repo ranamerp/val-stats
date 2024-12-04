@@ -18,22 +18,23 @@
 
     async function updateStore() {
         const { data: fetchedData, error } = await supabase
-        .from('presets')
-        .select('*')
-        .eq("user_id", user.id);
+            .from('presets')
+            .select('*')
+            .eq("user_id", user.id);
         
         if (fetchedData) {
-            //Need to get preset type from schema at some point.
-            fetchedData.forEach((preset: any) => {
-                //If it already exists, pass
+            presets.update((currentPresets) => {
+                const updatedPresets: Record<string, App.ColorPreset> = {...currentPresets};
 
-                if ($presets.find((pre: Record<string, App.ColorPreset>) => pre.preset_id === preset.preset_id)) {
-                    continue
-                }
-                //If it exists in store, has an id greater than 100, and doesnt exist in this list, remove
-                //If not exists in store, add
-                presets.update((currentPreset) => ({
-                    [preset.preset_name]: {
+                // Process each fetched preset
+                fetchedData.forEach((preset: any) => {
+                    // If the preset already exists in the current presets, skip it
+                    if (updatedPresets[preset.preset_name]) {
+                        return; // Skip this iteration
+                    }
+
+                    // If preset doesn't exist, add it
+                    updatedPresets[preset.preset_name] = {
                         preset_id: preset.preset_id,
                         leftbgcolor: preset.left_background,
                         leftbigtextcolor: preset.left_bigtext,
@@ -47,13 +48,14 @@
                         mvptextcolor: preset.mvp_text,
                         globaltextcolor: preset.global_text,
                         font: preset.font
-                    },
-                    ...currentPreset
-                    }));
-                
+                    };
+                });
+
+                return updatedPresets;
             });
         }
     }
+    
     async function deletePreset() {
         //Make sure they can't delete default presets
         // 
