@@ -300,6 +300,7 @@
             <ColorPicker
                 on:input={(event) => {
                     colors.leftbgcolor = event.detail.hex as string;
+                    currentColor.set(colors);
                 }}
                 label = "Left Background"
                 components={ChromeVariant} 
@@ -316,6 +317,7 @@
             on:input={(event) => {
                 
                 colors.leftbigtextcolor = event.detail.hex as string;
+                currentColor.set(colors);
             }}
             label = "Left Text"
             components={ChromeVariant} 
@@ -328,6 +330,7 @@
             on:input={(event) => {
                 
                 colors.leftsmalltextcolor = event.detail.hex as string;
+                currentColor.set(colors);
             }}
             label = "Left Small Text"
             components={ChromeVariant} 
@@ -343,6 +346,7 @@
             on:input={(event) => {
                 
                 colors.mvpbannerbgcolor = event.detail.hex as string;
+                currentColor.set(colors);
             }}
             label = "MVP Banner Background"
             components={ChromeVariant} 
@@ -355,6 +359,7 @@
             on:input={(event) => {
                 
                 colors.mvpbannertextcolor = event.detail.hex as string;
+                currentColor.set(colors);
             }}
             label = "MVP Banner Text"
             components={ChromeVariant} 
@@ -367,6 +372,7 @@
             on:input={(event) => {
                 
                 colors.mvpagentcolor = event.detail.hex as string;
+                currentColor.set(colors);
             }}
             label = "MVP Agent Text Color"
             components={ChromeVariant} 
@@ -379,6 +385,7 @@
             on:input={(event) => {
                 
                 colors.mvptextcolor = event.detail.hex as string;
+                currentColor.set(colors);
             }}
             label = "MVP Name Color"
             components={ChromeVariant} 
@@ -391,6 +398,7 @@
             on:input={(event) => {
                 
                 colors.globaltextcolor = event.detail.hex as string;
+                currentColor.set(colors);
             }}
             label = "Numbers Color"
             components={ChromeVariant} 
@@ -432,6 +440,7 @@
                 <ColorPicker
                 on:input={(event) => {
                     colors.rightbgcolor = event.detail.hex as string;
+                    currentColor.set(colors);
                 }}
                 label = "Right Background"
                 components={ChromeVariant} 
@@ -448,6 +457,7 @@
                 on:input={(event) => {
                     
                     colors.rightbigtextcolor = event.detail.hex as string;
+                    currentColor.set(colors);
                 }}
                 label = "Right Text"
                 components={ChromeVariant} 
@@ -460,6 +470,7 @@
                 on:input={(event) => {
                     
                     colors.rightsmalltextcolor = event.detail.hex as string;
+                    currentColor.set(colors);
                 }}
                 label = "Right Small Text"
                 components={ChromeVariant} 
@@ -474,6 +485,7 @@
                 on:input={(event) => {
                     
                     colors.mvpbannerbgcolor = event.detail.hex as string;
+                    currentColor.set(colors);
                 }}
                 label = "MVP Banner Background"
                 components={ChromeVariant} 
@@ -486,6 +498,7 @@
                 on:input={(event) => {
                     
                     colors.mvpbannertextcolor = event.detail.hex as string;
+                    currentColor.set(colors);
                 }}
                 label = "MVP Banner Text"
                 components={ChromeVariant} 
@@ -498,6 +511,7 @@
                 on:input={(event) => {
                     
                     colors.mvpagentcolor = event.detail.hex as string;
+                    currentColor.set(colors);
                 }}
                 label = "MVP Agent Text Color"
                 components={ChromeVariant} 
@@ -510,6 +524,7 @@
                 on:input={(event) => {
                     
                     colors.mvptextcolor = event.detail.hex as string;
+                    currentColor.set(colors);
                 }}
                 label = "MVP Name Color"
                 components={ChromeVariant} 
@@ -522,6 +537,7 @@
                 on:input={(event) => {
                     
                     colors.globaltextcolor = event.detail.hex as string;
+                    currentColor.set(colors);
                 }}
                 label = "Numbers Color"
                 components={ChromeVariant} 

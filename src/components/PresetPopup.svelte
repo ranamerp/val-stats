@@ -1,6 +1,6 @@
 <script lang="ts">
     import { getContext, onMount, setContext } from "svelte";
-    import type { Writable } from "svelte/store";
+    import { get, type Writable } from "svelte/store";
     import { presets, currentColor } from "../stores/Presets";
 
     let searchQuery: string = '';
@@ -25,6 +25,15 @@
         if (fetchedData) {
             presets.update((currentPresets) => {
                 const updatedPresets: Record<string, App.ColorPreset> = {...currentPresets};
+                const fetchedPresetNames = new Set(fetchedData.map((preset: any) => preset.preset_name));
+
+                // Remove items with preset_id < 100 that are not in fetchedData
+                Object.keys(updatedPresets).forEach(presetName => {
+                    const preset = updatedPresets[presetName];
+                    if (preset.preset_id > 100 && !fetchedPresetNames.has(presetName)) {
+                        delete updatedPresets[presetName];
+                    }
+                });
 
                 // Process each fetched preset
                 fetchedData.forEach((preset: any) => {
@@ -32,6 +41,7 @@
                     if (updatedPresets[preset.preset_name]) {
                         return; // Skip this iteration
                     }
+                    
 
                     // If preset doesn't exist, add it
                     updatedPresets[preset.preset_name] = {
@@ -49,8 +59,9 @@
                         globaltextcolor: preset.global_text,
                         font: preset.font
                     };
-                });
 
+                    
+                });
                 return updatedPresets;
             });
         }
@@ -60,28 +71,29 @@
         //Make sure they can't delete default presets
         // 
         if ($currentColor.preset_id < 100) {
+            // This is causing users to not be able to delete it right off the bat, regardless of if it's got the right ID or not.
             //Popup saying u cant delete. For now just a console and a return
             console.log("You cannot delete this preset!")
             return
         }
 
         try {
-        console.log($currentColor)
-        const { data, error } = await supabase
-            .from("presets")
-            .delete()
-            .eq('user_id', user.id)
-            .eq("preset_id", $currentColor.preset_id);
+            const { data, error } = await supabase
+                .from("presets")
+                .delete()
+                .eq('user_id', user.id)
+                .eq("preset_id", $currentColor.preset_id);
 
-        if (error) {
-            console.error(error);
-        } else {
-            console.log(data);
-            updateStore();
-            
-        }
+            if (error) {
+                console.error(error);
+            } else {
+                //Update button with confirmation of what got deleted
+                updateStore();
+                deleteBox = !deleteBox;
+                
+            }
         } catch (error) {
-        console.error(error);
+            console.error(error);
         }
     }
 
@@ -99,7 +111,7 @@
         let finalObject = {
             user_id: user.id,
             preset_name: presetName,
-            last_updated: Date.now(),
+            last_updated: new Date().toISOString(),
             left_background: $currentColor.leftbgcolor,
             left_bigtext: $currentColor.leftbigtextcolor,
             left_smalltext: $currentColor.leftsmalltextcolor,
@@ -114,36 +126,46 @@
             font: "Arial"
         }
 
-        const { data, error } = await supabase
-            .from('presets')
-            .select('*')
-            .eq("user_id", user.id)
-            .ilike("preset_name", presetName)
-
-        if (error) {
-            console.error('Supabase Query Error:', error)
+        if (get(presets)[presetName]) {
+            overwrite != overwrite;
+            console.log("DUMMY THIS EXISTS IN THE STORE")
         }
-
-        if (data.length > 0) {
-            overwrite = !overwrite;
-            console.log("This already exists lol, no bueno!")
-        } else {
-            // Add preset to DB and also store. Return confirmation by changing button color and text
-            try {
-                const { data, error } = await supabase
-                    .from('presets')
-                    .insert([finalObject]);
-
-                if (error) {
+        else {
+            const { data, error } = await supabase
+                .from('presets')
+                .select('*')
+                .eq("user_id", user.id)
+                .ilike("preset_name", presetName)
+    
+            if (error) {
+                console.error('Supabase Query Error:', error)
+            }
+            
+            //This should also check if it exists in the store
+            if (data.length > 0) {
+                overwrite = !overwrite;
+                console.log("This already exists lol, no bueno!")
+            } else {
+                // Add preset to DB and also store. Return confirmation by changing button color and text
+                try {
+                    const { data, error } = await supabase
+                        .from('presets')
+                        .insert([finalObject]);
+    
+                    if (error) {
+                        console.error(error);
+                    } else {
+                        console.log(data);
+                        updateStore();
+                        saveBox = !saveBox;
+                    }
+                    } catch (error) {
                     console.error(error);
-                } else {
-                    console.log(data);
-                    updateStore()
-                }
-                } catch (error) {
-                console.error(error);
-                }
+                    }
+            }
+
         }
+
         
     }
     
@@ -234,6 +256,7 @@
                     on:click={() => 
                     {
                         saveBox = !saveBox;
+                        searchQuery = '';
                         
                     }}
                 >
@@ -252,7 +275,11 @@
             </div>
             <!-- This is listing all the stored presets. Get presets from user and then append to presets from store -->
             <div class="max-h-60 overflow-y-auto">
-                {#each Object.entries($presets) as [presetname, preset]}
+                {#each Object.entries($presets)
+                    .sort((a, b) => b[1].preset_id - a[1].preset_id) 
+                    as [presetname, preset]
+                }
+                
                     <button
                     class="w-full px-4 py-2 text-left hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
                     on:click={() => applyPreset(preset)}
