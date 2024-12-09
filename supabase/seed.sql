@@ -1,0 +1,23 @@
+-- INSERT INTO
+-- stats.presets (user_id, preset_name, last_updated, 
+--                 left_background, left_bigtext, left_smalltext, 
+--                 right_background, right_bigtext, right_smalltext,
+--                 mvpbanner_background, mvpbanner_text, mvp_agent, mvp_text,
+--                 global_text, font)
+-- VALUES (
+--     '69bec3b4-0165-4594-9215-b49e116b6a31',
+--     'MaIn_Preset', 
+--     NOW(),
+--     '#085494',
+--     '#c15994',
+--     '#ffffff',
+--     '#c15994',
+--     '#ffffff',
+--     '#085494',
+--     '#085494',
+--     '#ffffff',
+--     '#ffffff',
+--     '#c15994',
+--     '#ffffff',
+--     'Arial'
+-- ) 
