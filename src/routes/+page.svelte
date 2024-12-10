@@ -48,6 +48,7 @@
     }
 
     $: if ($currentColor) {
+        colors.preset_id = $currentColor.preset_id
         colors.leftbgcolor = $currentColor.leftbgcolor
         colors.leftbigtextcolor = $currentColor.leftbigtextcolor
         colors.leftsmalltextcolor = $currentColor.leftsmalltextcolor

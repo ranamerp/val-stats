@@ -22,3 +22,6 @@ create table
     constraint presets_preset_id_key unique (preset_id),
     constraint presets_user_id_fkey foreign key (user_id) references auth.users (id) on update cascade on delete cascade
   ) tablespace pg_default;
+
+  GRANT ALL PRIVILEGES ON SCHEMA stats TO postgres, anon, authenticated, service_role, dashboard_user;
+  GRANT ALL privileges ON TABLE stats.presets TO postgres, anon, authenticated, service_role, dashboard_user;

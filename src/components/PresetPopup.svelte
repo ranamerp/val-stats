@@ -1,20 +1,17 @@
 <script lang="ts">
-    import { getContext, onMount, setContext } from "svelte";
-    import { get, type Writable } from "svelte/store";
+    import { getContext, onMount } from "svelte";
+    import { get } from "svelte/store";
     import { presets, currentColor } from "../stores/Presets";
 
     let searchQuery: string = '';
     let isPopOpen = false;
     let saveBox = false;
     let deleteBox = false;
-    let presetName = "";
+    let presetName = "Preset";
     let overwrite = false;
     const supabase: any = getContext('supabase');
     const user: any = getContext('user');
-    // TODO: Make ColorPreset object like supabase schema
-    // Fix SavePreset saving wrong version
-    // Finish Delete Preset
-    // Clean up where needed
+
 
     async function updateStore() {
         const { data: fetchedData, error } = await supabase
@@ -68,12 +65,9 @@
     }
     
     async function deletePreset() {
-        //Make sure they can't delete default presets
-        // 
         if ($currentColor.preset_id < 100) {
-            // This is causing users to not be able to delete it right off the bat, regardless of if it's got the right ID or not.
-            //Popup saying u cant delete. For now just a console and a return
             console.log("You cannot delete this preset!")
+            console.log($currentColor)
             return
         }
 
@@ -155,7 +149,7 @@
                     if (error) {
                         console.error(error);
                     } else {
-                        console.log(data);
+                        console.log(finalObject);
                         updateStore();
                         saveBox = !saveBox;
                     }
@@ -169,8 +163,9 @@
         
     }
     
-    async function applyPreset(selectedPreset: App.ColorPreset) {
-        currentColor.set(selectedPreset)
+    async function applyPreset(selectedPreset: App.ColorPreset, preName: string) {
+        currentColor.set((selectedPreset))
+        presetName = preName
     }
     onMount(async () => {
         await updateStore();
@@ -189,8 +184,15 @@
 <div class="font-dropdown relative w-64">
     <button
         class="w-full px-4 py-2 text-left border rounded-lg bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500"
-        on:click={() => isPopOpen = !isPopOpen}>
-        Preset
+        on:click={() => 
+            {
+                isPopOpen = !isPopOpen
+                saveBox = false;
+                deleteBox = false;
+                overwrite = false;
+            }
+        }>
+        {presetName}
     </button>
 
     {#if isPopOpen}
@@ -223,11 +225,14 @@
             {:else if deleteBox}
                 <div class="p-2">
                     <!-- Saving presets -->
-                    <h2>Are you sure you want to delete this preset? </h2>
+                    <h2>Are you sure you want to delete this preset?</h2>
+                    {presetName}
                     
                     <button
                         class="w-full mt-2 px-3 py-2 text-white bg-red-500 rounded-lg hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500"
-                        on:click={() => deletePreset()}
+                        on:click={() => {
+                            deletePreset()}
+                        }
                     >
                         Delete Preset
                     </button>
@@ -256,7 +261,7 @@
                     on:click={() => 
                     {
                         saveBox = !saveBox;
-                        searchQuery = '';
+                        presetName = '';
                         
                     }}
                 >
@@ -281,8 +286,8 @@
                 }
                 
                     <button
-                    class="w-full px-4 py-2 text-left hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
-                    on:click={() => applyPreset(preset)}
+                    class="w-full px-4 py-2 text-left hover:bg-blue-100 focus:outline-none focus:bg-blue-500"
+                    on:click={() => applyPreset(preset, presetname)}
                 >
                     {presetname}
                 </button>
