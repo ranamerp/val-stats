@@ -23,5 +23,38 @@ create table
     constraint presets_user_id_fkey foreign key (user_id) references auth.users (id) on update cascade on delete cascade
   ) tablespace pg_default;
 
-  GRANT ALL PRIVILEGES ON SCHEMA stats TO postgres, anon, authenticated, service_role, dashboard_user;
+  --Will eventually want to tighten this, for now all is fine
   GRANT ALL privileges ON TABLE stats.presets TO postgres, anon, authenticated, service_role, dashboard_user;
+
+create table
+  stats.users (
+    user_id uuid not null,
+    provider_id text not null,
+    provider text not null,
+    provider_username text not null,
+    provider_image text null,
+    current_match jsonb null,
+    current_preset jsonb null,
+    constraint users_pkey primary key (user_id)
+  ) tablespace pg_default;
+
+  GRANT ALL privileges ON TABLE stats.users TO postgres, anon, authenticated, service_role, dashboard_user;
+
+create function stats.handle_new_user()
+returns trigger
+language plpgsql
+security definer set search_path = ''
+as $$
+begin
+  if new.provider = 'discord' then 
+    insert into stats.users (user_id, provider_id, provider, provider_username, provider_image)
+    values (new.user_id, new.provider_id, new.provider, new.identity_data->>'full_name', new.identity_data->>'avatar_url');
+  end if;
+  return new;
+end;
+$$;
+
+-- trigger the function every time a user is created
+create trigger on_auth_user_created
+  after insert on auth.identities
+  for each row execute procedure stats.handle_new_user();

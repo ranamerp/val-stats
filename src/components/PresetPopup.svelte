@@ -79,6 +79,7 @@
                 .eq("preset_id", $currentColor.preset_id);
 
             if (error) {
+                //If the error is it can't find id, then the user is not signed in. Need a popup that has them sign in
                 console.error(error);
             } else {
                 //Update button with confirmation of what got deleted

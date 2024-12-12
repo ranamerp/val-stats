@@ -2,6 +2,7 @@
 	import '../app.css';
 	import { goto, invalidate } from '$app/navigation'
 	import { setContext } from 'svelte';
+	import { page } from '$app/stores';
 	const { data: propsData, children } = $props();
     const { supabase, session, user } = propsData;
 
@@ -36,7 +37,7 @@
     }
 
 </script>
-  
+{#if !$page.data.hideHeader}
   <header class="bg-gray-500 flex items-center justify-between p-4 shadow-md">
 	<!-- Logo (Home Link) -->
 	<a href="/" class="flex items-center space-x-2 hover:bg-gray-200 p-2 rounded-md transition" aria-label="Home">
@@ -90,5 +91,5 @@
 	  {/if}
 	</div>
   </header>
-
+{/if}
   {@render children()}

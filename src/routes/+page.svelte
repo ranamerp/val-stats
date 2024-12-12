@@ -91,6 +91,7 @@
         }
     }
 
+    //There should be a button that triggers this function without the redirect. 
     async function outputMatch(currentmatch: App.LocalMatch, colors: App.ColorPreset) {
         selectedmatch.set({
             match: currentmatch,
@@ -98,9 +99,8 @@
     })
         //once set, need to redirect
         const finalobject = {
-            user_id: user?.id,
-            selected_match: currentmatch,
-            selected_preset: colors
+            current_match: currentmatch,
+            current_preset: colors
         }
         console.log(currentmatch)
         console.log(colors)
@@ -108,7 +108,8 @@
             const { data, error } = await supabase
                 .schema('stats')
                 .from('users')
-                .insert([finalobject]);
+                .update([finalobject])
+                .eq('user_id', user?.id)
             if (error) {
                 console.error(error);
             } else {
