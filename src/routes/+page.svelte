@@ -4,7 +4,6 @@
     import FontPopup from "../components/FontPopup.svelte";
     import LoadingPopup from "../components/LoadingPopup.svelte";
     import PresetPopup from "../components/PresetPopup.svelte";
-    import { selectedmatch } from "../stores/SelectedMatch";
     import { presets, currentColor } from "../stores/Presets";
     import ColorPicker, { ChromeVariant } from 'svelte-awesome-color-picker';
     import { getContext, onMount } from 'svelte';
@@ -91,19 +90,21 @@
         }
     }
 
+    async function gotoOutput(currentmatch: App.LocalMatch, colors: App.ColorPreset) {
+        const stat = await outputMatch(currentmatch, colors)
+        if (stat.status === 200) {
+            goto(`${user?.id}/output`)
+        }        
+    }
     //There should be a button that triggers this function without the redirect. 
     async function outputMatch(currentmatch: App.LocalMatch, colors: App.ColorPreset) {
-        selectedmatch.set({
-            match: currentmatch,
-            colors: colors
-    })
+
         //once set, need to redirect
         const finalobject = {
             current_match: currentmatch,
             current_preset: colors
         }
-        console.log(currentmatch)
-        console.log(colors)
+        //Try and move this to the server if possible
         try {
             const { data, error } = await supabase
                 .schema('stats')
@@ -112,15 +113,15 @@
                 .eq('user_id', user?.id)
             if (error) {
                 console.error(error);
+                return {status: 404, error: error}
             } else {
                 console.log(finalobject);
-                //goto(`${user?.id}/output`)
+                return {status: 200}
             }
         } catch (error) {
             console.error(error);
+            return {status: 500, error: error}
         }
-        
-        //
 
     }
 
