@@ -5,8 +5,8 @@ export const load: PageLoad = async ({ fetch }) => {
 
     // Match fetching logic
     const region = 'na';
-    let name: string = 'kaoticcc';
-    const tag = '555';
+    let name: string = '469 ion2x';
+    const tag = '1love';
 
     const matchResponse = await fetch(`/api/match?region=${region}&name=${name}&tag=${tag}`);
     let matchData: App.APIResponse = {

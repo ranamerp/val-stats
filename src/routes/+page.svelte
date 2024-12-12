@@ -12,7 +12,7 @@
     import { setContext } from 'svelte';
 
     export let data;
-    const { stats } = data;
+    const { stats, supabase, user } = data;
     let player = data.player.split('#')[0]
     let value = 0;
     //These parts need to eventually be chosen by user via dropdown
@@ -91,13 +91,35 @@
         }
     }
 
-    function outputMatch(currentmatch: App.LocalMatch, colors: App.ColorPreset) {
+    async function outputMatch(currentmatch: App.LocalMatch, colors: App.ColorPreset) {
         selectedmatch.set({
             match: currentmatch,
             colors: colors
     })
         //once set, need to redirect
-        goto('/output')
+        const finalobject = {
+            user_id: user?.id,
+            selected_match: currentmatch,
+            selected_preset: colors
+        }
+        console.log(currentmatch)
+        console.log(colors)
+        try {
+            const { data, error } = await supabase
+                .schema('stats')
+                .from('users')
+                .insert([finalobject]);
+            if (error) {
+                console.error(error);
+            } else {
+                console.log(finalobject);
+                //goto(`${user?.id}/output`)
+            }
+        } catch (error) {
+            console.error(error);
+        }
+        
+        //
 
     }
 
