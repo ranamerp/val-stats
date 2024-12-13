@@ -1,41 +1,39 @@
 //TODO: make this the go-to place for supabase. Use this code as a baseline and build on it so all queries are server-side
 
-// /api/db/+server.ts
+import type { SupabaseClient } from '@supabase/supabase-js';
 import { error, json } from '@sveltejs/kit';
-import { createClient } from '@supabase/supabase-js';
 
 
+export async function GET({ url, locals }) {
+  const supabase: SupabaseClient = locals.supabase;
 
-
-export async function GET({ url }) {
   const action = url.searchParams.get('action');
-  const userId = url.searchParams.get('userId');
+  const userid = url.searchParams.get('userid');
 
   switch (action) {
     case 'getUserStats':
-      return await getUserStats(userId);
+      return await getUserStats(userid, supabase);
     case 'getCurrentMatch':
-      return await getCurrentMatch(userId);
+      return await getCurrentMatch(userid, supabase);
     default:
       return error(400, 'Invalid action');
   }
 }
 
-export async function POST({ request }) {
+export async function POST({ request, locals }) {
+  const supabase: SupabaseClient = locals.supabase;
   const { action, data } = await request.json();
 
   switch (action) {
     case 'updateUserPreset':
-      return await updateUserPreset(data);
-    case 'createNewMatch':
-      return await createNewMatch(data);
+      return await updateUserPreset(data, supabase);
     default:
       return error(400, 'Invalid action');
   }
 }
 
 // Specific query functions
-async function getUserStats(userId: string | null) {
+async function getUserStats(userId: string | null, supabase: SupabaseClient) {
   if (!userId) {
     return error(400, 'User ID is required');
   }
@@ -57,7 +55,7 @@ async function getUserStats(userId: string | null) {
   });
 }
 
-async function getCurrentMatch(userId: string | null) {
+async function getCurrentMatch(userId: string | null, supabase: SupabaseClient) {
   if (!userId) {
     return error(400, 'User ID is required');
   }
@@ -81,7 +79,7 @@ async function getCurrentMatch(userId: string | null) {
   });
 }
 
-async function updateUserPreset(data: any) {
+async function updateUserPreset(data: any, supabase: SupabaseClient) {
   const { userId, preset } = data;
 
   if (!userId || !preset) {

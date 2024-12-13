@@ -20,7 +20,7 @@ create table
     font character varying null,
     constraint presets_pkey primary key (preset_id),
     constraint presets_preset_id_key unique (preset_id),
-    constraint presets_user_id_fkey foreign key (user_id) references auth.users (id) on update cascade on delete cascade
+    constraint presets_user_id_fkey foreign key (user_id) references stats.users (id) on update cascade on delete cascade
   ) tablespace pg_default;
 
   --Will eventually want to tighten this, for now all is fine
