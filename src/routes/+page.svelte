@@ -6,21 +6,20 @@
     import PresetPopup from "../components/PresetPopup.svelte";
     import { presets, currentColor } from "../stores/Presets";
     import ColorPicker, { ChromeVariant } from 'svelte-awesome-color-picker';
-    import { getContext, onMount } from 'svelte';
     import { goto } from '$app/navigation';
-    import { setContext } from 'svelte';
+    
 
     export let data;
     const { stats, supabase, user } = data;
     let player = data.player.split('#')[0]
     let value = 0;
-    //These parts need to eventually be chosen by user via dropdown
-
     let btname = "SEN";
     let rtname = "100T";
     let searchTerm = data.player;
+    let selection = stats as App.LocalMatch[];
+    selection[value].red_team.team_name = rtname;
+    selection[value].blue_team.team_name = btname;
 
-    //For now this will work, but I think adding more options (like left background, small text, etc) may be a good advanced paid option
     let showPopup = false;
     let popupMessage = "";
 
@@ -76,12 +75,9 @@
         try{
             const response = await fetch(`/api/match?region=${'na'}&name=${terms[0]}&tag=${terms[1]}`);
             const matchData = await response.json();
-            processMatch(matchData.data).then(result => {
-                selection = result
-                value = 0;
-                player = terms[0];
-            })
-            //Need to find this type later, for now any should be fine
+            selection = matchData.data;
+            value = 0;
+            player = terms[0];
         } catch (err: any) {
             console.log("ERROR!")
             console.log(err.message);
@@ -96,6 +92,7 @@
             goto(`${user?.id}/output`)
         }        
     }
+
     //There should be a button that triggers this function without the redirect. 
     async function outputMatch(currentmatch: App.LocalMatch, colors: App.ColorPreset) {
 
@@ -125,110 +122,8 @@
 
     }
 
-    async function processMatch(stats: Array<App.ValorantMatch>) {
-        const selection: Array<App.LocalMatch> = []
-        for (const [index, item] of stats.entries()) {
-            const base = item
-            const map = base.metadata.map.name;
-            const startTime = base.metadata.started_at
-            const totalRounds = base.rounds.length
-            const teams: App.LocalTeam[] = []
-            const firstkills: any = {};
-            let currentRound = -1;
-            
-            base.kills.forEach((kill) => {
-                const itemRound = kill.round;
-                if (currentRound === itemRound) {
-                    return;
-                }
-                const killer = kill.killer.puuid;
-                firstkills[killer] = (firstkills[killer] || 0) + 1;
-                currentRound = itemRound;
-            });
-            for (const team of base.teams) {       
-                const playerBase = base.players;
-                const localPlayers: App.LocalPlayer[] = [];
-                for (const player of playerBase) {
-                    let kd = 1;
-                    if(player.stats.deaths != 0) {
-                        kd = +(player.stats.kills / player.stats.deaths).toFixed(2);
-                    }
-                    const playerData = {
-                        puuid: player.puuid,
-                        name: player.name,
-                        team: player.team_id,
-                        agent: player.agent.name,
-                        kd: kd,
-                        kills: player.stats.kills,
-                        deaths: player.stats.deaths,
-                        acs: Math.round(player.stats.score / totalRounds),
-                        firstkills: (firstkills[player.puuid] === undefined ) ? 0 : firstkills[player.puuid]
-                    }
-                    
-                    localPlayers.push(playerData)
-                }
-                localPlayers.sort((a, b) => a.team.localeCompare(b.team) || b.acs - a.acs)
-                let teamData = {
-                    team_id : team.team_id,
-                    team_name: team.team_id.toLowerCase() === "red" ? (rtname || "ATK") : (team.team_id.toLowerCase() === "blue" ? (btname || "DEF") : ""),
-                    won_bool: team.won,
-                    won: team.won ? "WIN" : "LOSS",
-                    rounds_won: team.rounds.won,
-                    players: localPlayers
-                };
-                teams.push(teamData)
-            }
 
-            for (const team of teams) {
-                const filteredPlayers = team.players?.filter(player => player.team.toLowerCase() === team.team_id.toLowerCase());
-                team.players = filteredPlayers;
-            }
-
-            selection.push(
-                {
-                    index : index,
-                    match_id: base.metadata.match_id, 
-                    mapName : map,
-                    startTime : startTime,
-                    red_team: teams?.find(team => team.team_id.toLowerCase() === 'red') as App.LocalTeam,
-                    blue_team: teams?.find(team => team.team_id.toLowerCase() === 'blue') as App.LocalTeam
-                }
-            )
-        }
-        return selection;
-    }
-
-    let selection: App.LocalMatch[] = [];
-    $: customGames = selection?.filter((item, index) => 
-        // svelte-ignore reactive_declaration_non_reactive_property
-                stats[index]?.metadata?.queue?.id === "custom"
-    ) ?? [];
-
-    //I think this is processing the match twice. need to redo this at some point
-    let isLoading = true;
-    onMount(async () => {
-        selection = await processMatch(stats);
-        isLoading = false;
-    });
-    
-    $: if (!isLoading && stats) {
-        processMatch(stats).then(result => {
-            selection = result;
-            
-
-        });
-    }
-
-
-
-    // Set default value when customGames changes
-    $: if (customGames.length > 0 && !value) {
-        value = customGames[0].index;
-        //matchHandler(customGames[0]);
-    }
-    
-
-
+    let isLoading = false;
 
 </script>
 {#if isLoading}
@@ -245,9 +140,14 @@
             rounded-lg text-sm text-black focus:border-blue-500 focus:ring-blue-500 
             disabled:opacity-50 disabled:pointer-events-none" 
             value={value}
-            onchange={(event) => value = (event.target as any).selectedIndex}
+            onchange={(event) => {
+                value = (event.target as any).selectedIndex;
+                selection[value].red_team.team_name = rtname;
+                selection[value].blue_team.team_name = btname;
+                }
+            }
             >
-            {#each customGames as item}
+            {#each selection as item}
                 <option value={item.index}>
                     {item.mapName} ({item.startTime})
                 </option>

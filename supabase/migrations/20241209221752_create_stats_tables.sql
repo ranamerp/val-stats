@@ -58,3 +58,5 @@ $$;
 create trigger on_auth_user_created
   after insert on auth.identities
   for each row execute procedure stats.handle_new_user();
+
+GRANT ALL ON SCHEMA stats TO postgres, anon, authenticated, service_role, dashboard_user;

@@ -21,7 +21,7 @@ async function updateAgents() {
                     ? undefined
                     : item.role?.displayIcon
             }
-            console.log()
+            
         });
         agents.set(newdata);
     } catch(error) {

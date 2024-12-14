@@ -46,7 +46,7 @@ declare global {
 
 		interface APIResponse {
 			status: number;
-			data: ValorantMatch[];
+			data: ValorantMatch[] | LocalMatch[];
 			errors?: {
 				message: string;
 				details: string;

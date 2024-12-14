@@ -1,3 +1,4 @@
+import { processMatches } from '../utils/match';
 import type { PageLoad } from './$types'
 
 export const load: PageLoad = async ({ fetch }) => {
@@ -12,16 +13,20 @@ export const load: PageLoad = async ({ fetch }) => {
     let matchData: App.APIResponse = {
         status: 500,
         data: []
-    };
+    }
 
     if (matchResponse.status === 500) {
         const refResponse = await fetch('ref.json');
-        matchData = await refResponse.json();
+        const d = await refResponse.json();
+        matchData = {status: 200, data: processMatches(d)}
+
         name = 'sen z#5193';
     } else {
-        matchData = await matchResponse.json();
+        const d: App.LocalMatch[] = await matchResponse.json();
+        matchData = {status: 200, data: d}
     }
 
+    
     return { 
         stats: matchData.data,
         player: name }
