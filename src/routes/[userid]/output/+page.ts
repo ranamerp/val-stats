@@ -7,7 +7,11 @@ export const load = async ({ params, parent }) => {
            .schema('stats')
            .from('users')
            .select('user_id, current_preset, current_match')
-           .eq('provider_username', params.userid)  // Add filter for specific user
+           .or(
+            params.userid.includes('-') 
+              ? `user_id.eq."${params.userid}"` 
+              : `provider_username.eq.${params.userid},provider_id.eq.${params.userid}`
+          )  // Add filter for specific user
 
         if (error) {
            console.error(error);
