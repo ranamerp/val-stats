@@ -190,13 +190,16 @@
 
 <div class="font-dropdown relative w-64">
     <button
-        class="w-full px-4 py-2 text-left border rounded-lg bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        class="w-full min-h-10 px-4 py-2 text-left border rounded-lg bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500"
         on:click={() => 
             {
                 isPopOpen = !isPopOpen
                 saveBox = false;
                 deleteBox = false;
                 overwrite = false;
+                if (presetName.trim().length === 0) {
+                    presetName = "Preset"
+                }
             }
         }>
         {presetName}
@@ -268,7 +271,7 @@
                     on:click={() => 
                     {
                         saveBox = !saveBox;
-                        presetName = '';
+                        presetName = `Preset`;
                         
                     }}
                 >
