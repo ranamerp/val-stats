@@ -77,7 +77,7 @@
                     <div class='text-3xl' style="color: {leftsmalltextcolor}">{blue_team.won} </div> 
                 </div> 
                 <div class="flex justify-center items-center opacity-20">
-                    <img src="https://owcdn.net/img/65207bdae3e06.png" alt="ur mom" width=170 height=170>
+                    <img src="https://i.postimg.cc/rFcBLJsY/1280px-HD-transparent-picture.png" alt="ur mom">
                 </div>
                 <div class={'text-8xl text-right m-3'} style="color: {leftbigtextcolor}"> {blue_team.rounds_won} </div>
             </div>
@@ -123,8 +123,8 @@
         <div class = "w-[11.3%] mx-5 py-5 h-full flex flex-col flex-grow-0 flex-auto">
             <!-- Above div to push it down (and have logo) -->
              <!-- This needs to be fixed at some point, it's a small design detail I will work on later -->
-            <div class="relative flex h-[14.75%] bg-yellow-200 overflow-hidden"> 
-                <img class="object-contain" src="https://owcdn.net/img/63067806d167d.png" alt="vct" width=170 height="100">
+            <div class="relative flex h-[17.5%] overflow-hidden"> 
+                <img src="https://i.postimg.cc/rFcBLJsY/1280px-HD-transparent-picture.png" alt="vct">
             </div>
             <div class="h-full bg-black bg-opacity-45 overflow-hidden w-full mt-5 text-center">
                 <div class= "h-[35%] text-3xl mt-2 mb-5 flex flex-col flex-auto">
@@ -152,7 +152,7 @@
             <div class='h-[14.5%] grid grid-cols-3' style="background-color: {rightbgcolor};">
                 <div class='text-8xl text-left m-3' style="color: {rightbigtextcolor}"> {red_team.rounds_won} </div>
                 <div class="flex justify-center items-center opacity-20">
-                    <img src="https://owcdn.net/img/65207bdae3e06.png" alt="ur mom" width=170 height=170>
+                    <img src="https://i.postimg.cc/rFcBLJsY/1280px-HD-transparent-picture.png" alt="ur mom">
                 </div>
                 <div class="mr-8 my-5 items-center justify-items-end"> 
                     <!-- Need to make sure input here does not go past 5 characters -->
@@ -193,7 +193,7 @@
 
                 <!-- Map Section -->
                 <div class="relative w-[50%] ml-3 justify items-end" style="background-color: {rightbgcolor};">
-                    <img src="https://owcdn.net/img/65207bdae3e06.png" alt="ur mom" width=170 height=170>
+                    <img src="https://i.postimg.cc/rFcBLJsY/1280px-HD-transparent-picture.png" alt="ur mom">
                 </div>
 
             </div>

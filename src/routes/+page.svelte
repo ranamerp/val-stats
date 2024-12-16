@@ -354,7 +354,7 @@
         <!-- Other Dropdowns -->
         <div class="bg-slate-600 flex flex-col gap-y-5">
             
-            <FontPopup/>
+            <!-- <FontPopup/> -->
             
             <PresetPopup/>
 
