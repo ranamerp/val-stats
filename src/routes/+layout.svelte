@@ -8,15 +8,17 @@
 	
 	$effect(() => {
 		const { data } = supabase.auth.onAuthStateChange((_, newSession) => {
-			if (!newSession) {
-				/**
-				 * Queue this as a task so the navigation won't prevent the
-				 * triggering function from completing
-				 */
-				setTimeout(() => {
-					goto('/', { invalidateAll: true });
-				});
-			}
+			// I'm keeping this commented out, but we probably need to figure out auth states properly
+			// We need to be able to have short sessions (aka log them back in after a while) while still being able to load a site without a session
+			// if (!newSession) {
+			// 	/**
+			// 	 * Queue this as a task so the navigation won't prevent the
+			// 	 * triggering function from completing
+			// 	 */
+			// 	setTimeout(() => {
+			// 		goto('/', { invalidateAll: true });
+			// 	});
+			// }
 			if (newSession?.expires_at !== session?.expires_at) {
 				invalidate('supabase:auth');
 			}
