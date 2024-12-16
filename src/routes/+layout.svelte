@@ -1,14 +1,9 @@
 <script lang="ts">
 	import '../app.css';
 	import { goto, invalidate } from '$app/navigation'
-	import { setContext } from 'svelte';
 	import { page } from '$app/stores';
 	const { data: propsData, children } = $props();
     const { supabase, session, user } = propsData;
-
-	setContext('supabase', supabase);
-	setContext('session', session);
-	setContext('user', user);
 
 	
 	$effect(() => {

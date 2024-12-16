@@ -2,6 +2,8 @@
     import { getContext, onMount } from "svelte";
     import { get } from "svelte/store";
     import { presets, currentColor } from "../stores/Presets";
+    import type { SupabaseClient, User } from '@supabase/supabase-js'
+
 
     let searchQuery: string = '';
     let isPopOpen = false;
@@ -18,6 +20,10 @@
             .from('presets')
             .select('*')
             .eq("user_id", user.id);
+        
+        if(error) {
+            console.log(error)
+        }
         
         if (fetchedData) {
             presets.update((currentPresets) => {
@@ -137,7 +143,7 @@
             }
             
             //This should also check if it exists in the store
-            if (data.length > 0) {
+            if (data && data.length > 0) {
                 overwrite = !overwrite;
                 console.log("This already exists lol, no bueno!")
             } else {

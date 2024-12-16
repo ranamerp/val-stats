@@ -1,11 +1,16 @@
 //TODO: make this the go-to place for supabase. Use this code as a baseline and build on it so all queries are server-side
 
-import type { SupabaseClient } from '@supabase/supabase-js';
+import type { SupabaseClient, User } from '@supabase/supabase-js';
 import { error, json } from '@sveltejs/kit';
 
 
 export async function GET({ url, locals }) {
   const supabase: SupabaseClient = locals.supabase;
+  const user: User | null = locals.user;
+
+  if (!user) {
+    return error(400, 'User is currently not found!');
+  } 
 
   const action = url.searchParams.get('action');
   const userid = url.searchParams.get('userid');
@@ -15,6 +20,8 @@ export async function GET({ url, locals }) {
       return await getUserStats(userid, supabase);
     case 'getCurrentMatch':
       return await getCurrentMatch(userid, supabase);
+    case 'getPresets':
+      return await getPresets(user.id, supabase)
     default:
       return error(400, 'Invalid action');
   }
@@ -77,6 +84,29 @@ async function getCurrentMatch(userId: string | null, supabase: SupabaseClient) 
     status: 200,
     data
   });
+}
+
+async function getPresets(userid: string | null, supabase: SupabaseClient) {
+  if (!userid) {
+    return error(400, 'User ID is required');
+  }
+
+  const { data, error: dbError } = await supabase
+    .schema('stats')
+    .from('presets')
+    .select('*')
+    .eq("user_id", userid);
+
+  if (dbError) {
+    return error(500, dbError.message);
+  }
+
+  return json({
+    status: 200,
+    data
+  })
+  
+
 }
 
 async function updateUserPreset(data: any, supabase: SupabaseClient) {
