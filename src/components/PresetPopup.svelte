@@ -4,27 +4,25 @@
     import { presets, currentColor } from "../stores/Presets";
     import type { SupabaseClient, User } from '@supabase/supabase-js'
 
-
+    export let supabase: SupabaseClient<any, "stats", any>;
+    export let userid: string | undefined;
     let searchQuery: string = '';
     let isPopOpen = false;
     let saveBox = false;
     let deleteBox = false;
     let presetName = "Preset";
     let overwrite = false;
-    const supabase: any = getContext('supabase');
-    const user: any = getContext('user');
+    //const supabase: SupabaseClient = { supabaseC }
+    //const user: any = getContext('user');
 
 
     async function updateStore() {
         const { data: fetchedData, error } = await supabase
             .from('presets')
             .select('*')
-            .eq("user_id", user.id);
+            .eq("user_id", userid);
         
-        if(error) {
-            console.log(error)
-        }
-        
+        //This means a user is found, so we can add new presets. Otherwise, if a user is not found, we just show them the stored presets
         if (fetchedData) {
             presets.update((currentPresets) => {
                 const updatedPresets: Record<string, App.ColorPreset> = {...currentPresets};
@@ -81,7 +79,7 @@
             const { data, error } = await supabase
                 .from("presets")
                 .delete()
-                .eq('user_id', user.id)
+                .eq('user_id', userid)
                 .eq("preset_id", $currentColor.preset_id);
 
             if (error) {
@@ -110,7 +108,7 @@
         // Change button text and color to indicate preset is saved
 
         let finalObject = {
-            user_id: user.id,
+            user_id: userid,
             preset_name: presetName,
             last_updated: new Date().toISOString(),
             left_background: $currentColor.leftbgcolor,
@@ -135,7 +133,7 @@
             const { data, error } = await supabase
                 .from('presets')
                 .select('*')
-                .eq("user_id", user.id)
+                .eq("user_id", userid)
                 .ilike("preset_name", presetName)
     
             if (error) {
@@ -147,6 +145,14 @@
                 overwrite = !overwrite;
                 console.log("This already exists lol, no bueno!")
             } else {
+                // This is a claude suggestion for post requests using fetch. Will attempt it for consistency
+                // const { data, error } = await fetch('/api/your-endpoint', {
+                // method: 'POST',
+                // body: JSON.stringify(finalObject),
+                // headers: {
+                //     'Content-Type': 'application/json'
+                // }
+                // }).then(res => res.json());
                 // Add preset to DB and also store. Return confirmation by changing button color and text
                 try {
                     const { data, error } = await supabase
@@ -297,7 +303,10 @@
                 
                     <button
                     class="w-full px-4 py-2 text-left hover:bg-blue-100 focus:outline-none focus:bg-blue-500"
-                    on:click={() => applyPreset(preset, presetname)}
+                    on:click={() => {
+                        applyPreset(preset, presetname);
+                        isPopOpen = !isPopOpen;
+                    }}
                 >
                     {presetname}
                 </button>

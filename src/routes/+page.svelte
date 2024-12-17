@@ -23,10 +23,6 @@
     let showPopup = false;
     let popupMessage = "";
 
-    let preset = 'Champs 24'
-
-    let presetColors = $presets[preset];
-
     let colors: App.ColorPreset = {
         preset_id: $currentColor.preset_id ?? 0,
         leftbgcolor: $currentColor.leftbgcolor ?? '#c2ae75',
@@ -212,6 +208,18 @@
          <div>
             <button type="submit" onclick={searchPlayers} class="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">Reload Matches</button>
          </div>
+
+         <div> 
+            <!-- This will be where we send users to the page that they can pull their image.  -->
+            <!-- For now start with just an output page but then eventually need to do user auth. -->
+            <button type="submit" onclick={() => outputMatch(selection[value], colors)} class="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">Export to Page</button>
+            
+        </div>
+
+        <PresetPopup 
+            supabase = {supabase}
+            userid = {user?.id}
+        />
          
     </div>
 
@@ -343,12 +351,7 @@
                  />
              </div>
 
-             <div class="flex justify-center items-center"> 
-                <!-- This will be where we send users to the page that they can pull their image.  -->
-                <!-- For now start with just an output page but then eventually need to do user auth. -->
-                <button type="submit" onclick={() => outputMatch(selection[value], colors)} class="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">Export to Page</button>
-                
-            </div>
+
 
          </div>
 
@@ -357,7 +360,7 @@
             
             <!-- <FontPopup/> -->
             
-            <PresetPopup/>
+
 
 
             <!-- Right colors -->
