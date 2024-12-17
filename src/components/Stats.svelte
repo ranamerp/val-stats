@@ -82,16 +82,26 @@
                 <div class={'text-8xl text-right m-3'} style="color: {leftbigtextcolor}"> {blue_team.rounds_won} </div>
             </div>
             <!-- MVP Section -->
-            <div class="h-[30%] my-5 grid grid-cols-3 bg-black bg-opacity-45 overflow-hidden">
+            <div class="h-[30%] max-h-[30%] my-5 grid grid-cols-3 bg-black bg-opacity-45 overflow-hidden">
                 <div class="flex flex-col flex-auto">
-                    <div class='my-8 w-11/12 text-6xl text-center' style = "background-color: {mvpbannerbgcolor}; color: {mvpbannertextcolor}"> MVP </div>
-                    <div class='mx-5 pt-12 text-2xl' style="color: {mvpagentcolor}">{blue_team.players[0].agent.toUpperCase().substring(0, 5)}</div>
+                    <div class='my-8 w-11/12 text-6xl text-center z-10' style = "background-color: {mvpbannerbgcolor}; color: {mvpbannertextcolor}"> MVP </div>
+                    <div class='mx-5 pt-12 text-2xl z-10' style="color: {mvpagentcolor}">{blue_team.players[0].agent.toUpperCase().substring(0, 5)}</div>
                     <!-- Need to figure out how to make this a dynamic text size based on character length -->
-                    <div class='mx-5 text-4xl' style="color: {mvptextcolor}">{blue_team.players[0].name.toUpperCase()}</div>
+                    <div 
+                        class='mx-5 text-4xl overflow-hidden whitespace-nowrap'
+                        style="
+                            color: {mvptextcolor};
+                            max-width: 300px; 
+                            transform: {blue_team.players[0].name.length > 15 ? 'scale(0.8)' : 'scale(1)'};
+                            transition: transform 0.3s ease;
+                        "
+                        >
+                        {blue_team.players[0].name.toUpperCase()}
+                    </div>
                 </div>
                 <div class="flex overflow-y-clip">
                     <!-- This might need some JS or some code to make it fit. Like as the height of the box changes, the X coord of the image needs to change. For now keeping it as is -->
-                    <img class="object-contain scale-[4] z-0" style="object-position: 0% 245%" src={mapData.agentData[blue_team.players[0].agent].fullPortrait} alt="ur mom">
+                    <img class="object-contain scale-[4] -z-0" style="object-position: 0% 245%" src={mapData.agentData[blue_team.players[0].agent].fullPortrait} alt="ur mom">
                 </div>
                 <div class="mx-4 text-5xl flex flex-col flex-auto">
                     <div class="my-5 text-right" style="color: {globaltextcolor}">{blue_team.players[0].kills}/{blue_team.players[0].deaths}</div>
@@ -169,13 +179,23 @@
                 </div>
                 <div class="flex overflow-y-clip">
                     <!-- This might need some JS or some code to make it fit. Like as the height of the box changes, the X coord of the image needs to change. For now keeping it as is -->
-                    <img class="object-contain scale-[4] scale-x-[-4] z-0" style="object-position: 0% 245%" src={mapData.agentData[red_team.players[0].agent].fullPortrait} alt="ur mom">
+                    <img class="object-contain scale-[4] scale-x-[-4] -z-0" style="object-position: 0% 245%" src={mapData.agentData[red_team.players[0].agent].fullPortrait} alt="ur mom">
                 </div>
                 <div class="flex flex-col flex-auto justify items-end">
-                    <div class='my-8 w-11/12 text-6xl text-center' style = "background-color: {mvpbannerbgcolor}; color: {mvpbannertextcolor}"> MVP </div>
+                    <div class='my-8 w-11/12 text-6xl text-center z-10' style = "background-color: {mvpbannerbgcolor}; color: {mvpbannertextcolor}"> MVP </div>
                     <div class='mx-5 pt-12 text-2xl text-right' style="color: {mvpagentcolor}">{red_team.players[0].agent.toUpperCase()}</div>
                     <!-- Need to figure out how to make this a dynamic text size based on character length -->
-                    <div class='mx-5 text-4xl text-right' style="color: {mvptextcolor}">{red_team.players[0].name.toUpperCase()}</div>
+                    <div 
+                        class='mx-5 text-4xl text-right overflow-hidden whitespace-nowrap z-10'
+                        style="
+                            color: {mvptextcolor};
+                            max-width: 300px; 
+                            transform: {red_team.players[0].name.length > 15 ? 'scale(0.8)' : 'scale(1)'};
+                            transition: transform 0.3s ease;
+                        "
+                        >
+                        {red_team.players[0].name.toUpperCase()}
+                    </div>
                 </div>
 
 
