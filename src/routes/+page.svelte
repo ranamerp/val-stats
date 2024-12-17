@@ -74,10 +74,11 @@
 
         try{
             const response = await fetch(`/api/match?region=${'na'}&name=${terms[0]}&tag=${terms[1]}`);
-            const matchData = await response.json();
-            selection = matchData.data;
+            selection = await response.json();
             value = 0;
             player = terms[0];
+            selection[value].red_team.team_name = rtname;
+            selection[value].blue_team.team_name = btname;
         } catch (err: any) {
             console.log("ERROR!")
             console.log(err.message);
