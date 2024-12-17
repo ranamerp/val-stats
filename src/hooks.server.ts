@@ -48,7 +48,9 @@ const supabase: Handle = async ({ event, resolve }) => {
       return { session: null, user: null }
     }
 
-    return { session, user }
+    delete (session as any).user;
+
+    return { session: Object.assign({}, session, { user }), user };
   }
 
   return resolve(event, {
