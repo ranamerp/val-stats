@@ -111,7 +111,7 @@
             </div>
             
             <!-- Bottom Section -->
-            <div class="h-[50%] overflow-hidden flex flex-row"> 
+            <div class="flex flex-row"> 
                 <!-- Map Section -->
                 <div class="relative w-[50%] flex overflow-hidden pr-3">
                     <img class="object-none" src={mapData.mapData[playerData.mapName].splash} alt={playerData.mapName}>
@@ -202,7 +202,7 @@
             </div>
             
             <!-- Bottom Section -->
-            <div class="h-[50%] overflow-hidden flex flex-row"> 
+            <div class="flex flex-row"> 
                 <!--For loop using {#each}-->
                 <!-- Other Player Stats Section -->
                 <div class="flex flex-col min-w-[68%] w-[75%] gap-3">
@@ -230,3 +230,4 @@
         font-family: '`{globalFont.family}`, sans-serif';
     }
 </style> -->
+

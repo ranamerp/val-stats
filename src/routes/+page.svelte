@@ -334,7 +334,7 @@
                 colors.globaltextcolor = event.detail.hex as string;
                 currentColor.set(colors);
             }}
-            label = "Numbers Color"
+            label = "General Text Color"
             components={ChromeVariant} 
             sliderDirection="horizontal"
             hex = {colors.globaltextcolor}
@@ -468,7 +468,7 @@
                     colors.globaltextcolor = event.detail.hex as string;
                     currentColor.set(colors);
                 }}
-                label = "Numbers Color"
+                label = "General Text Color"
                 components={ChromeVariant} 
                 sliderDirection="horizontal"
                 hex = {colors.globaltextcolor}
