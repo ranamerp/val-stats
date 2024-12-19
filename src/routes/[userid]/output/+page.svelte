@@ -5,7 +5,7 @@
    
 </script>
 
-<div class="flex justify-center">
+<div class="flex min-h-screen max-h-screen justify-center">
    {#await data}
       <p> Loading... </p>
    {:then resp}

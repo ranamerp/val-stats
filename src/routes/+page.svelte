@@ -127,7 +127,7 @@
    <p> Loading...</p>
 {:else}
     <LoadingPopup {showPopup} message= {popupMessage} />
-    <div class="flex flex-row space-x-8">
+    <div class="flex flex-row space-x-8 bg-purple-500">
         <!-- Match Selection -->
         <div>
             <h1> Choose a match :</h1>
@@ -223,11 +223,8 @@
          
     </div>
 
-    <br>
-    
-
     <!-- <div class="w-[1280px] h-[720px]"> -->
-    <div class="flex flex-row">
+    <div class="flex flex-row py-5 bg-purple-500">
         <!-- Colors -->
         <div class="bg-slate-600 flex flex-col">
             <!-- We can make this custom, refer to doc for creating custom components. -->

@@ -10,7 +10,6 @@ export async function GET({ url }) {
     const name = url.searchParams.get('name');
     const tag = url.searchParams.get('tag');
 
-    //Temp removing custom game from this list, this probably will change
     const apiUrl = `https://api.henrikdev.xyz/valorant/v4/matches/${region}/pc/${name}/${tag}?mode=custom`;
 
     try {
