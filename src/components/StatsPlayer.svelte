@@ -30,7 +30,7 @@
             </div>
         </div>
         <div class="w-full grid grid-cols-2">
-            <div class="pl-5 align-text-bottom content-end"> 
+            <div class="pl-5 flex flex-col justify-end">
                 <div class="text-l" style="color: {colorData.smalltext}"> {playerData.agent.toUpperCase()} </div>
                 <div class="text-2xl" style="color: {colorData.text}"> {playerData.name.toUpperCase()} </div>
             </div>
@@ -49,7 +49,7 @@
             <div class="text-left text-4xl" style="color: {colorData.text}">{playerData.acs}</div>
         </div>
 
-        <div class="pr-5 align-text-bottom content-end"> 
+        <div class="pr-5 flex flex-col justify-end">
             <div class="text-right text-l" style="color: {colorData.smalltext}"> {playerData.agent.toUpperCase()} </div>
             <div class="text-right text-2xl" style="color: {colorData.text}"> {playerData.name.toUpperCase()} </div>
         </div>
