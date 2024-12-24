@@ -57,7 +57,7 @@
 
     </div>
     <div class="flex relative bg-black w-[25%] h-full justify-center items-center overflow-hidden">
-        <img class="object-cover h-full min-w-full" src={agentData[playerData.agent].displayIcon} alt={playerData.agent}>
+        <img class="object-cover h-full min-w-full transform -scale-x-100" src={agentData[playerData.agent].displayIcon} alt={playerData.agent}>
         <div class="absolute inset-0">
             <div class="absolute bottom-0 left-0 z-10 w-[25%] h-[22%]" style="background-color: {colorData.bg}">
                 <div 
