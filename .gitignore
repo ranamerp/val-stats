@@ -13,3 +13,4 @@ vite.config.ts.timestamp-*
 package-lock.json
 package.json
 bun.lockb
+src/routes/test/+page.svelte

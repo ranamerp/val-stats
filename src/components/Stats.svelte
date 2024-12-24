@@ -164,13 +164,13 @@
             <div class='h-[19.5%] grid grid-cols-3' style="background-color: {leftbgcolor};">
                 <div class="ml-8 my-5 items-center"> 
                     <!-- Need to make sure input here does not go past 5 characters -->
-                    <div class='text-6xl' style="color: {leftbigtextcolor}">{blue_team.team_name.toUpperCase()} </div>
-                    <div class='text-3xl' style="color: {leftsmalltextcolor}">{blue_team.won} </div> 
+                    <div class='text-7xl' style="color: {leftbigtextcolor}">{blue_team.team_name.toUpperCase()} </div>
+                    <div class='text-4xl' style="color: {leftsmalltextcolor}">{blue_team.won} </div> 
                 </div> 
                 <div class="flex justify-center items-center opacity-20">
                     <img src="https://i.postimg.cc/rFcBLJsY/1280px-HD-transparent-picture.png" alt="ur mom">
                 </div>
-                <div class={'text-8xl text-right m-3'} style="color: {leftbigtextcolor}"> {blue_team.rounds_won} </div>
+                <div class={'text-9xl text-right m-3'} style="color: {leftbigtextcolor}"> {blue_team.rounds_won} </div>
             </div>
             <!-- MVP Section -->
             <div class="h-[30%] max-h-[30%] my-5 grid grid-cols-3 bg-black bg-opacity-45 relative" bind:this={blue_div}>
@@ -178,10 +178,10 @@
                 <div class="flex flex-col flex-auto z-10">
                     <div class='my-8 w-11/12 text-6xl text-center' style="background-color: {mvpbannerbgcolor}; color: {mvpbannertextcolor}"> MVP </div>
                     <div class="flex-auto"></div>
-                    <div class='mx-5 pt-12 text-2xl' style="color: {mvpagentcolor}">{blue_team.players[0].agent.toUpperCase().substring(0, 5)}</div>
+                    <div class='mx-5 pt-12 text-3xl' style="color: {mvpagentcolor}">{blue_team.players[0].agent.toUpperCase().substring(0, 5)}</div>
                     <!-- Need to figure out how to make this a dynamic text size based on character length -->
                     <div 
-                        class='mx-5 mb-5 text-4xl overflow-hidden whitespace-nowrap'
+                        class='mx-5 mb-5 text-5xl overflow-hidden whitespace-nowrap'
                         style="
                             color: {mvptextcolor};
                             max-width: 300px; 
@@ -201,9 +201,12 @@
                 </div>
                 
                 <!-- Stats Div -->
-                <div class="mx-4 text-5xl flex flex-col flex-auto z-10">
+                 <!-- I think there is a better way to space out the numbers. Going to keep as is for now -->
+                <div class="mx-4 text-6xl flex flex-col flex-auto z-10">
                     <div class="my-5 text-right" style="color: {globaltextcolor}">{blue_team.players[0].kills}/{blue_team.players[0].deaths}</div>
+                    <div class="flex-auto"></div>
                     <div class="my-5 text-right" style="color: {globaltextcolor}">{blue_team.players[0].acs}</div>
+                    <div class="flex-auto"></div>
                     <div class="my-5 text-right" style="color: {globaltextcolor}">{blue_team.players[0].firstkills}</div>
                 </div>
             </div>
@@ -234,9 +237,11 @@
             </div>
 
             <div class="flex flex-col flex-auto bg-black bg-opacity-45 overflow-hidden w-full mb-5 text-center">
-                <div class= "h-30[%] max-h-[30%] text-3xl mb-6 flex flex-col flex-auto pt-3">
+                <div class= "h-30[%] text-4xl mb-6 flex flex-col flex-auto pt-3">
                     <div class="my-6" style="color: {globaltextcolor}"> K/D </div>
+                    <div class="flex-auto my-3"></div>
                     <div class="my-6" style="color: {globaltextcolor}"> ACS </div>
+                    <div class="flex-auto my-3"></div>
                     <div class="my-6" style="color: {globaltextcolor}"> First Kills </div>
                 </div>
                 
@@ -244,8 +249,8 @@
                     {#each blue_team.players.slice(1) as player}
                         <div class= "">
                             <div class = "grid gap-y-4 mb-6">
-                                <div class ="text-center text-2xl mb-[4.4%]" style="color: {globaltextcolor}"> K/D </div>
-                                <div class = "text-center text-2xl" style="color: {globaltextcolor}"> ACS </div>
+                                <div class ="text-center text-3xl mb-[4.4%]" style="color: {globaltextcolor}"> K/D </div>
+                                <div class = "text-center text-3xl" style="color: {globaltextcolor}"> ACS </div>
                             </div>
                         </div>
                     {/each}
@@ -257,21 +262,23 @@
         <div class="w-[42.7%] p-5 flex flex-col flex-grow">
             <!-- Top Bar -->
             <div class='h-[19.5%] grid grid-cols-3' style="background-color: {rightbgcolor};">
-                <div class='text-8xl text-left m-3' style="color: {rightbigtextcolor}"> {red_team.rounds_won} </div>
+                <div class='text-9xl text-left m-3' style="color: {rightbigtextcolor}"> {red_team.rounds_won} </div>
                 <div class="flex justify-center items-center opacity-20">
                     <img src="https://i.postimg.cc/rFcBLJsY/1280px-HD-transparent-picture.png" alt="ur mom">
                 </div>
                 <div class="mr-8 my-5 items-center justify-items-end"> 
-                    <div class='text-6xl text-right' style="color: {rightbigtextcolor}">{red_team.team_name.toUpperCase().substring(0, 5)} </div>
-                    <div class='text-3xl text-right' style="color: {rightsmalltextcolor}">{red_team.won} </div> 
+                    <div class='text-7xl text-right' style="color: {rightbigtextcolor}">{red_team.team_name.toUpperCase().substring(0, 5)} </div>
+                    <div class='text-4xl text-right' style="color: {rightsmalltextcolor}">{red_team.won} </div> 
                 </div> 
             </div>
             <!-- MVP Section -->
             <div class="h-[30%] max-h-[30%] my-5 grid grid-cols-3 bg-black bg-opacity-45 relative" bind:this={red_div}>
                 <!-- Stats Div -->
-                <div class="mx-4 text-5xl flex flex-col flex-auto z-10">
+                <div class="mx-4 text-6xl flex flex-col flex-auto z-10">
                     <div class="my-5 text-left" style="color: {globaltextcolor}">{red_team.players[0].kills}/{red_team.players[0].deaths}</div>
+                    <div class="flex-auto"></div>
                     <div class="my-5 text-left" style="color: {globaltextcolor}">{red_team.players[0].acs}</div>
+                    <div class="flex-auto"></div>
                     <div class="my-5 text-left" style="color: {globaltextcolor}">{red_team.players[0].firstkills}</div>
                 </div>
                 
@@ -285,11 +292,12 @@
                 
                 <!-- Text Divs -->
                 <div class="flex flex-col flex-auto z-10">
-                    <div class='my-8 w-11/12 text-6xl text-center' style="background-color: {mvpbannerbgcolor}; color: {mvpbannertextcolor}"> MVP </div>
-                    <div class='mx-5 pt-12 text-2xl text-right' style="color: {mvpagentcolor}">{red_team.players[0].agent.toUpperCase()}</div>
+                    <div class='my-8 w-full text-6xl text-center' style="background-color: {mvpbannerbgcolor}; color: {mvpbannertextcolor}"> MVP </div>
+                    <div class="flex-auto"></div>
+                    <div class='mx-5 pt-12 text-3xl text-right' style="color: {mvpagentcolor}">{red_team.players[0].agent.toUpperCase()}</div>
                     <!-- Need to figure out how to make this a dynamic text size based on character length -->
                     <div 
-                        class='mx-5 text-4xl text-right overflow-hidden whitespace-nowrap'
+                        class='mx-5 mb-5 text-5xl text-right overflow-hidden whitespace-nowrap'
                         style="
                             color: {mvptextcolor};
                             max-width: 300px; 
