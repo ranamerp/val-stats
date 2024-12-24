@@ -123,10 +123,12 @@
     let isLoading = false;
 
 </script>
+<div class="w-screen h-screen">
 {#if isLoading}
    <p> Loading...</p>
 {:else}
-    <LoadingPopup {showPopup} message= {popupMessage} />
+<LoadingPopup {showPopup} message= {popupMessage} />
+    <!-- Top Div -->
     <div class="flex flex-row space-x-8 bg-purple-500">
         <!-- Match Selection -->
         <div>
@@ -156,7 +158,7 @@
         <!-- Team Selection -->
         <div class="flex flex-row">
             <!-- Team A -->
-             <div class="px-8">
+                <div class="px-8">
                 <!-- Edit Players Name -->
                 <div>
                     <label for="blue_team" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Left Team</label>
@@ -168,10 +170,10 @@
                 <div>
 
                 </div>
-             </div>
+                </div>
 
             <!-- Team B -->
-             <div>
+                <div>
                 <div>
                     <label for="red_team" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Right Team</label>
                     <input type="text" bind:value={rtname} oninput={() => {
@@ -179,7 +181,7 @@
                     }} id="red_team" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="John" required />
                 </div>
                 
-             </div>
+                </div>
         </div>
 
         <!-- Current Player -->
@@ -205,11 +207,11 @@
         </form>
 
         <!-- Add Match Reload Button -->
-         <div>
+            <div>
             <button type="submit" onclick={searchPlayers} class="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">Reload Matches</button>
-         </div>
+            </div>
 
-         <div> 
+            <div> 
             <!-- This will be where we send users to the page that they can pull their image.  -->
             <!-- For now start with just an output page but then eventually need to do user auth. -->
             <button type="submit" onclick={() => outputMatch(selection[value], colors)} class="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">Export to Page</button>
@@ -220,10 +222,11 @@
             supabase = {supabase}
             userid = {user?.id}
         />
-         
+            
     </div>
 
     <!-- <div class="w-[1280px] h-[720px]"> -->
+    <!-- Main Bottom Div -->
     <div class="flex flex-row py-5 bg-purple-500">
         <!-- Colors -->
         <div class="bg-slate-600 flex flex-col">
@@ -340,17 +343,17 @@
         </div>
         
         <!-- Stats -->
-         <div class="flex flex-col">
-             <div class="w-[1920px] h-[1080px]">
-                 <Stats 
-                     playerData={selection[value]}
-                     colors = {colors}
-                 />
-             </div>
+            <div class="flex flex-col">
+                <div class="w-[1920px] h-[1080px]">
+                    <Stats 
+                        playerData={selection[value]}
+                        colors = {colors}
+                    />
+                </div>
 
 
 
-         </div>
+            </div>
 
         <!-- Other Dropdowns -->
         <div class="bg-slate-600 flex flex-col gap-y-5">
@@ -476,4 +479,5 @@
 
     </div>
 {/if}
+</div>
 
