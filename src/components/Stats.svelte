@@ -28,6 +28,10 @@
     let blue_div: HTMLDivElement | null = null;
     let red_div: HTMLDivElement | null = null;
 
+    let div_height = 0;
+    let stats_height = 0;
+    
+
     async function cropImage(imageUrl: string, cropWidth: number, cropHeight: number, flip: boolean = false): Promise<HTMLCanvasElement | null> {
         const image = new Image();
         let canvas: HTMLCanvasElement = document.createElement('canvas');
@@ -115,11 +119,13 @@
         if (blue_div) {
             const blueDivRect = blue_div.getBoundingClientRect();
             updateCanvas(blue_canvas, mapData.agentData[blue_team.players[0].agent].fullPortrait, blueDivRect.width, blueDivRect.height);
+            div_height = blueDivRect.height;
         }
         if (red_div) {
             const redDivRect = red_div.getBoundingClientRect();
             updateCanvas(red_canvas, mapData.agentData[red_team.players[0].agent].fullPortrait, redDivRect.width, redDivRect.height, true); // Flip the red canvas
         }
+        //console.log(statsHeight);
     }
 
 
@@ -145,6 +151,7 @@
         if (blue_div) {
             const blueDivRect = blue_div.getBoundingClientRect();
             await updateCanvas(blue_canvas, mapData.agentData[blue_team.players[0].agent].fullPortrait, blueDivRect.width, blueDivRect.height);
+            div_height = blueDivRect.height;
         }
         if (red_div) {
             const redDivRect = red_div.getBoundingClientRect();
@@ -173,7 +180,7 @@
                 <div class={'text-9xl text-right m-3'} style="color: {leftbigtextcolor}"> {blue_team.rounds_won} </div>
             </div>
             <!-- MVP Section -->
-            <div class="h-[30%] max-h-[30%] my-5 grid grid-cols-3 bg-black bg-opacity-45 relative" bind:this={blue_div}>
+            <div class="h-[30%] my-5 grid grid-cols-3 bg-black bg-opacity-45 relative" bind:this={blue_div}>
                 <!-- Text Divs -->
                 <div class="flex flex-col flex-auto z-10">
                     <div class='my-8 w-11/12 text-6xl text-center' style="background-color: {mvpbannerbgcolor}; color: {mvpbannertextcolor}"> MVP </div>
@@ -181,7 +188,7 @@
                     <div class='mx-5 pt-12 text-3xl' style="color: {mvpagentcolor}">{blue_team.players[0].agent.toUpperCase().substring(0, 5)}</div>
                     <!-- Need to figure out how to make this a dynamic text size based on character length -->
                     <div 
-                        class='mx-5 mb-5 text-5xl overflow-hidden whitespace-nowrap'
+                        class='mx-5 mb-5 text-4xl overflow-hidden whitespace-nowrap'
                         style="
                             color: {mvptextcolor};
                             max-width: 300px; 
@@ -202,7 +209,7 @@
                 
                 <!-- Stats Div -->
                  <!-- I think there is a better way to space out the numbers. Going to keep as is for now -->
-                <div class="mx-4 text-6xl flex flex-col flex-auto z-10">
+                <div class="mx-4 text-5xl flex flex-col flex-auto z-10">
                     <div class="my-5 text-right" style="color: {globaltextcolor}">{blue_team.players[0].kills}/{blue_team.players[0].deaths}</div>
                     <div class="flex-auto"></div>
                     <div class="my-5 text-right" style="color: {globaltextcolor}">{blue_team.players[0].acs}</div>
@@ -221,7 +228,7 @@
                 </div>
                 <!--For loop using {#each}-->
                 <!-- Other Player Stats Section -->
-                <div class="flex flex-col min-w-[68%] w-[75%] gap-3">
+                <div class="flex flex-col min-w-[68%] w-[75%] gap-3" bind:clientHeight={stats_height}>
                     {#each blue_team.players.slice(1) as player}
                         <StatsPlayer orientation="left" playerData={player} colorData={{bg: leftbgcolor, text: leftbigtextcolor, smalltext: leftsmalltextcolor}} agentData={mapData.agentData}/>
                     {/each}
@@ -231,26 +238,29 @@
         </div>
 
         <!-- Middle Side -->
-        <div class = "w-[11.3%] mx-5 flex flex-col">
-            <div class="h-[19%] my-5 overflow-hidden"> 
+        <div class = "w-[11.3%] p-5 flex flex-col flex-grow">
+            <!-- Top Image -->
+            <div class="h-[19.5%] overflow-hidden"> 
                 <img src="https://i.postimg.cc/rFcBLJsY/1280px-HD-transparent-picture.png" alt="vct" class="w-full h-full object-contain">
             </div>
 
-            <div class="flex flex-col flex-auto bg-black bg-opacity-45 overflow-hidden w-full mb-5 text-center">
-                <div class= "h-30[%] text-4xl mb-6 flex flex-col flex-auto pt-3">
-                    <div class="my-6" style="color: {globaltextcolor}"> K/D </div>
-                    <div class="flex-auto my-3"></div>
-                    <div class="my-6" style="color: {globaltextcolor}"> ACS </div>
-                    <div class="flex-auto my-3"></div>
-                    <div class="my-6" style="color: {globaltextcolor}"> First Kills </div>
+            <!--  -->
+            <div class="flex flex-col flex-auto bg-black bg-opacity-45 overflow-hidden w-full mt-5 gap-5 text-center">
+                <div class= "text-3xl flex flex-col flex-auto" style="height: {div_height}px; max-height: {div_height}px; min-height: {div_height}px;">
+                    <div class="my-7" style="color: {globaltextcolor}"> K/D </div>
+                    <div class="flex-auto"></div>
+                    <div class="my-7" style="color: {globaltextcolor}"> ACS </div>
+                    <div class="flex-auto"></div>
+                    <div class="my-7" style="color: {globaltextcolor}"> First Kills </div>
                 </div>
                 
-                <div class="flex flex-col flex-auto gap-3 mt-5">
+                
+                <div class="flex flex-col gap-3">
                     {#each blue_team.players.slice(1) as player}
-                        <div class= "">
-                            <div class = "grid gap-y-4 mb-6">
-                                <div class ="text-center text-3xl mb-[4.4%]" style="color: {globaltextcolor}"> K/D </div>
-                                <div class = "text-center text-3xl" style="color: {globaltextcolor}"> ACS </div>
+                    <div class= "">
+                            <div class="flex flex-col items-center gap-y-5">
+                                <div class = "text-center text-2xl" style="color: {globaltextcolor}"> K/D </div>
+                                <div class = "text-center text-2xl" style="color: {globaltextcolor}"> ACS </div>
                             </div>
                         </div>
                     {/each}
@@ -274,7 +284,7 @@
             <!-- MVP Section -->
             <div class="h-[30%] max-h-[30%] my-5 grid grid-cols-3 bg-black bg-opacity-45 relative" bind:this={red_div}>
                 <!-- Stats Div -->
-                <div class="mx-4 text-6xl flex flex-col flex-auto z-10">
+                <div class="mx-4 text-5xl flex flex-col flex-auto z-10">
                     <div class="my-5 text-left" style="color: {globaltextcolor}">{red_team.players[0].kills}/{red_team.players[0].deaths}</div>
                     <div class="flex-auto"></div>
                     <div class="my-5 text-left" style="color: {globaltextcolor}">{red_team.players[0].acs}</div>
@@ -297,7 +307,7 @@
                     <div class='mx-5 pt-12 text-3xl text-right' style="color: {mvpagentcolor}">{red_team.players[0].agent.toUpperCase()}</div>
                     <!-- Need to figure out how to make this a dynamic text size based on character length -->
                     <div 
-                        class='mx-5 mb-5 text-5xl text-right overflow-hidden whitespace-nowrap'
+                        class='mx-5 mb-5 text-4xl text-right overflow-hidden whitespace-nowrap'
                         style="
                             color: {mvptextcolor};
                             max-width: 300px; 
@@ -316,7 +326,7 @@
                 <!-- Other Player Stats Section -->
                 <div class="flex flex-col min-w-[68%] w-[75%] gap-3">
                     {#each red_team.players.slice(1) as player}
-                        <StatsPlayer orientation="right" playerData={player} colorData={{bg: rightbgcolor, text: rightbigtextcolor, smalltext: rightsmalltextcolor}} agentData={mapData.agentData}/>
+                        <StatsPlayer  orientation="right" playerData={player} colorData={{bg: rightbgcolor, text: rightbigtextcolor, smalltext: rightsmalltextcolor}} agentData={mapData.agentData}/>
                     {/each}
                 </div>
 

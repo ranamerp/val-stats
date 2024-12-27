@@ -35,8 +35,8 @@
                 <div class="text-2xl" style="color: {colorData.text}"> {playerData.name.toUpperCase()} </div>
             </div>
 
-            <div class="pr-5 align-text-bottom content-center grid"> 
-                <div class="text-right text-4xl mb-5" style="color: {colorData.text}">{playerData.kills}/{playerData.deaths}</div>
+            <div class="pr-5 align-text-bottom content-center grid gap-y-5"> 
+                <div class="text-right text-4xl" style="color: {colorData.text}">{playerData.kills}/{playerData.deaths}</div>
                 <div class="text-right text-4xl" style="color: {colorData.text}">{playerData.acs}</div>
             </div>
         </div>
