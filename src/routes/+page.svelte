@@ -6,7 +6,7 @@
     import PresetPopup from "../components/PresetPopup.svelte";
     import { presets, currentColor } from "../stores/Presets";
     import ColorPicker, { ChromeVariant } from 'svelte-awesome-color-picker';
-    import { goto } from '$app/navigation';
+    import { goto, invalidate } from '$app/navigation';
     
 
     export let data;
@@ -109,7 +109,6 @@
                 console.error(error);
                 return {status: 404, error: error}
             } else {
-                console.log(finalobject);
                 return {status: 200}
             }
         } catch (error) {
@@ -184,6 +183,11 @@
                 </div>
         </div>
 
+        <!-- Add Match Reload Button -->
+        <div>
+            <button type="submit" onclick={searchPlayers} class="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">Reload Matches</button>
+        </div>
+
         <!-- Current Player -->
         <div class="p-5"> 
             Current Player: {player}
@@ -206,15 +210,15 @@
             </div>
         </form>
 
-        <!-- Add Match Reload Button -->
-            <div>
-            <button type="submit" onclick={searchPlayers} class="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">Reload Matches</button>
-            </div>
+        <!-- Update Output -->
+        <div>
+        <button type="submit" onclick={() => outputMatch(selection[value], colors)} class="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">Update Output</button>
+        </div>
 
-            <div> 
+        <div> 
             <!-- This will be where we send users to the page that they can pull their image.  -->
             <!-- For now start with just an output page but then eventually need to do user auth. -->
-            <button type="submit" onclick={() => outputMatch(selection[value], colors)} class="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">Export to Page</button>
+            <button type="submit" onclick={() => gotoOutput(selection[value], colors)} class="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">Export to Page</button>
             
         </div>
 
