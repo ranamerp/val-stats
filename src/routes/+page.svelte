@@ -229,7 +229,7 @@
     <!-- Main Bottom Div -->
     <div class="flex flex-row py-5 bg-purple-500">
         <!-- Colors -->
-        <div class="bg-slate-600 flex flex-col">
+        <div class="bg-slate-600 flex flex-col z-20">
             <!-- We can make this custom, refer to doc for creating custom components. -->
             <ColorPicker
                 on:input={(event) => {
@@ -356,7 +356,7 @@
             </div>
 
         <!-- Other Dropdowns -->
-        <div class="bg-slate-600 flex flex-col gap-y-5">
+        <div class="bg-slate-600 flex flex-col gap-y-5 z-20">
             
             <!-- <FontPopup/> -->
             
