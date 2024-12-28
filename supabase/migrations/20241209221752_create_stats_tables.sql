@@ -1,4 +1,17 @@
 create schema if not exists stats;
+create table
+  stats.users (
+    user_id uuid not null,
+    provider_id text not null,
+    provider text not null,
+    provider_username text not null,
+    provider_image text null,
+    current_match jsonb null,
+    current_preset jsonb null,
+    constraint users_pkey primary key (user_id)
+  ) tablespace pg_default;
+
+  GRANT ALL privileges ON TABLE stats.users TO postgres, anon, authenticated, service_role, dashboard_user;
 
 create table
   stats.presets (
@@ -20,25 +33,12 @@ create table
     font character varying null,
     constraint presets_pkey primary key (preset_id),
     constraint presets_preset_id_key unique (preset_id),
-    constraint presets_user_id_fkey foreign key (user_id) references stats.users (id) on update cascade on delete cascade
+    constraint presets_user_id_fkey foreign key (user_id) references stats.users (user_id) on update cascade on delete cascade
   ) tablespace pg_default;
 
   --Will eventually want to tighten this, for now all is fine
   GRANT ALL privileges ON TABLE stats.presets TO postgres, anon, authenticated, service_role, dashboard_user;
 
-create table
-  stats.users (
-    user_id uuid not null,
-    provider_id text not null,
-    provider text not null,
-    provider_username text not null,
-    provider_image text null,
-    current_match jsonb null,
-    current_preset jsonb null,
-    constraint users_pkey primary key (user_id)
-  ) tablespace pg_default;
-
-  GRANT ALL privileges ON TABLE stats.users TO postgres, anon, authenticated, service_role, dashboard_user;
 
 create function stats.handle_new_user()
 returns trigger
