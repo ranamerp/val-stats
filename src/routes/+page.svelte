@@ -233,14 +233,14 @@
     <!-- Main Bottom Div -->
     <div class="flex flex-row py-5 bg-purple-500">
         <!-- Colors -->
-        <div class="bg-slate-600 flex flex-col z-20">
+        <div class="bg-slate-600 flex flex-col min-w-[10%] z-20">
             <!-- We can make this custom, refer to doc for creating custom components. -->
             <ColorPicker
                 on:input={(event) => {
                     colors.leftbgcolor = event.detail.hex as string;
                     currentColor.set(colors);
                 }}
-                label = "Left Background"
+                label = "Left BG"
                 components={ChromeVariant} 
                 sliderDirection="horizontal"
                 hex = {colors.leftbgcolor}
@@ -270,7 +270,7 @@
                 colors.leftsmalltextcolor = event.detail.hex as string;
                 currentColor.set(colors);
             }}
-            label = "Left Small Text"
+            label = "Left Accent"
             components={ChromeVariant} 
             sliderDirection="horizontal"
             hex = {colors.leftsmalltextcolor}
@@ -286,7 +286,7 @@
                 colors.mvpbannerbgcolor = event.detail.hex as string;
                 currentColor.set(colors);
             }}
-            label = "MVP Banner Background"
+            label = "MVP Banner BG"
             components={ChromeVariant} 
             sliderDirection="horizontal"
             hex = {colors.mvpbannerbgcolor}
@@ -312,7 +312,7 @@
                 colors.mvpagentcolor = event.detail.hex as string;
                 currentColor.set(colors);
             }}
-            label = "MVP Agent Text Color"
+            label = "MVP Agent Text"
             components={ChromeVariant} 
             sliderDirection="horizontal"
             hex = {colors.mvpagentcolor}
@@ -325,7 +325,7 @@
                 colors.mvptextcolor = event.detail.hex as string;
                 currentColor.set(colors);
             }}
-            label = "MVP Name Color"
+            label = "MVP Name"
             components={ChromeVariant} 
             sliderDirection="horizontal"
             hex = {colors.mvptextcolor}
@@ -338,7 +338,7 @@
                 colors.globaltextcolor = event.detail.hex as string;
                 currentColor.set(colors);
             }}
-            label = "General Text Color"
+            label = "General Text"
             components={ChromeVariant} 
             sliderDirection="horizontal"
             hex = {colors.globaltextcolor}
@@ -348,19 +348,14 @@
         
         <!-- Stats -->
             <div class="flex flex-col">
-                <div class="w-[1920px] h-[1080px]">
                     <Stats 
                         playerData={selection[value]}
                         colors = {colors}
                     />
-                </div>
-
-
-
             </div>
 
         <!-- Other Dropdowns -->
-        <div class="bg-slate-600 flex flex-col gap-y-5 z-20">
+        <div class="bg-slate-600 flex flex-col min-w-[10%] z-20">
             
             <!-- <FontPopup/> -->
             
@@ -375,7 +370,7 @@
                     colors.rightbgcolor = event.detail.hex as string;
                     currentColor.set(colors);
                 }}
-                label = "Right Background"
+                label = "Right BG"
                 components={ChromeVariant} 
                 sliderDirection="horizontal"
                 hex = {colors.rightbgcolor}
@@ -405,7 +400,7 @@
                     colors.rightsmalltextcolor = event.detail.hex as string;
                     currentColor.set(colors);
                 }}
-                label = "Right Small Text"
+                label = "Right Accent"
                 components={ChromeVariant} 
                 sliderDirection="horizontal"
                 hex = {colors.rightsmalltextcolor}
@@ -420,7 +415,7 @@
                     colors.mvpbannerbgcolor = event.detail.hex as string;
                     currentColor.set(colors);
                 }}
-                label = "MVP Banner Background"
+                label = "MVP Banner BG"
                 components={ChromeVariant} 
                 sliderDirection="horizontal"
                 hex = {colors.mvpbannerbgcolor}
@@ -446,7 +441,7 @@
                     colors.mvpagentcolor = event.detail.hex as string;
                     currentColor.set(colors);
                 }}
-                label = "MVP Agent Text Color"
+                label = "MVP Agent Text"
                 components={ChromeVariant} 
                 sliderDirection="horizontal"
                 hex = {colors.mvpagentcolor}
@@ -459,7 +454,7 @@
                     colors.mvptextcolor = event.detail.hex as string;
                     currentColor.set(colors);
                 }}
-                label = "MVP Name Color"
+                label = "MVP Name"
                 components={ChromeVariant} 
                 sliderDirection="horizontal"
                 hex = {colors.mvptextcolor}
@@ -472,7 +467,7 @@
                     colors.globaltextcolor = event.detail.hex as string;
                     currentColor.set(colors);
                 }}
-                label = "General Text Color"
+                label = "General Text"
                 components={ChromeVariant} 
                 sliderDirection="horizontal"
                 hex = {colors.globaltextcolor}
