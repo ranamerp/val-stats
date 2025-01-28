@@ -230,7 +230,7 @@
             <div class="flex flex-row flex-grow"> 
                 <!-- Map Section -->
                 <div class="relative w-[50%] flex overflow-hidden pr-3">
-                    <img class="object-none" src={mapData.mapData[playerData.mapName].splash} alt={playerData.mapName}>
+                    <img class="object-cover size=" src={mapData.mapData[playerData.mapName].splash} alt={playerData.mapName}>
                     <p class="absolute inset-x-0 bottom-0 pb-5 text-center text-6xl"style="color: {globaltextcolor}"> {playerData.mapName} </p>
     
                 </div>
