@@ -184,20 +184,27 @@
             <div class="h-[30%] my-5 grid grid-cols-3 bg-black bg-opacity-45 relative" bind:this={blue_div}>
                 <!-- Text Divs -->
                 <div class="flex flex-col flex-auto z-10">
-                    <div class='my-8 w-11/12 text-6xl text-center' style="background-color: {mvpbannerbgcolor}; color: {mvpbannertextcolor}"> MVP </div>
+                    <div class='my-8 w-11/12 text-6xl text-center' style="background-color: {mvpbannerbgcolor}; color: {mvpbannertextcolor}">MVP</div>
                     <div class="flex-auto"></div>
-                    <div class='mx-5 pt-12 text-3xl' style="color: {mvpagentcolor}">{blue_team.players[0].agent.toUpperCase().substring(0, 5)}</div>
-                    <!-- Need to figure out how to make this a dynamic text size based on character length -->
-                    <div 
-                        class='mx-5 mb-5 text-4xl whitespace-nowrap'
-                        style="
-                            color: {mvptextcolor};
-                            max-width: 300px; 
-                            transform: {blue_team.players[0].name.length > 15 ? 'scale(0.8)' : 'scale(1)'};
-                            transition: transform 0.3s ease;
-                        "
-                    >
-                        {blue_team.players[0].name.toUpperCase()}
+                    
+                    <!-- Container for aligned text -->
+                    <div class="w-full mb-5 pl-8 flex flex-col items-start">
+                        <!-- Agent name -->
+                        <div class="text-3xl" style="color: {mvpagentcolor}">
+                            {blue_team.players[0].agent.toUpperCase()}
+                        </div>
+                        
+                        <!-- Player name -->
+                        <div 
+                            class="text-4xl whitespace-nowrap"
+                            style="
+                                color: {mvptextcolor};
+                                transform: {blue_team.players[0].name.length > 15 ? 'scale(0.8)' : 'scale(1)'};
+                                transform-origin: left;
+                            "
+                        >
+                            {blue_team.players[0].name.toUpperCase()}
+                        </div>
                     </div>
                 </div>
                 <!-- Blank Div to push the stats div to the right -->
@@ -306,21 +313,28 @@
                 </div>
                 
                 <!-- Text Divs -->
-                <div class="flex flex-col flex-auto z-10">
-                    <div class='my-8 w-full text-6xl text-center' style="background-color: {mvpbannerbgcolor}; color: {mvpbannertextcolor}"> MVP </div>
+                <div class="flex flex-col flex-auto z-10 w-full">
+                    <div class='my-8 w-full text-6xl text-center' style="background-color: {mvpbannerbgcolor}; color: {mvpbannertextcolor}">MVP</div>
                     <div class="flex-auto"></div>
-                    <div class='mx-5 pt-12 text-3xl text-right' style="color: {mvpagentcolor}">{red_team.players[0].agent.toUpperCase()}</div>
-                    <!-- Need to figure out how to make this a dynamic text size based on character length -->
-                    <div 
-                        class='mx-5 mb-5 text-4xl text-right overflow-hidden whitespace-nowrap'
-                        style="
-                            color: {mvptextcolor};
-                            max-width: 300px; 
-                            transform: {red_team.players[0].name.length > 15 ? 'scale(0.8)' : 'scale(1)'};
-                            transition: transform 0.3s ease;
-                        "
-                    >
-                        {red_team.players[0].name.toUpperCase()}
+                    
+                    <!-- Container for aligned text -->
+                    <div class="w-full mb-5 pr-8 flex flex-col items-end">
+                        <!-- Agent name -->
+                        <div class="text-3xl" style="color: {mvpagentcolor}">
+                            {red_team.players[0].agent.toUpperCase()}
+                        </div>
+                        
+                        <!-- Player name -->
+                        <div 
+                            class="text-4xl whitespace-nowrap"
+                            style="
+                                color: {mvptextcolor};
+                                transform: {red_team.players[0].name.length > 15 ? 'scale(0.8)' : 'scale(1)'};
+                                transform-origin: right;
+                            "
+                        >
+                            {red_team.players[0].name.toUpperCase()}
+                        </div>
                     </div>
                 </div>
             </div>
