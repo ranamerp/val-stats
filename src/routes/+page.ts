@@ -3,6 +3,7 @@ import type { PageLoad } from './$types'
 
 export const load: PageLoad = async ({ fetch }) => {
 
+    //Potential improvement: check if user is logged in and get their current match from db. 
 
     // Match fetching logic
     const region = 'na';

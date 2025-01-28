@@ -3,15 +3,16 @@
     export let playerData: App.LocalPlayer;
     export let colorData;
     export let agentData: Record<string, App.ValorantAgent>;
+    export let height: number = 0;
 </script>
 
-<style>
+<!-- <style>
     :root {
       --aspect-ratio: calc(114px / 490px); /* Adjust this value based on your original aspect ratio */
     }
-</style>
+</style> -->
 
-<div class="flex w-full h-1/4" style="background-color: {colorData.bg};">
+<div bind:clientHeight={height} class="flex w-full h-1/4" style="background-color: {colorData.bg};">
     {#if orientation == "left"}
         <!-- This should be the agent background -->
         <div class="flex relative bg-black w-[25%] h-full justify-center items-center overflow-hidden">

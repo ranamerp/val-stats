@@ -25,6 +25,7 @@
 
     let blue_canvas: HTMLCanvasElement | null = null;
     let red_canvas: HTMLCanvasElement | null = null;
+    let top_div: HTMLDivElement | null = null;
     let blue_div: HTMLDivElement | null = null;
     let red_div: HTMLDivElement | null = null;
 
@@ -168,7 +169,7 @@
         <!-- Left Side -->
         <div class="w-[42.7%] p-5 flex flex-col flex-grow">
             <!-- Top Bar -->
-            <div class='h-[19.5%] grid grid-cols-3' style="background-color: {leftbgcolor};">
+            <div class='h-[16%] grid grid-cols-3' style="background-color: {leftbgcolor};">
                 <div class="ml-8 my-5 items-center"> 
                     <!-- Need to make sure input here does not go past 5 characters -->
                     <div class='text-7xl' style="color: {leftbigtextcolor}">{blue_team.team_name.toUpperCase()} </div>
@@ -188,7 +189,7 @@
                     <div class='mx-5 pt-12 text-3xl' style="color: {mvpagentcolor}">{blue_team.players[0].agent.toUpperCase().substring(0, 5)}</div>
                     <!-- Need to figure out how to make this a dynamic text size based on character length -->
                     <div 
-                        class='mx-5 mb-5 text-4xl overflow-hidden whitespace-nowrap'
+                        class='mx-5 mb-5 text-4xl whitespace-nowrap'
                         style="
                             color: {mvptextcolor};
                             max-width: 300px; 
@@ -228,9 +229,15 @@
                 </div>
                 <!--For loop using {#each}-->
                 <!-- Other Player Stats Section -->
-                <div class="flex flex-col min-w-[68%] w-[75%] gap-3" bind:clientHeight={stats_height}>
+                <div class="flex flex-col min-w-[68%] w-[75%] gap-3">
                     {#each blue_team.players.slice(1) as player}
-                        <StatsPlayer orientation="left" playerData={player} colorData={{bg: leftbgcolor, text: leftbigtextcolor, smalltext: leftsmalltextcolor}} agentData={mapData.agentData}/>
+                        <StatsPlayer 
+                            orientation="left" 
+                            playerData={player} 
+                            colorData={{bg: leftbgcolor, text: leftbigtextcolor, smalltext: leftsmalltextcolor}} 
+                            agentData={mapData.agentData}
+                            bind:height={stats_height}
+                        />
                     {/each}
                 </div>
             </div>
@@ -240,38 +247,36 @@
         <!-- Middle Side -->
         <div class = "w-[11.3%] p-5 flex flex-col flex-grow">
             <!-- Top Image -->
-            <div class="h-[19.5%] overflow-hidden"> 
-                <img src="https://i.postimg.cc/rFcBLJsY/1280px-HD-transparent-picture.png" alt="vct" class="w-full h-full object-contain">
+            <div class="min-h-[16%] overflow-hidden"> 
+                <img src="https://i.postimg.cc/rFcBLJsY/1280px-HD-transparent-picture.png" alt="vct" class="w-full h-full py-5 object-contain">
             </div>
 
-            <!--  -->
-            <div class="flex flex-col flex-auto bg-black bg-opacity-45 overflow-hidden w-full mt-5 gap-5 text-center">
-                <div class= "text-3xl flex flex-col flex-auto" style="height: {div_height}px; max-height: {div_height}px; min-height: {div_height}px;">
-                    <div class="my-7" style="color: {globaltextcolor}"> K/D </div>
-                    <div class="flex-auto"></div>
-                    <div class="my-7" style="color: {globaltextcolor}"> ACS </div>
-                    <div class="flex-auto"></div>
-                    <div class="my-7" style="color: {globaltextcolor}"> First Kills </div>
-                </div>
-                
-                
-                <div class="flex flex-col gap-3">
-                    {#each blue_team.players.slice(1) as player}
-                    <div class= "">
-                            <div class="flex flex-col items-center gap-y-5">
-                                <div class = "text-center text-2xl" style="color: {globaltextcolor}"> K/D </div>
-                                <div class = "text-center text-2xl" style="color: {globaltextcolor}"> ACS </div>
-                            </div>
+            <!-- Middle Nameplates -->
+            <div class="h-[30%] max-h-[30%] flex flex-col flex-auto text-3xl text-center mt-5 bg-black bg-opacity-45">
+                <div class="my-7" style="color: {globaltextcolor}"> K/D </div>
+                <div class="flex-auto"></div>
+                <div class="my-7" style="color: {globaltextcolor}"> ACS </div>
+                <div class="flex-auto"></div>
+                <div class="my-7" style="color: {globaltextcolor}"> First Kills </div>
+            </div>
+            
+
+            <div class="flex flex-col flex-auto gap-3 bg-black bg-opacity-45 pt-5">
+                {#each blue_team.players.slice(1) as player}
+                <div class= "" style="height: {stats_height}px;">
+                        <div class="flex flex-col h-full items-center justify-center gap-y-5">
+                            <div class = "text-center text-2xl" style="color: {globaltextcolor}"> K/D </div>
+                            <div class = "text-center text-2xl" style="color: {globaltextcolor}"> ACS </div>
                         </div>
-                    {/each}
-                </div>
+                    </div>
+                {/each}
             </div>
         </div>
 
         <!-- Right Side -->
         <div class="w-[42.7%] p-5 flex flex-col flex-grow">
             <!-- Top Bar -->
-            <div class='h-[19.5%] grid grid-cols-3' style="background-color: {rightbgcolor};">
+            <div class='h-[16%] grid grid-cols-3' style="background-color: {rightbgcolor};">
                 <div class='text-9xl text-left m-3' style="color: {rightbigtextcolor}"> {red_team.rounds_won} </div>
                 <div class="flex justify-center items-center opacity-20">
                     <img src="https://i.postimg.cc/rFcBLJsY/1280px-HD-transparent-picture.png" alt="ur mom">
