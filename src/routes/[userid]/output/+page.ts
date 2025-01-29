@@ -3,64 +3,59 @@ import { browser } from '$app/environment';
 import { invalidate } from '$app/navigation';
 
 export const load: PageLoad = async ({ params, parent }) => {
-    // This retrieves the Supabase client from the parent layout
-   const { supabase } = await parent();
-   try {
-      const { data, error } = await supabase
-         .schema('stats')
-         .from('users')
-         .select('user_id, current_preset, current_match')
-         .or(
-         params.userid.includes('-') 
-            ? `user_id.eq."${params.userid}"` 
-            : `provider_username.eq.${params.userid},provider_id.eq.${params.userid}`
-         );
+  const { supabase } = await parent();
+  
+  try {
+    const { data: userData, error } = await supabase
+      .schema('stats')
+      .from('users')
+      .select('user_id, current_preset, current_match')
+      .or(params.userid.includes('-') 
+        ? `user_id.eq.${params.userid}` 
+        : `provider_username.eq.${params.userid},provider_id.eq.${params.userid}`
+      )
+      .single();
 
-      if (error) {
-         console.error(error);
-         return { status: 500, hideHeader: true };
-      }
+    if (error) throw error;
 
-      // Assuming data is an array and you want the first matching record
-      if (data && data.length > 0) {
-         const firstRecord = data[0];
-         
-         if (browser) {
-            const channel = supabase
-               .channel('schema-db-changes')
-               .on(
-                  'postgres_changes',
-                  {
-                     event: 'UPDATE',
-                     schema: 'stats',
-                     table: 'users',
-                     filter: `user_id=eq.${firstRecord.user_id}`
-                  },
-                  async (payload) => {
-                     console.log('Change received!', payload);
-                     await invalidate('app:data');
-                  }
-               )
-               .subscribe();
+    if (browser) {
+      console.log('Subscribing to changes for user:', userData.user_id);
+      
+      const channel = supabase
+        .channel(`user:${userData.user_id}`) // Unique channel name
+        .on(
+          'postgres_changes',
+          {
+            event: 'UPDATE',
+            schema: 'stats',
+            table: 'users',
+            filter: `user_id=eq.${userData.user_id}` // Add quotes if string/UUID
+          },
+          (payload) => {
+            console.log('Realtime update:', payload.new);
+            window.location.reload(); // Soft refresh instead of reload
+          }
+        )
+        .subscribe();
 
-            // Cleanup function
-            return {
-               status: 200,
-               match: firstRecord.current_match,
-               preset: firstRecord.current_preset,
-               hideHeader: true,
-               destroy: () => {
-                     supabase.removeChannel(channel);
-               }
-            };
-         }
-      }
+      return {
+        match: userData.current_match,
+        preset: userData.current_preset,
+        hideHeader: true,
+        destroy: () => {
+          supabase.removeChannel(channel);
+        }
+      };
+    }
 
-        // No matching record found
-        return { status: 404, hideHeader: true  };
-     } catch (error) {
-        console.error(error);
-        return { status: 500, hideHeader: true  };
-     }
+    return {
+      match: userData.current_match,
+      preset: userData.current_preset,
+      hideHeader: true
+    };
 
+  } catch (error) {
+    console.error(error);
+    return { status: 500, hideHeader: true };
   }
+};

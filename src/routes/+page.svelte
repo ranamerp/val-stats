@@ -98,24 +98,33 @@
             current_match: currentmatch,
             current_preset: colors
         }
+
         //Try and move this to the server if possible
+        if (!user?.id) {
+            console.error('User ID is missing');
+            return { status: 400, error: 'User ID is missing' };
+        }
+
         try {
             const { data, error } = await supabase
                 .schema('stats')
                 .from('users')
-                .update([finalobject])
-                .eq('user_id', user?.id)
-            if (error) {
-                console.error(error);
-                return {status: 404, error: error}
-            } else {
-                return {status: 200}
-            }
-        } catch (error) {
-            console.error(error);
-            return {status: 500, error: error}
+                .update(finalobject)
+                .eq('user_id', user.id)
+                .select();
+
+        if (error) {
+            console.error('Supabase Error:', error);
+            return { status: 404, error: error.message };
         }
 
+        console.log('Update Successful:', data);
+        return { status: 200, data: data };
+
+        } catch (error) {
+            console.error('Unexpected Error:', error);
+            return { status: 500, error: 'Internal Server Error' };
+        }
     }
 
 
