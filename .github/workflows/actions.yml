@@ -18,10 +18,8 @@ jobs:
         run: |
           mkdir -p ~/.ssh
           ssh-keyscan -t rsa ${{ secrets.DEPLOY_HOST }} >> ~/.ssh/known_hosts
-          chmod 700 ~/.ssh  # Set directory permissions
-          chmod 644 ~/.ssh/known_hosts  # Set file permissions
-          cat ~/.ssh/known_hosts  # Debugging output
-
+          chmod 700 ~/.ssh
+          chmod 644 ~/.ssh/known_hosts
 
       - name: Install SSH key
         uses: shimataro/ssh-key-action@v2
@@ -29,19 +27,30 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           known_hosts: ~/.ssh/known_hosts
 
-          
-      - name: Deploy to Production Server
-        uses: oven-sh/setup-bun@v2
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: latest
 
+      - name: Pull Latest Changes
         env:
           DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
           DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
           DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
         run: |
-            ssh $DEPLOY_USER@$DEPLOY_HOST "\
-            cd $DEPLOY_PATH && \
-            git pull origin main && \
-            bun install && \
-            pkill -f 'bun ./build/index.js' || true && \
-            bun run build && \
-            nohup bun bun ./build/index.js > app.log 2>&1 &"
+          ssh $DEPLOY_USER@$DEPLOY_HOST "\
+          cd $DEPLOY_PATH && \
+          git pull origin main"
+
+      - name: Build and Run Application
+        env:
+          DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
+          DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
+          DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
+        run: |
+          ssh $DEPLOY_USER@$DEPLOY_HOST "\
+          cd $DEPLOY_PATH && \
+          bun install && \
+          pkill -f 'bun ./build/index.js' || true && \
+          bun run build && \
+          nohup bun ./build/index.js > app.log 2>&1 &"
