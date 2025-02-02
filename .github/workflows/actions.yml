@@ -62,9 +62,8 @@ jobs:
           DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
           DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
         run: |
-          ssh $DEPLOY_USER@$DEPLOY_HOST "\
-          cd $DEPLOY_PATH && \
-          export BUN_INSTALL=\"\$HOME/.bun\" && \
-          export PATH=\"\$BUN_INSTALL/bin:\$PATH\" && \
+          ssh $DEPLOY_USER@$DEPLOY_HOST "cd $DEPLOY_PATH && \
+          export BUN_INSTALL=\$HOME/.bun && \
+          export PATH=\$BUN_INSTALL/bin:\$PATH && \
           pkill -f 'bun ./build/index.js' || true && \
           nohup bun ./build/index.js > app.log 2>&1 &"
