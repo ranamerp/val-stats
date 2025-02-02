@@ -130,6 +130,42 @@
         }
     }
 
+    function getTimeAgo(timestamp: string | Date): string {
+        try {
+            const now = new Date();
+            const then = timestamp instanceof Date ? timestamp : new Date(timestamp);
+            
+            if (isNaN(then.getTime())) {
+                throw new Error('Invalid date');
+            }
+
+            const diff = Math.floor((now.getTime() - then.getTime()) / 1000);
+
+            if (diff < 60) return `${diff} ${diff === 1 ? 'second' : 'seconds'} ago`;
+            if (diff < 3600) {
+                const minutes = Math.floor(diff / 60);
+                return `${minutes} ${minutes === 1 ? 'minute' : 'minutes'} ago`;
+            }
+            if (diff < 86400) {
+                const hours = Math.floor(diff / 3600);
+                return `${hours} ${hours === 1 ? 'hour' : 'hours'} ago`;
+            }
+            if (diff < 2592000) {
+                const days = Math.floor(diff / 86400);
+                return `${days} ${days === 1 ? 'day' : 'days'} ago`;
+            }
+            if (diff < 31536000) {
+                const months = Math.floor(diff / 2592000);
+                return `${months} ${months === 1 ? 'month' : 'months'} ago`;
+            }
+            const years = Math.floor(diff / 31536000);
+            return `${years} ${years === 1 ? 'year' : 'years'} ago`;
+        } catch (error) {
+            console.error('Error parsing date:', error);
+            return 'Invalid date';
+        }
+    }
+
 
     let isLoading = false;
 
@@ -159,7 +195,7 @@
             >
             {#each selection as item}
                 <option value={item.index}>
-                    {item.mapName} ({item.startTime})
+                    {item.mapName} ({getTimeAgo(item.startTime)})
                 </option>
             {/each}
             </select>
