@@ -54,3 +54,4 @@ jobs:
           pkill -f 'bun ./build/index.js' || true && \
           bun run build && \
           nohup bun ./build/index.js > app.log 2>&1 &"
+        shell: /usr/bin/bash -e {0}
