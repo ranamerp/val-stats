@@ -62,11 +62,20 @@ jobs:
           DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
           DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
         run: |
-          ssh $DEPLOY_USER@$DEPLOY_HOST "cd $DEPLOY_PATH && \
-          export BUN_INSTALL=\$HOME/.bun && \
-          export PATH=\$BUN_INSTALL/bin:\$PATH && \
-          pkill -f 'bun ./build/index.js' || true && \
-          echo 'Starting application...' && \
-          nohup \$HOME/.bun/bin/bun ./build/index.js > app.log 2>&1 & \
-          echo 'App started, checking process:' && \
-          ps aux | grep 'bun ./build/index.js'"
+          ssh $DEPLOY_USER@$DEPLOY_HOST "
+            cd $DEPLOY_PATH &&
+            pkill -f 'bun ./build/index.js' || true &&
+            echo 'Starting application...' &&
+            BUN_PATH=\$(command -v bun) &&  # Find bun's path
+            which bun &&  # Add this line
+            nohup $HOME/.bun/bin/bun ./build/index.js > app.log 2>&1 &
+            if [[ -n \"\$BUN_PATH\" ]]; then
+              nohup \$BUN_PATH ./build/index.js > app.log 2>&1 &
+              echo 'App started, checking process:' &&
+              ps aux | grep 'bun ./build/index.js' &&
+              tail -n 20 app.log
+            else
+              echo 'Error: bun not found in PATH' &&
+              exit 1  # Fail the workflow
+            fi
+          "
