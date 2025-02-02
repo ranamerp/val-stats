@@ -51,8 +51,11 @@ jobs:
         run: |
           ssh $DEPLOY_USER@$DEPLOY_HOST "\
           cd $DEPLOY_PATH && \
-          which bun && \
-          bun install && \
-          pkill -f 'bun ./build/index.js' && \
-          bun run build && \
-          nohup bun ./build/index.js > app.log 2>&1 &"
+          echo 'Current PATH:' && \
+          echo \$PATH && \
+          echo 'Bun location:' && \
+          which bun || echo 'bun not found' && \
+          echo 'Shell:' && \
+          echo \$SHELL && \
+          echo 'Home directory:' && \
+          echo \$HOME"
