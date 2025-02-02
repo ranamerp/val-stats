@@ -54,6 +54,6 @@ jobs:
           cd $DEPLOY_PATH && \
           which bun && \
           bun install && \
-          pkill -f 'bun ./build/index.js' || true && \
+          pkill -f 'bun ./build/index.js' && \
           bun run build && \
           nohup bun ./build/index.js > app.log 2>&1 &"
