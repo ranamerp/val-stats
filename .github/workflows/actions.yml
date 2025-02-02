@@ -13,6 +13,7 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        uses: oven-sh/setup-bun@v2
 
       - name: Add SSH host to known_hosts
         run: |
