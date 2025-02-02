@@ -85,15 +85,18 @@
 
     async function gotoOutput(currentmatch: App.LocalMatch, colors: App.ColorPreset) {
         const stat = await outputMatch(currentmatch, colors)
+        //If provider is discord, lets use their discord username instead of the id
+        let username = ''
+        if (user?.app_metadata.provider === 'discord') {
+            username = user?.user_metadata.full_name
+        }
+        //If provider is riot, we should still try to use their name, but I currently don't know what the name is.
         if (stat.status === 200) {
-            goto(`${user?.id}/output`)
+            goto(`${username}/output`)
         }        
     }
 
-    //There should be a button that triggers this function without the redirect. 
     async function outputMatch(currentmatch: App.LocalMatch, colors: App.ColorPreset) {
-
-        //once set, need to redirect
         const finalobject = {
             current_match: currentmatch,
             current_preset: colors
