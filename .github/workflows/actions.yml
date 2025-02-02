@@ -18,6 +18,10 @@ jobs:
         run: |
           mkdir -p ~/.ssh
           ssh-keyscan -t rsa ${{ secrets.DEPLOY_HOST }} >> ~/.ssh/known_hosts
+          chmod 700 ~/.ssh  # Set directory permissions
+          chmod 644 ~/.ssh/known_hosts  # Set file permissions
+          cat ~/.ssh/known_hosts  # Debugging output
+
 
       - name: Install SSH key
         uses: shimataro/ssh-key-action@v2
