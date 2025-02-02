@@ -38,6 +38,7 @@ jobs:
           DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
           DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
         run: |
+          set -e
           ssh $DEPLOY_USER@$DEPLOY_HOST "\
           cd $DEPLOY_PATH && \
           git pull origin main"
@@ -48,10 +49,11 @@ jobs:
           DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
           DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
         run: |
+          set -e  # Fail on any error
           ssh $DEPLOY_USER@$DEPLOY_HOST "\
           cd $DEPLOY_PATH && \
+          which bun && \
           bun install && \
           pkill -f 'bun ./build/index.js' || true && \
           bun run build && \
           nohup bun ./build/index.js > app.log 2>&1 &"
-        shell: /usr/bin/bash -e {0}
