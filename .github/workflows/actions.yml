@@ -52,6 +52,7 @@ jobs:
           export PATH=\"\$BUN_INSTALL/bin:\$PATH\" && \
           bun install && \
           bun run build"
+          
       - name: Start Application
         env:
           DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
@@ -63,6 +64,7 @@ jobs:
           export PATH=\$BUN_INSTALL/bin:\$PATH && \
           pkill -f 'bun ./build/index.js' || true && \
           echo 'Starting application...' && \
+          echo $HOME && \
           nohup \$HOME/.bun/bin/bun ./build/index.js > app.log 2>&1 & \
           echo 'App started, checking process:' && \
           ps aux | grep 'bun ./build/index.js' | grep -v grep"
