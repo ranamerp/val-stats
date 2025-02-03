@@ -66,9 +66,10 @@ jobs:
           pkill -f 'bun ./build/index.js' || true &&
           echo 'Starting application...' &&
           echo $HOME &&
-          nohup \$HOME/.bun/bin/bun ./build/index.js > app.log 2>&1 &
+          setsid \$HOME/.bun/bin/bun ./build/index.js > app.log 2>&1 & &&
           echo 'App started, checking process:' &&
           ps aux | grep 'bun ./build/index.js' | grep -v grep" 2>&1 | tee deploy.log # Redirect everything to deploy.log
+          cat app.log" # Check app.log
 
       - name: Check deploy.log
         run: cat deploy.log
