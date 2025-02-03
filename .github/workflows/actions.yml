@@ -50,10 +50,8 @@ jobs:
           DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
         run: |
           ssh $DEPLOY_USER@$DEPLOY_HOST "
-            cd $DEPLOY_PATH &&
-            export BUN_INSTALL=\$HOME/.bun &&
-            export PATH=\"\$BUN_INSTALL/bin:\$PATH\" &&
-            bun install &&
-            bun run build &&
-            pm2 deploy ecosystem.config.cjs production
+          cd $DEPLOY_PATH &&  # This line might not be strictly needed anymore
+          export BUN_INSTALL=\$HOME/.bun &&
+          export PATH=\"\$BUN_INSTALL/bin:\$PATH\" &&
+          pm2 deploy ecosystem.config.cjs production
           "

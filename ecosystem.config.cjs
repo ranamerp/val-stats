@@ -1,18 +1,27 @@
 module.exports = {
-    apps : [{
-      name: "valstats", // Replace with your application's name
-      script: "./build/index.js", // Path to your application's entry point
-      cwd: "./", // Current working directory (usually the application root)
-      instances: 1, // Number of instances to run (adjust as needed)
-      autorestart: true, // Automatically restart on crashes
-      watch: false, // Disable file watching (handled by deployment)
-      max_memory_restart: '500M', // Optional: Restart if memory usage exceeds 500MB
-      env: { // Environment variables
-        NODE_ENV: "production"
-        // ... other environment variables
-      },
-      log_date_format: "YYYY-MM-DD HH:mm Z", // Optional: Customize log format
-      error_file: "err.log", // Optional: Error log file
-      out_file: "out.log"  // Optional: Output log file
-    }]
-  };
+  apps : [{
+    name: "val-stats",
+    script: "./build/index.js",
+    cwd: "./",
+    instances: 1,
+    autorestart: true,
+    watch: false,
+    max_memory_restart: '500M',
+    env: {
+      NODE_ENV: "development" // Default environment
+    },
+    env_production: { // Production environment-specific settings
+      NODE_ENV: "production"
+    }
+  }],
+  deploy: {
+    production: {
+      user: 'tee', // Your server's username
+      host: '5.161.72.105', // Your server's IP or domain
+      ref: 'origin/main', // Git branch to deploy
+      repo: 'https://github.com/ranamerp/val-stats.git', // URL of your Git repository
+      path: '/home/tee/stats/val-stats', // Absolute path to your app on the server
+      'post-deploy': 'bun install && bun run build && pm2 reload ecosystem.config.cjs --env production' // Commands to run after deployment
+    }
+  }
+};
