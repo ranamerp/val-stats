@@ -37,7 +37,6 @@ jobs:
           DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
           DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
         run: |
-          set -e
           ssh $DEPLOY_USER@$DEPLOY_HOST "\
           cd $DEPLOY_PATH && \
           git pull origin main"
@@ -66,4 +65,15 @@ jobs:
           echo 'Starting application...' && \
           nohup \$HOME/.bun/bin/bun ./build/index.js > app.log 2>&1 & \
           echo 'App started, checking process:' && \
-          ps aux | grep 'bun ./build/index.js'"
+          ps aux | grep 'bun ./build/index.js' | grep -v grep"
+
+      - name: Check app.log (if start fails)
+        if: failure()
+        env:
+          DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
+          DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
+          DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
+        run: |
+          ssh $DEPLOY_USER@$DEPLOY_HOST "
+          cd $DEPLOY_PATH &&
+          cat app.log"
