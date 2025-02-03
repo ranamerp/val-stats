@@ -61,6 +61,7 @@ jobs:
         run: |
           ssh $DEPLOY_USER@$DEPLOY_HOST "
             cd $DEPLOY_PATH &&
+            export $DEPLOY_PATH &&
             ./start_app.sh" 2>&1 | tee deploy.log
 
       - name: Check deploy.log
