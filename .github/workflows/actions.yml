@@ -64,7 +64,6 @@ jobs:
             ./start_app.sh" 2>&1 | tee deploy.log
 
       - name: Check deploy.log
-        if: failure()
         run: cat deploy.log
         
       - name: Check app.log (if start fails)
