@@ -61,16 +61,7 @@ jobs:
         run: |
           ssh $DEPLOY_USER@$DEPLOY_HOST "
             cd $DEPLOY_PATH &&
-            export BUN_INSTALL=\$HOME/.bun &&
-            export PATH=\"\$BUN_INSTALL/bin:\$PATH\" &&
-            set -ex &&
-            pkill -f 'bun ./build/index.js' || true &&
-            echo 'Starting application...' &&
-            echo \$HOME &&
-            setsid \$HOME/.bun/bin/bun ./build/index.js > app.log 2>&1 &; # <-- Semicolon here!
-            echo 'App started, checking process:' &&
-            ps aux | grep 'bun ./build/index.js' | grep -v grep &&
-            cat app.log" 2>&1 | tee deploy.log
+            ./start_app.sh" 2>&1 | tee deploy.log
 
       - name: Check deploy.log
         if: failure()
