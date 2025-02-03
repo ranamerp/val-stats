@@ -170,7 +170,7 @@
     let isLoading = false;
 
 </script>
-<div class="w-screen h-screen">
+<div class="h-screen">
 {#if isLoading}
    <p> Loading...</p>
 {:else}
