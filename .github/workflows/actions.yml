@@ -59,17 +59,20 @@ jobs:
           DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
           DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
         run: |
-          ssh $DEPLOY_USER@$DEPLOY_HOST "cd $DEPLOY_PATH && \
-          export BUN_INSTALL=\$HOME/.bun && \
-          export PATH=\$BUN_INSTALL/bin:\$PATH && \
-          pkill -f 'bun ./build/index.js' || true && \
-          echo 'ARE WE WORKING?' && \
-          echo 'Starting application...' && \
-          echo $HOME && \
-          nohup \$HOME/.bun/bin/bun ./build/index.js > app.log 2>&1 & \
-          echo 'App started, checking process:' && \
-          ps aux | grep 'bun ./build/index.js' | grep -v grep"
+          ssh $DEPLOY_USER@$DEPLOY_HOST "cd $DEPLOY_PATH &&
+          export BUN_INSTALL=\$HOME/.bun &&
+          export PATH=\$BUN_INSTALL/bin:\$PATH &&
+          set -ex &&
+          pkill -f 'bun ./build/index.js' || true &&
+          echo 'Starting application...' &&
+          echo $HOME &&
+          nohup \$HOME/.bun/bin/bun ./build/index.js > app.log 2>&1 &
+          echo 'App started, checking process:' &&
+          ps aux | grep 'bun ./build/index.js' | grep -v grep" 2>&1 | tee deploy.log # Redirect everything to deploy.log
 
+      - name: Check deploy.log
+        run: cat deploy.log
+        
       - name: Check app.log (if start fails)
         if: failure()
         env:
