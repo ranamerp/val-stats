@@ -20,17 +20,11 @@ jobs:
           ssh-keyscan -t rsa ${{ secrets.DEPLOY_HOST }} >> ~/.ssh/known_hosts
           chmod 700 ~/.ssh
           chmod 644 ~/.ssh/known_hosts
-
-          
       - name: Install SSH key
         uses: shimataro/ssh-key-action@v2
         with:
-          key: ${{ secrets.DEPLOY_KEY_PRIVATE }}
-          known_hosts: 'just_accept'
-
-      - name: Set correct file permissions to private key
-        run: |
-          chmod 600 ~/.ssh/id_rsa
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          known_hosts: ~/.ssh/known_hosts
 
       - name: Setup Bun
         uses: oven-sh/setup-bun@v1
@@ -47,16 +41,29 @@ jobs:
           ssh $DEPLOY_USER@$DEPLOY_HOST "\
           cd $DEPLOY_PATH && \
           git pull origin main"
-
-      - name: Deploy
+      - name: Build Application
         env:
           DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
           DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
           DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
         run: |
-          ssh $DEPLOY_USER@$DEPLOY_HOST "
-          cd $DEPLOY_PATH &&  # This line might not be strictly needed anymore
-          export BUN_INSTALL=\$HOME/.bun &&
-          export PATH=\"\$BUN_INSTALL/bin:\$PATH\" &&
-          pm2 deploy ecosystem.config.cjs production
-          "
+          ssh $DEPLOY_USER@$DEPLOY_HOST "\
+          cd $DEPLOY_PATH && \
+          export BUN_INSTALL=\"\$HOME/.bun\" && \
+          export PATH=\"\$BUN_INSTALL/bin:\$PATH\" && \
+          bun install && \
+          bun run build"
+      - name: Start Application
+        env:
+          DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
+          DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
+          DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
+        run: |
+          ssh $DEPLOY_USER@$DEPLOY_HOST "cd $DEPLOY_PATH && \
+          export BUN_INSTALL=\$HOME/.bun && \
+          export PATH=\$BUN_INSTALL/bin:\$PATH && \
+          pkill -f 'bun ./build/index.js' || true && \
+          echo 'Starting application...' && \
+          nohup \$HOME/.bun/bin/bun ./build/index.js > app.log 2>&1 & \
+          echo 'App started, checking process:' && \
+          ps aux | grep 'bun ./build/index.js'"
