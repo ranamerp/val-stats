@@ -21,7 +21,7 @@ module.exports = {
       ref: 'origin/main', // Git branch to deploy
       repo: 'https://github.com/ranamerp/val-stats.git', // URL of your Git repository
       path: '/home/tee/stats/val-stats', // Absolute path to your app on the server
-      'post-deploy': 'bun install && bun run build && pm2 reload ecosystem.config.cjs --env production' // Commands to run after deployment
+      'post-deploy': 'echo "Running post-deploy script..." && bun install && bun run build && pm2 reload ecosystem.config.cjs --env production' // Commands to run after deployment
     }
   }
 };
