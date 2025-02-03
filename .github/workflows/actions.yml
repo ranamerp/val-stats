@@ -21,11 +21,21 @@ jobs:
           chmod 700 ~/.ssh
           chmod 644 ~/.ssh/known_hosts
 
+      - name: Set correct file permissions to private key
+        run: |
+          chmod 600 ~/.ssh/id_rsa
+          
       - name: Install SSH key
         uses: shimataro/ssh-key-action@v2
         with:
           key: ${{ secrets.DEPLOY_KEY_PRIVATE }}
           known_hosts: 'just_accept'
+
+
+      - name: Check SSH Agent
+        run: |
+          echo "SSH Agent contents:"
+          ssh-add -l
 
       - name: Setup Bun
         uses: oven-sh/setup-bun@v1
