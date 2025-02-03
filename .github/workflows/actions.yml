@@ -55,5 +55,5 @@ jobs:
             export PATH=\"\$BUN_INSTALL/bin:\$PATH\" &&
             bun install &&
             bun run build &&
-            pm2 deploy ecosystem.config.js production
+            pm2 deploy ecosystem.config.cjs production
           "
