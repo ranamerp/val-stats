@@ -177,7 +177,7 @@
 {:else}
 <LoadingPopup {showPopup} message= {popupMessage} />
     <!-- Top Div -->
-    <div class="flex flex-row space-x-8 bg-green-500">
+    <div class="flex flex-row space-x-8 bg-purple-500">
         <!-- Match Selection -->
         <div>
             <h1> Choose a match :</h1>
