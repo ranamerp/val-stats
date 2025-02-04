@@ -92,7 +92,8 @@
         }
         //If provider is riot, we should still try to use their name, but I currently don't know what the name is.
         if (stat.status === 200) {
-            goto(`${username}/output`)
+            //goto(`${username}/output`)
+            window.open(`${username}/output`, '_blank');
         }        
     }
 
