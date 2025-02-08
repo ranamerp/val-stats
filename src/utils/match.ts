@@ -64,11 +64,15 @@ export function processMatch(match: App.ValorantMatch) {
 
 export function processMatches(data: App.APIResponse) {
     const selection: App.LocalMatch[] = []
-
-    data.data?.forEach((match, index) => {
-        const m = processMatch(match as App.ValorantMatch)
-        m.index = index;
-        selection.push(m)
+    let idx = 0;
+    data.data?.forEach((match) => {
+        const valorantMatch = match as App.ValorantMatch;
+        if (valorantMatch.metadata.queue.mode_type == "Standard") {
+            const m = processMatch(match as App.ValorantMatch)
+            m.index = idx;
+            idx++;
+            selection.push(m);
+        }
     });
     
     return selection;

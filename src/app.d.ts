@@ -60,6 +60,11 @@ declare global {
 					id: string;
 					name: string;
 				};
+				queue: {
+					id: string;
+					name: string;
+					mode_type: string;
+				}
 				game_version:      string;
 				game_length_in_ms: number;
 				started_at:        Date;
