@@ -2,8 +2,10 @@
 	import '../app.css';
 	import { goto, invalidate } from '$app/navigation'
 	import { page } from '$app/stores';
+    import { on } from 'svelte/events';
 	const { data: propsData, children } = $props();
     const { supabase, session, user } = propsData;
+	let optionMenu = $state(false);
 
 	
 	$effect(() => {
@@ -32,6 +34,14 @@
             provider: 'discord',
         })
     }
+
+
+	async function signOut() {
+		const { error } = await supabase.auth.signOut();
+		if (error) console.error('Sign out error', error.message);
+		//Once sign out is done need to refresh page
+		location.reload();
+	}
 
 </script>
 {#if !$page.data.hideHeader}
@@ -67,25 +77,59 @@
   
 	<!-- Login/Profile Section -->
 	<div class="ml-auto relative">
-	  {#if user}
+	{#if user}
 		<div class="flex items-center space-x-2">
+
+		<button
+			type="submit" 
+			class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition"
+			onclick={signOut}
+		>
+		  Logout
+		</button>
+
 		  <div class="relative">
 			<img 
 			  src={user.user_metadata.avatar_url} 
 			  alt="User Profile" 
-			  class="w-11 h-11 rounded-full border-2 border-gray-300"
+			  class="w-11 h-11 rounded-full border-2 border-gray-300 hover:border-blue-600 transition cursor-pointer"
 			/>
 		  </div>
 		</div>
-	  {:else}
-		<button
-			type="submit" 
-			class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition"
-			onclick={signInWithDiscord}
-		>
-		  Login
-		</button>
-	  {/if}
+	{:else}
+		<div class = "flex flex-row gap-x-3">
+			{#if optionMenu}
+				<!-- <div class="bg-[#f12b15] text-white hover:bg-[#a41d0e] rounded-md px-4">
+					<button 
+						class="w-full text-left p-2 rounded-md transition"
+						onclick={signInWithDiscord}>
+					Riot
+					</button>
+				</div> -->
+				
+				<div class=" bg-[#7289DA] text-white hover:bg-[#5768a6] rounded-md px-4">
+					<button 
+						class="w-full text-left p-2 rounded-md transition"
+						onclick={signInWithDiscord}>
+					Discord
+					</button>
+				</div>
+
+			{/if}
+			<button
+				type="submit" 
+				class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition"
+				onclick={() => {
+					optionMenu = !optionMenu;
+					console.log('Login button clicked, optionMenu:', optionMenu);
+					}
+				}
+				>
+				Login
+			</button>
+
+		</div>
+	{/if}
 	</div>
   </header>
 {/if}
