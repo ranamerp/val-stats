@@ -4,9 +4,12 @@
     import FontPopup from "../components/FontPopup.svelte";
     import LoadingPopup from "../components/LoadingPopup.svelte";
     import PresetPopup from "../components/PresetPopup.svelte";
+    import ErrorComp from "../components/ErrorComp.svelte";
+
     import { presets, currentColor } from "../stores/Presets";
     import ColorPicker, { ChromeVariant } from 'svelte-awesome-color-picker';
-    import { goto, invalidate } from '$app/navigation';
+    import { error } from "@sveltejs/kit";
+    
     
 
     export let data;
@@ -21,7 +24,9 @@
     selection[value].blue_team.team_name = btname;
 
     let showPopup = false;
+    let showError = true;
     let popupMessage = "";
+    let errorMessage = '';
 
     let colors: App.ColorPreset = {
         preset_id: $currentColor.preset_id ?? 0,
@@ -61,7 +66,7 @@
     
     currentColor.set(colors)
 
-    async function searchPlayers() {
+    async function searchPlayers(origin?: string) {
         let terms = searchTerm.split("#");
 
 
@@ -70,14 +75,24 @@
 
         try{
             const response = await fetch(`/api/match?region=${'na'}&name=${terms[0]}&tag=${terms[1]}`);
-            selection = await response.json();
+            if (response.status === 404) {
+                if (origin === 'reload') {
+                    throw new Error("Reload failed, user not found!");
+                }
+                throw new Error("User not found!");
+            }
+            else if (response.status !== 200) {
+                if (origin === 'reload') {
+                    throw new Error("Reload failed, please refresh the page!");
+                }
+                throw new Error('Invalid response from server');
+            }
             value = 0;
             player = terms[0];
             selection[value].red_team.team_name = rtname;
             selection[value].blue_team.team_name = btname;
         } catch (err: any) {
-            console.log("ERROR!")
-            console.log(err.message);
+            triggerError(err.message);
         } finally {
             showPopup = false;
         }
@@ -105,7 +120,8 @@
 
         //Try and move this to the server if possible
         if (!user?.id) {
-            console.error('User ID is missing');
+            //console.error('User ID is missing');
+            triggerError('User ID is missing! Are you logged in?');
             return { status: 400, error: 'User ID is missing' };
         }
 
@@ -118,7 +134,7 @@
                 .select();
 
         if (error) {
-            console.error('Supabase Error:', error);
+            triggerError(`Supabase Error: ${error.message}`);
             return { status: 404, error: error.message };
         }
 
@@ -127,6 +143,7 @@
 
         } catch (error) {
             console.error('Unexpected Error:', error);
+            triggerError('Error when updating match, please try again later.');
             return { status: 500, error: 'Internal Server Error' };
         }
     }
@@ -167,6 +184,14 @@
         }
     }
 
+    function triggerError(message: string) {
+        showError = false;
+        errorMessage = message;
+        showError = true;
+        setTimeout(() => {
+            showError = false;
+        }, 5000);
+    }
 
     let isLoading = false;
 
@@ -175,7 +200,12 @@
 {#if isLoading}
    <p> Loading...</p>
 {:else}
-<LoadingPopup {showPopup} message= {popupMessage} />
+    
+    {#if showError}
+        <ErrorComp message = {errorMessage}/>
+    {/if}
+
+    <LoadingPopup {showPopup} message= {popupMessage} />
     <!-- Top Div -->
     <div class="flex flex-row space-x-8 bg-purple-500">
         <!-- Match Selection -->
@@ -234,7 +264,7 @@
 
         <!-- Add Match Reload Button -->
         <div>
-            <button type="submit" onclick={searchPlayers} class="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">Reload Matches</button>
+            <button type="submit" onclick={() => searchPlayers("reload")} class="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">Reload Matches</button>
         </div>
 
         <!-- Current Player -->
@@ -255,7 +285,7 @@
                     </svg>
                 </div>
                 <input type="search"  bind:value={searchTerm} id="default-search" class="block w-full p-4 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Search Players..." required />
-                <button onclick={searchPlayers} type="submit" class="text-white absolute end-2.5 bottom-2.5 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Search</button>
+                <button onclick={() => searchPlayers("search")} type="submit" class="text-white absolute end-2.5 bottom-2.5 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Search</button>
             </div>
         </form>
 

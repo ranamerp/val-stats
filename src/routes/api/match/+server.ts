@@ -31,8 +31,11 @@ export async function GET({ url }) {
         const selection: App.LocalMatch[] = processMatches(data);
         return json(selection);
         //Need an error for when data is empty or player can't be found.
-    } catch (error) {
+    } catch (error: unknown) {
         console.error('Error fetching match data:', error);
+        if ( error instanceof Error && error.message.includes('404')) {
+            return json({ error: 'Match not found' }, { status: 404 });
+        }
         return json({ error: 'Failed to fetch match data' }, { status: 500 });
     }
 }
