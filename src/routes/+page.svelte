@@ -196,7 +196,7 @@
     let isLoading = false;
 
 </script>
-<div class="h-screen">
+<div>
 {#if isLoading}
    <p> Loading...</p>
 {:else}

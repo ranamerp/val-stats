@@ -44,8 +44,10 @@
 	}
 
 </script>
-{#if !$page.data.hideHeader}
-  <header class="bg-gray-500 flex items-center justify-between p-1 shadow-md">
+
+<div class="min-h-screen flex flex-col">
+	{#if !$page.data.hideHeader}
+  		<header class="bg-gray-500 flex items-center justify-between p-1 shadow-md">
 	<!-- Logo (Home Link) -->
 	<a href="/" class="flex items-center space-x-2 hover:bg-gray-200 p-2 rounded-md transition" aria-label="Home">
 	  <svg 
@@ -131,6 +133,16 @@
 		</div>
 	{/if}
 	</div>
-  </header>
-{/if}
-  {@render children()}
+  		</header>
+
+  	{/if}
+	<main class="flex-1 overflow-hidden">
+		{@render children()}
+	</main>
+	{#if !$page.data.hideHeader}
+	<footer class="flex flex-row bg-gray-800 text-white text-center p-4">
+		<a href="/tos" class="ml-auto hover:text-gray-400">Terms of Service</a>
+		<a href="/privacy" class="ml-4 hover:text-gray-400">Privacy Policy</a>
+	</footer>
+	{/if}
+</div>
