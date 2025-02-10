@@ -16,8 +16,8 @@
     const { stats, supabase, user } = data;
     let player = data.player.split('#')[0]
     let value = 0;
-    let btname = "SEN";
-    let rtname = "100T";
+    let btname = "ATK";
+    let rtname = "DEF";
     let searchTerm = data.player;
     let selection = stats as App.LocalMatch[];
     selection[value].red_team.team_name = rtname;
