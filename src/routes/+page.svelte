@@ -87,10 +87,14 @@
                 }
                 throw new Error('Invalid response from server');
             }
-            value = 0;
-            player = terms[0];
-            selection[value].red_team.team_name = rtname;
-            selection[value].blue_team.team_name = btname;
+            else {
+                selection = await response.json();
+                value = 0;
+                player = terms[0];
+                selection[value].red_team.team_name = rtname;
+                selection[value].blue_team.team_name = btname;
+
+            }
         } catch (err: any) {
             triggerError(err.message);
         } finally {
