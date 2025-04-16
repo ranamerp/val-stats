@@ -15,6 +15,18 @@
     //const supabase: SupabaseClient = { supabaseC }
     //const user: any = getContext('user');
 
+    function isAuthenticated(): boolean {
+        return !!userid;
+    }
+
+    function handleAuthenticatedAction(action: () => void) {
+        if (!isAuthenticated()) {
+            // You could trigger an error message here
+            console.log('Please login to use this feature');
+            return;
+        }
+        action();
+    }
 
     async function updateStore() {
         const { data: fetchedData, error } = await supabase
@@ -127,6 +139,8 @@
 
         if (get(presets)[presetName]) {
             overwrite != overwrite;
+            // We want to update the preset. We need change the component to show a confirmation button
+            
             console.log("DUMMY THIS EXISTS IN THE STORE")
         }
         else {
@@ -153,6 +167,7 @@
                 //     'Content-Type': 'application/json'
                 // }
                 // }).then(res => res.json());
+
                 // Add preset to DB and also store. Return confirmation by changing button color and text
                 try {
                     const { data, error } = await supabase
@@ -263,34 +278,65 @@
                 </div>
             {:else}
             <div class="p-2">
-                <!-- Searching presets -->
-                <input
-                    type="text"
-                    placeholder="Search presets..."
-                    class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    bind:value={searchQuery}
-                />
-                
-                <!-- These should only save if user is paid. But for now keep -->
+                <!-- <button
+                    class="w-full mt-2 px-3 py-2 text-white {isAuthenticated() ? 'bg-blue-500 hover:bg-blue-600' : 'bg-gray-400 cursor-not-allowed'} 
+                    rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    on:click={() => handleAuthenticatedAction(() => console.log("Share functionality"))}
+                    disabled={!isAuthenticated()}
+                >
+                Share Preset
+                </button> -->
+
                 <button
-                    class="w-full mt-2 px-3 py-2 text-white bg-blue-500 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    on:click={() => 
+                    class="w-full mt-2 px-3 py-2 text-white {isAuthenticated() ? 'bg-blue-500 hover:bg-blue-600' : 'bg-gray-400 cursor-not-allowed'} 
+                    rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    on:click={() => handleAuthenticatedAction(() =>
                     {
                         saveBox = !saveBox;
                         presetName = `Preset`;
                         
-                    }}
+                    })}
+                    disabled={!isAuthenticated()}
                 >
                 
                     Save Preset
                 </button>
 
+
+
                 <button
-                    class="w-full mt-2 px-3 py-2 text-white bg-red-500 rounded-lg hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500"
+                    class="w-full mt-2 px-3 py-2 text-white {isAuthenticated() ? 'bg-red-500  hover:bg-red-600': 'bg-gray-400 cursor-not-allowed'}  
+                    rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
                     on:click={() => deleteBox = !deleteBox}
+                    disabled={!isAuthenticated()}
                 >
-                    Delete Preset
+                    Delete
                 </button>
+                
+                <!-- <div class = "flex flex-row gap-x-1">
+
+                    <button
+                    class="w-full mt-2 px-3 py-2 text-white {isAuthenticated() ? 'bg-blue-500 hover:bg-blue-600' : 'bg-gray-400 cursor-not-allowed'} 
+                    rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    on:click={() => 
+                    {
+                        console.log("how to update lol")
+                    }}
+                    disabled={!isAuthenticated()}
+                >
+                
+                    Update
+                </button>
+
+                    <button
+                        class="w-full mt-2 px-3 py-2 text-white {isAuthenticated() ? 'bg-red-500  hover:bg-red-600': 'bg-gray-400 cursor-not-allowed'}  
+                        rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
+                        on:click={() => deleteBox = !deleteBox}
+                        disabled={!isAuthenticated()}
+                    >
+                        Delete
+                    </button>
+                </div> -->
 
 
             </div>
