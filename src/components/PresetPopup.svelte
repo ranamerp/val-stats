@@ -6,12 +6,11 @@
 
     export let supabase: SupabaseClient<any, "stats", any>;
     export let userid: string | undefined;
-    let searchQuery: string = '';
     let isPopOpen = false;
-    let saveBox = false;
-    let deleteBox = false;
     let presetName = "Preset";
     let overwrite = false;
+
+    let presetView: 'main' | 'save' | 'delete' | 'update' | 'share' = 'main';
     //const supabase: SupabaseClient = { supabaseC }
     //const user: any = getContext('user');
 
@@ -100,7 +99,7 @@
             } else {
                 //Update button with confirmation of what got deleted
                 updateStore();
-                deleteBox = !deleteBox;
+                presetView = 'main';
                 
             }
         } catch (error) {
@@ -179,7 +178,8 @@
                     } else {
                         console.log(finalObject);
                         updateStore();
-                        saveBox = !saveBox;
+                        presetView = 'main';
+                        isPopOpen = !isPopOpen;
                     }
                     } catch (error) {
                     console.error(error);
@@ -189,6 +189,26 @@
         }
 
         
+    }
+
+    async function updatePreset() {
+        // This should do the following:
+        // Get current selected preset from store
+        // Get current preset in general
+        // Let you click button to swap between them to confirm changes
+        // Have a input box that will let you change the name of the preset
+        // When updating, it'll take either the "before" or "after" option, overwrite the store, and then update the database
+
+    }
+
+    async function sharePreset() {
+        // This should do the following:
+        // Get the preset share 
+    }
+
+    async function loadPreset(presetID: string) {
+        //This will get the preset id from a text box, and grab it from the database
+        // Currently, need to add a share_id to the preset table. 
     }
     
     async function applyPreset(selectedPreset: App.ColorPreset, preName: string) {
@@ -215,8 +235,7 @@
         on:click={() => 
             {
                 isPopOpen = !isPopOpen
-                saveBox = false;
-                deleteBox = false;
+                presetView = 'main';
                 overwrite = false;
                 if (presetName.trim().length === 0) {
                     presetName = "Preset"
@@ -228,7 +247,7 @@
 
     {#if isPopOpen}
         <div class="absolute w-full mt-1 bg-white border rounded-lg shadow-lg z-50">
-            {#if saveBox}
+            {#if presetView === 'save'}
             <div class="p-2">
                 <!-- Saving presets -->
                 <input
@@ -247,13 +266,13 @@
 
                 <button
                     class="w-full mt-2 px-3 py-2 text-white bg-blue-500 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    on:click={() => saveBox = !saveBox}
+                    on:click={() => presetView = 'main'}
                 >
                     Back
                 </button>
 
             </div>
-            {:else if deleteBox}
+            {:else if presetView === 'delete'}
                 <div class="p-2">
                     <!-- Saving presets -->
                     <h2>Are you sure you want to delete this preset?</h2>
@@ -270,7 +289,7 @@
 
                     <button
                         class="w-full mt-2 px-3 py-2 text-white bg-blue-500 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        on:click={() => deleteBox = !deleteBox}
+                        on:click={() => presetView = 'main'}
                     >
                         Back
                     </button>
@@ -292,7 +311,7 @@
                     rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                     on:click={() => handleAuthenticatedAction(() =>
                     {
-                        saveBox = !saveBox;
+                        presetView = 'save';
                         presetName = `Preset`;
                         
                     })}
@@ -304,39 +323,30 @@
 
 
 
-                <button
-                    class="w-full mt-2 px-3 py-2 text-white {isAuthenticated() ? 'bg-red-500  hover:bg-red-600': 'bg-gray-400 cursor-not-allowed'}  
-                    rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
-                    on:click={() => deleteBox = !deleteBox}
-                    disabled={!isAuthenticated()}
-                >
-                    Delete
-                </button>
-                
-                <!-- <div class = "flex flex-row gap-x-1">
+                <div class = "flex flex-row gap-x-1">
 
-                    <button
-                    class="w-full mt-2 px-3 py-2 text-white {isAuthenticated() ? 'bg-blue-500 hover:bg-blue-600' : 'bg-gray-400 cursor-not-allowed'} 
-                    rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    on:click={() => 
-                    {
-                        console.log("how to update lol")
-                    }}
-                    disabled={!isAuthenticated()}
-                >
+                    <!-- <button
+                        class="w-full mt-2 px-3 py-2 text-white {isAuthenticated() ? 'bg-blue-500 hover:bg-blue-600' : 'bg-gray-400 cursor-not-allowed'} 
+                        rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        on:click={() => 
+                        {
+                            console.log("how to update lol")
+                        }}
+                        disabled={!isAuthenticated()}
+                    >
                 
                     Update
-                </button>
+                    </button> -->
 
                     <button
                         class="w-full mt-2 px-3 py-2 text-white {isAuthenticated() ? 'bg-red-500  hover:bg-red-600': 'bg-gray-400 cursor-not-allowed'}  
                         rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
-                        on:click={() => deleteBox = !deleteBox}
+                        on:click={() => presetView = 'delete'}
                         disabled={!isAuthenticated()}
                     >
                         Delete
                     </button>
-                </div> -->
+                </div>
 
 
             </div>
@@ -352,6 +362,7 @@
                     on:click={() => {
                         applyPreset(preset, presetname);
                         isPopOpen = !isPopOpen;
+                        presetView = 'main';
                     }}
                 >
                     {presetname}
