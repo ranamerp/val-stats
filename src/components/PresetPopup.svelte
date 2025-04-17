@@ -51,9 +51,9 @@
                 // Process each fetched preset
                 fetchedData.forEach((preset: any) => {
                     // If the preset already exists in the current presets, skip it
-                    if (updatedPresets[preset.preset_name]) {
-                        return; // Skip this iteration
-                    }
+                    // if (updatedPresets[preset.preset_name]) {
+                    //     return; // Skip this iteration
+                    // }
                     
 
                     // If preset doesn't exist, add it
