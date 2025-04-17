@@ -9,6 +9,7 @@
     let isPopOpen = false;
     let presetName = "Preset";
     let overwrite = false;
+    let temp_preset: App.ColorPreset = $currentColor;
 
     let presetView: 'main' | 'save' | 'delete' | 'update' | 'share' = 'main';
     //const supabase: SupabaseClient = { supabaseC }
@@ -199,6 +200,52 @@
         // Have a input box that will let you change the name of the preset
         // When updating, it'll take either the "before" or "after" option, overwrite the store, and then update the database
 
+        if ($currentColor.preset_id < 100) {
+            console.log("You cannot update this preset!")
+            isPopOpen = !isPopOpen;
+            return
+        }
+        let finalObject = {
+            preset_id: $currentColor.preset_id,
+            user_id: userid,
+            preset_name: presetName,
+            last_updated: new Date().toISOString(),
+            left_background: $currentColor.leftbgcolor,
+            left_bigtext: $currentColor.leftbigtextcolor,
+            left_smalltext: $currentColor.leftsmalltextcolor,
+            right_background: $currentColor.rightbgcolor,
+            right_bigtext: $currentColor.rightbigtextcolor,
+            right_smalltext:  $currentColor.rightsmalltextcolor,
+            mvpbanner_background: $currentColor.mvpbannerbgcolor,
+            mvpbanner_text:  $currentColor.mvpbannertextcolor,
+            mvp_agent:  $currentColor.mvpagentcolor,
+            mvp_text: $currentColor.mvptextcolor,
+            global_text: $currentColor.globaltextcolor,
+            font: "Arial"
+        }
+
+        try {
+            const { data, error } = await supabase
+                .from('presets')
+                .upsert([finalObject], {
+                    onConflict: 'preset_id'
+                });
+
+
+            if (error) {
+                console.error(error);
+            } else {
+                console.log(finalObject);
+                updateStore();
+                presetView = 'main';
+                isPopOpen = !isPopOpen;
+            }
+        } catch (error) {
+            console.error(error);
+        }
+
+        // Find the supabase record and update it. 
+
     }
 
     async function sharePreset() {
@@ -295,6 +342,59 @@
                     </button>
 
                 </div>
+            {:else if presetView === 'update'}
+                <div class="p-2">
+
+                    <!-- Saving presets -->
+                    <h2>Are you sure you want to update this preset?</h2>
+                    <input
+                        type="text"
+                        placeholder={presetName}
+                        class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        bind:value={presetName}
+                    />
+
+                    <div class="flex flex-row gap-2">
+                        <button
+                            class="w-full mt-2 px-3 text-white bg-blue-500 rounded-lg  hover:bg-blue-600 active:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            on:click={() => {
+                                temp_preset = { ...$currentColor };
+                                let new_preset = Object.values($presets).find(preset => preset.preset_id === temp_preset.preset_id) ??
+                                                temp_preset;
+                                applyPreset(new_preset, presetName);
+                            }}
+                            >
+                            Current Preset
+                        </button>
+
+                        <button
+                            class="w-full mt-2 px-3 text-white bg-red-500 rounded-lg  hover:bg-red-600 active:bg-red-800 focus:outline-none focus:ring-2 focus:ring-red-500"
+                            on:click={() => {
+                                // By default this is already the current color. 
+                                // If a user changes color away from the preset, then it should show here
+                                // For current preset, it should save whatever user has, then pull the preset by id
+                                applyPreset(temp_preset, presetName);
+                            }}
+                        >
+                            New Preset
+                        </button>
+                    </div>
+
+                    
+                    <button
+                        class="w-full mt-2 px-3 py-2 text-white bg-blue-500 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        on:click={() => updatePreset()}
+                    >
+                        Update Preset
+                    </button>
+
+                    <button
+                        class="w-full mt-2 px-3 py-2 text-white bg-blue-500 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        on:click={() => presetView = 'main'}
+                    >
+                        Back
+                    </button>
+                </div>
             {:else}
             <div class="p-2">
                 <!-- <button
@@ -325,18 +425,18 @@
 
                 <div class = "flex flex-row gap-x-1">
 
-                    <!-- <button
+                    <button
                         class="w-full mt-2 px-3 py-2 text-white {isAuthenticated() ? 'bg-blue-500 hover:bg-blue-600' : 'bg-gray-400 cursor-not-allowed'} 
                         rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                         on:click={() => 
                         {
-                            console.log("how to update lol")
+                            presetView = 'update';
                         }}
                         disabled={!isAuthenticated()}
                     >
                 
                     Update
-                    </button> -->
+                    </button>
 
                     <button
                         class="w-full mt-2 px-3 py-2 text-white {isAuthenticated() ? 'bg-red-500  hover:bg-red-600': 'bg-gray-400 cursor-not-allowed'}  
