@@ -42,7 +42,48 @@ declare global {
 			mvptextcolor: string;
 			globaltextcolor: string;
 			font: string;
+			share_code: string;
 		}
+
+		interface DatabaseColorPresetResponse {
+			preset_id: number;
+			user_id: string;
+			preset_name: string;
+			last_updated: string;
+			left_background: string;
+			left_bigtext: string;
+			left_smalltext: string;
+			right_background: string;
+			right_bigtext: string;
+			right_smalltext: string;
+			mvpbanner_background: string;
+			mvpbanner_text: string;
+			mvp_agent: string;
+			mvp_text: string;
+			global_text: string;
+			font: string;
+			share_code: string;
+		}
+
+		interface DatabaseColorPreset {
+			user_id: string;
+			preset_name: string;
+			last_updated: string;
+			left_background: string;
+			left_bigtext: string;
+			left_smalltext: string;
+			right_background: string;
+			right_bigtext: string;
+			right_smalltext: string;
+			mvpbanner_background: string;
+			mvpbanner_text: string;
+			mvp_agent: string;
+			mvp_text: string;
+			global_text: string;
+			font: string;
+			share_code: string;
+		}
+
 
 		interface APIResponse {
 			status: number;

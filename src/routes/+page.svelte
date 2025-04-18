@@ -43,7 +43,8 @@
         mvpagentcolor:  $currentColor.mvpagentcolor ?? '#ffffff',
         mvptextcolor: $currentColor.mvptextcolor ?? '#c2ae75',
         globaltextcolor: $currentColor.globaltextcolor ?? '#c2ae75',
-        font: $currentColor.font ?? 'Arial'
+        font: $currentColor.font ?? 'Arial',
+        share_code: $currentColor.share_code ?? 'BTU17Y',
     }
 
     $: if ($currentColor) {

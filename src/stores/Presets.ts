@@ -18,7 +18,8 @@ export const presets: Writable<Record<string, App.ColorPreset>> = writable ({
         mvpagentcolor:  '#ffffff',
         mvptextcolor: '#c2ae75',
         globaltextcolor: '#c2ae75',
-        font: 'Arial'
+        font: 'Arial',
+        share_code: 'BTU17Y'
     },
     'Masters': {
         preset_id: 2,
@@ -35,7 +36,8 @@ export const presets: Writable<Record<string, App.ColorPreset>> = writable ({
         mvpagentcolor:  '#ffffff',
         mvptextcolor: '#6644bb',
         globaltextcolor: '#e9d98d',
-        font: 'Arial'
+        font: 'Arial',
+        share_code: 'WTLMH0'
     },
     'VCL NA': {
         preset_id: 3,
@@ -52,7 +54,8 @@ export const presets: Writable<Record<string, App.ColorPreset>> = writable ({
         mvpagentcolor:  '#ffffff',
         mvptextcolor: '#0da68c',
         globaltextcolor: '#e9d98d',
-        font: 'Arial'
+        font: 'Arial',
+        share_code: 'Z2XK7A'
     },
     'Red Bull': {
         preset_id: 4,
@@ -69,7 +72,8 @@ export const presets: Writable<Record<string, App.ColorPreset>> = writable ({
         mvpagentcolor:  '#bb4e52',
         mvptextcolor: '#bb4e52',
         globaltextcolor: '#ffffff',
-        font: 'Arial'
+        font: 'Arial',
+        share_code: '4F8N7X'
     },
     'SEN': {
         preset_id: 5,
@@ -86,7 +90,8 @@ export const presets: Writable<Record<string, App.ColorPreset>> = writable ({
         mvpagentcolor:  '#ffffff',
         mvptextcolor: '#d4062c',
         globaltextcolor: '#e9d98d',
-        font: 'Arial'
+        font: 'Arial',
+        share_code: '6F5Z3N'
     }
 })
 
@@ -107,6 +112,7 @@ export const currentColor: Writable<App.ColorPreset> = writable (
         mvpagentcolor:  '#ffffff',
         mvptextcolor: '#c2ae75',
         globaltextcolor: '#c2ae75',
-        font: 'Arial'
+        font: 'Arial',
+        share_code: 'BTU17Y'
     }
 )

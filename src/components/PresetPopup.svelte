@@ -8,8 +8,8 @@
     export let userid: string | undefined;
     let isPopOpen = false;
     let presetName = "Preset";
-    let overwrite = false;
     let temp_preset: App.ColorPreset = $currentColor;
+    let currentPresetCode: string = $currentColor.share_code;
 
     let presetView: 'main' | 'save' | 'delete' | 'update' | 'share' = 'main';
     //const supabase: SupabaseClient = { supabaseC }
@@ -70,7 +70,8 @@
                         mvpbannertextcolor: preset.mvpbanner_text,
                         mvptextcolor: preset.mvp_text,
                         globaltextcolor: preset.global_text,
-                        font: preset.font
+                        font: preset.font,
+                        share_code: preset.share_code
                     };
 
                     
@@ -108,7 +109,7 @@
         }
     }
 
-    async function savePreset() {
+    async function savePreset(preset?: App.DatabaseColorPresetResponse) {
         // This should do the following:
         // Get the current user from auth
         // Get the current colors from root (send reactively)
@@ -118,37 +119,81 @@
         // Check if preset current exists. If it does, ask if they want to overwrite
         // Write all this data to supabase
         // Change button text and color to indicate preset is saved
+        
+        let finalObject: App.DatabaseColorPreset;
 
-        let finalObject = {
-            user_id: userid,
-            preset_name: presetName,
-            last_updated: new Date().toISOString(),
-            left_background: $currentColor.leftbgcolor,
-            left_bigtext: $currentColor.leftbigtextcolor,
-            left_smalltext: $currentColor.leftsmalltextcolor,
-            right_background: $currentColor.rightbgcolor,
-            right_bigtext: $currentColor.rightbigtextcolor,
-            right_smalltext:  $currentColor.rightsmalltextcolor,
-            mvpbanner_background: $currentColor.mvpbannerbgcolor,
-            mvpbanner_text:  $currentColor.mvpbannertextcolor,
-            mvp_agent:  $currentColor.mvpagentcolor,
-            mvp_text: $currentColor.mvptextcolor,
-            global_text: $currentColor.globaltextcolor,
-            font: "Arial"
+        if (preset) {
+            finalObject = {
+                user_id: userid ?? '',
+                preset_name: preset.preset_name,
+                last_updated: new Date().toISOString(),
+                left_background: preset.left_background,
+                left_bigtext: preset.left_bigtext,
+                left_smalltext: preset.left_smalltext,
+                right_background: preset.right_background,
+                right_bigtext: preset.right_bigtext,
+                right_smalltext:  preset.right_smalltext,
+                mvpbanner_background: preset.mvpbanner_background,
+                mvpbanner_text:  preset.mvpbanner_text,
+                mvp_agent:  preset.mvp_agent,
+                mvp_text: preset.mvp_text,
+                global_text: preset.global_text,
+                font: preset.font,
+                share_code: preset.share_code
+            }
+        } else {
+            // If no preset is passed, use the current color from the store
+            finalObject = {
+                user_id: userid ?? '',
+                preset_name: presetName,
+                last_updated: new Date().toISOString(),
+                left_background: $currentColor.leftbgcolor,
+                left_bigtext: $currentColor.leftbigtextcolor,
+                left_smalltext: $currentColor.leftsmalltextcolor,
+                right_background: $currentColor.rightbgcolor,
+                right_bigtext: $currentColor.rightbigtextcolor,
+                right_smalltext:  $currentColor.rightsmalltextcolor,
+                mvpbanner_background: $currentColor.mvpbannerbgcolor,
+                mvpbanner_text:  $currentColor.mvpbannertextcolor,
+                mvp_agent:  $currentColor.mvpagentcolor,
+                mvp_text: $currentColor.mvptextcolor,
+                global_text: $currentColor.globaltextcolor,
+                font: "Arial",
+                share_code: Math.random().toString(36).slice(2,8).toUpperCase()
+            }
         }
 
+        // let finalObject: DatabasePreset = {
+        //     user_id: userid,
+        //     preset_name: presetName,
+        //     last_updated: new Date().toISOString(),
+        //     left_background: $currentColor.leftbgcolor,
+        //     left_bigtext: $currentColor.leftbigtextcolor,
+        //     left_smalltext: $currentColor.leftsmalltextcolor,
+        //     right_background: $currentColor.rightbgcolor,
+        //     right_bigtext: $currentColor.rightbigtextcolor,
+        //     right_smalltext:  $currentColor.rightsmalltextcolor,
+        //     mvpbanner_background: $currentColor.mvpbannerbgcolor,
+        //     mvpbanner_text:  $currentColor.mvpbannertextcolor,
+        //     mvp_agent:  $currentColor.mvpagentcolor,
+        //     mvp_text: $currentColor.mvptextcolor,
+        //     global_text: $currentColor.globaltextcolor,
+        //     font: "Arial",
+        //     share_code: Math.random().toString(36).slice(2,8).toUpperCase()
+        // }
+
         if (get(presets)[presetName]) {
-            overwrite != overwrite;
-            // We want to update the preset. We need change the component to show a confirmation button
-            
             console.log("DUMMY THIS EXISTS IN THE STORE")
+            presetView = 'main';
+            isPopOpen = !isPopOpen;
         }
         else {
             const { data, error } = await supabase
                 .from('presets')
                 .select('*')
-                .eq("user_id", userid)
-                .ilike("preset_name", presetName)
+                .or(`and(user_id.eq.${userid}, preset_name.ilike.${presetName}), share_code.eq.${finalObject.share_code}`)
+                // .eq("user_id", userid)
+                // .ilike("preset_name", presetName)
     
             if (error) {
                 console.error('Supabase Query Error:', error)
@@ -156,8 +201,27 @@
             
             //This should also check if it exists in the store
             if (data && data.length > 0) {
-                overwrite = !overwrite;
-                console.log("This already exists lol, no bueno!")
+                // If the preset came from importing, we still want to save it but just change ID. 
+                console.log("This preset already exists in the database!")
+                if (preset) {
+                    try {
+                    const { data, error } = await supabase
+                        .from('presets')
+                        .insert([finalObject]);
+    
+                    if (error) {
+                        console.error(error);
+                    } else {
+                        console.log(finalObject);
+                        updateStore();
+                        presetView = 'main';
+                        currentPresetCode = finalObject.share_code;
+                        isPopOpen = !isPopOpen;
+                    }
+                    } catch (error) {
+                    console.error(error);
+                    }
+                }
             } else {
                 // This is a claude suggestion for post requests using fetch. Will attempt it for consistency
                 // const { data, error } = await fetch('/api/your-endpoint', {
@@ -180,6 +244,7 @@
                         console.log(finalObject);
                         updateStore();
                         presetView = 'main';
+                        currentPresetCode = finalObject.share_code;
                         isPopOpen = !isPopOpen;
                     }
                     } catch (error) {
@@ -221,7 +286,8 @@
             mvp_agent:  $currentColor.mvpagentcolor,
             mvp_text: $currentColor.mvptextcolor,
             global_text: $currentColor.globaltextcolor,
-            font: "Arial"
+            font: $currentColor.font,
+            share_code: $currentColor.share_code
         }
 
         try {
@@ -248,19 +314,62 @@
 
     }
 
-    async function sharePreset() {
+    async function sharePreset(text: string) {
         // This should do the following:
-        // Get the preset share 
+        // Get the preset share
+        try {
+            await navigator.clipboard.writeText(text);
+            console.log("Copied to clipboard: " + text);
+            return true
+
+        } catch (err) {
+            console.error("Failed to copy: ", err);
+            return false
+        }
+
     }
 
     async function loadPreset(presetID: string) {
         //This will get the preset id from a text box, and grab it from the database
-        // Currently, need to add a share_id to the preset table. 
+        // Currently, need to add a share_id to the preset table.
+        const { data, error } = await supabase
+                .from('presets')
+                .select('*')
+                .eq("share_code", presetID)
+                .limit(1);
+    
+        if (error) {
+            console.error('Supabase Query Error:', error)
+        }
+
+        if (data && data.length > 0) {
+            const preset: App.DatabaseColorPresetResponse = data[0];
+            let newPreset = {
+                preset_id: preset.preset_id,
+                leftbgcolor: preset.left_background,
+                leftbigtextcolor: preset.left_bigtext,
+                leftsmalltextcolor: preset.left_smalltext,
+                rightbgcolor: preset.right_background,
+                rightbigtextcolor: preset.right_bigtext,
+                rightsmalltextcolor: preset.right_smalltext,
+                mvpbannerbgcolor: preset.mvpbanner_background,
+                mvpbannertextcolor: preset.mvpbanner_text,
+                mvpagentcolor: preset.mvp_agent,
+                mvptextcolor: preset.mvp_text,
+                globaltextcolor: preset.global_text,
+                font: "Arial",
+                share_code: preset.share_code
+            }
+            applyPreset(newPreset, preset.preset_name);
+            savePreset(preset);
+            presetView = 'main';
+        }
     }
     
     async function applyPreset(selectedPreset: App.ColorPreset, preName: string) {
         currentColor.set((selectedPreset))
         presetName = preName
+        currentPresetCode = selectedPreset.share_code;
     }
     onMount(async () => {
         await updateStore();
@@ -283,7 +392,6 @@
             {
                 isPopOpen = !isPopOpen
                 presetView = 'main';
-                overwrite = false;
                 if (presetName.trim().length === 0) {
                     presetName = "Preset"
                 }
@@ -395,16 +503,56 @@
                         Back
                     </button>
                 </div>
+            {:else if presetView === 'share'}
+                <div class="p-2">
+                    <!-- Saving presets -->
+                    <h2>Preset ID</h2>
+                    <input
+                        type="text"
+                        placeholder="Preset ID"
+                        class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        bind:value={currentPresetCode}
+                    />
+                    <div class="flex flex-row gap-2">
+                        <button
+                            class="w-full mt-2 px-3 text-white bg-blue-500 rounded-lg  hover:bg-blue-600 active:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            on:click={() => {
+                                loadPreset(currentPresetCode);
+                            }}
+                        >
+                            Load Preset
+                        </button>
+                        <button
+                            class="w-full mt-2 px-3 py-2 text-white bg-blue-500 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            on:click={() => {
+                                sharePreset(currentPresetCode);
+                                isPopOpen = !isPopOpen;
+                            }}
+                        >
+                            Share Preset
+                        </button>
+                    </div>
+
+                    <button
+                        class="w-full mt-2 px-3 py-2 text-white bg-blue-500 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        on:click={() => presetView = 'main'}
+                    >
+                        Back
+                    </button>
+                </div>
             {:else}
             <div class="p-2">
-                <!-- <button
+                <button
                     class="w-full mt-2 px-3 py-2 text-white {isAuthenticated() ? 'bg-blue-500 hover:bg-blue-600' : 'bg-gray-400 cursor-not-allowed'} 
                     rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    on:click={() => handleAuthenticatedAction(() => console.log("Share functionality"))}
+                    on:click={() => handleAuthenticatedAction(() => 
+                    {
+                        presetView = 'share';
+                    })}
                     disabled={!isAuthenticated()}
                 >
                 Share Preset
-                </button> -->
+                </button>
 
                 <button
                     class="w-full mt-2 px-3 py-2 text-white {isAuthenticated() ? 'bg-blue-500 hover:bg-blue-600' : 'bg-gray-400 cursor-not-allowed'} 
