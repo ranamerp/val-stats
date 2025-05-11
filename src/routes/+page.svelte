@@ -27,6 +27,7 @@
     let showError = true;
     let popupMessage = "";
     let errorMessage = '';
+    let region = 'na';
 
     let colors: App.ColorPreset = {
         preset_id: $currentColor.preset_id ?? 0,
@@ -75,7 +76,7 @@
         popupMessage = `"Loading player data for ${searchTerm}"`
 
         try{
-            const response = await fetch(`/api/match?region=${'na'}&name=${terms[0]}&tag=${terms[1]}`);
+            const response = await fetch(`/api/match?region=${region}&name=${terms[0]}&tag=${terms[1]}`);
             if (response.status === 404) {
                 if (origin === 'reload') {
                     throw new Error("Reload failed, user not found!");
@@ -273,9 +274,26 @@
         </div>
 
         <!-- Current Player -->
-        <div class="p-5"> 
+        <div class=""> 
             Current Player: {player}
         </div>
+
+        <!-- Region Selection -->
+        <div>
+            <label for="region" class="block mb-2 px-2 text-sm font-medium text-gray-900 dark:text-white">Region</label>
+            <select 
+            id="region" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+            onchange={(event) => {
+                region = (event.target as any).value;
+            }}
+            >
+                <option value="na">NA</option>
+                <option value="eu">EU</option>
+                <option value="ap">AP</option>
+                <option value="kr">KR</option>
+            </select>
+        </div>
+        
 
         <!-- Search Bar -->
         <form
@@ -462,6 +480,9 @@
                 --cp-text-color="black"
                 --picker-indicator-size="10px"
                 --input-size="25px"
+                --position="responsive-x"
+
+                
     
                 />
     
