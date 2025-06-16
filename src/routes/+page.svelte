@@ -213,9 +213,9 @@
 
     <LoadingPopup {showPopup} message= {popupMessage} />
     <!-- Top Div -->
-    <div class="flex flex-row space-x-8 bg-purple-500">
+    <div class="flex justify-between items-center w-full px-4 bg-purple-500 gap-3">
         <!-- Match Selection -->
-        <div>
+        <div class="flex-[1.5] min-w-[150px]">
             <h1> Choose a match :</h1>
             
             <select
@@ -239,47 +239,16 @@
         </div>
         
 
-        <!-- Team Selection -->
-        <div class="flex flex-row">
-            <!-- Team A -->
-                <div class="px-8">
-                <!-- Edit Players Name -->
-                <div>
-                    <label for="blue_team" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Left Team</label>
-                    <input type="text" bind:value={btname} oninput={() => {
-                        selection[value].blue_team.team_name = btname.substring(0,5);
-                    }} id="blue_team" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="John" required />
-                </div>
-                <!-- Change Logo -->
-                <div>
-
-                </div>
-                </div>
-
-            <!-- Team B -->
-                <div>
-                <div>
-                    <label for="red_team" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Right Team</label>
-                    <input type="text" bind:value={rtname} oninput={() => {
-                        selection[value].red_team.team_name = rtname.substring(0,5);
-                    }} id="red_team" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="John" required />
-                </div>
-                
-                </div>
-        </div>
-
         <!-- Add Match Reload Button -->
-        <div>
+        <div class="flex-1 min-w-[120px]">
+            <div class="text-black text-lg">
+                Current Player: {player}
+            </div>
             <button type="submit" onclick={() => searchPlayers("reload")} class="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">Reload Matches</button>
         </div>
 
-        <!-- Current Player -->
-        <div class=""> 
-            Current Player: {player}
-        </div>
-
         <!-- Region Selection -->
-        <div>
+        <div class="flex-1 min-w-[50px]">
             <label for="region" class="block mb-2 px-2 text-sm font-medium text-gray-900 dark:text-white">Region</label>
             <select 
             id="region" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
@@ -293,12 +262,11 @@
                 <option value="kr">KR</option>
             </select>
         </div>
+
         
 
         <!-- Search Bar -->
-        <form
-        class="w-1/4 mx-auto"
-        >   
+        <form class="flex-[3] min-w-[200px]">   
             <label for="default-search" class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>
             <div class="relative">
                 <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
@@ -312,22 +280,29 @@
             </div>
         </form>
 
+
         <!-- Update Output -->
-        <div>
-        <button type="submit" onclick={() => outputMatch(selection[value], colors)} class="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">Update Output</button>
+        <div class="flex-1 min-w-[120px]">
+            <button type="submit" onclick={() => outputMatch(selection[value], colors)} class="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">Update Output</button>
         </div>
 
-        <div> 
-            <!-- This will be where we send users to the page that they can pull their image.  -->
-            <!-- For now start with just an output page but then eventually need to do user auth. -->
+        <!-- Goto Page -->
+        <div class="flex-1 min-w-[120px]">
             <button type="submit" onclick={() => gotoOutput(selection[value], colors)} class="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">Export to Page</button>
-            
         </div>
 
-        <PresetPopup 
-            supabase = {supabase}
-            userid = {user?.id}
-        />
+
+        <div>
+
+            <PresetPopup 
+                supabase = {supabase}
+                userid = {user?.id}
+            />
+        </div>
+
+
+
+
             
     </div>
 
@@ -336,6 +311,14 @@
     <div class="flex flex-row py-5 bg-purple-500">
         <!-- Colors -->
         <div class="bg-slate-600 flex flex-col min-w-[10%] z-20">
+            <!-- Edit Players Name -->
+            <div class = "mx-2 py-2">
+                <label for="blue_team" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Left Team Name</label>
+                <input type="text" bind:value={btname} oninput={() => {
+                    selection[value].blue_team.team_name = btname.substring(0,5);
+                }} id="blue_team" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="John" required />
+            </div>
+
             <!-- We can make this custom, refer to doc for creating custom components. -->
             <ColorPicker
                 on:input={(event) => {
@@ -380,7 +363,7 @@
             />
 
             <br>
-            <br>
+
     
             <ColorPicker
             on:input={(event) => {
@@ -446,6 +429,10 @@
             hex = {colors.globaltextcolor}
     
             />
+
+
+
+
         </div>
         
         <!-- Stats -->
@@ -460,7 +447,12 @@
         <div class="bg-slate-600 flex flex-col min-w-[10%] z-20">
             
             <!-- <FontPopup/> -->
-            
+            <div class ="mx-2 py-1">
+                <label for="red_team" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Right Team</label>
+                <input type="text" bind:value={rtname} oninput={() => {
+                        selection[value].red_team.team_name = rtname.substring(0,5);
+                }} id="red_team" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="John" required />
+            </div>
 
 
 
@@ -511,7 +503,6 @@
                 hex = {colors.rightsmalltextcolor}
         
                 />
-                <br>
                 <br>
                 
                 <ColorPicker
@@ -576,8 +567,11 @@
                 components={ChromeVariant} 
                 sliderDirection="horizontal"
                 hex = {colors.globaltextcolor}
-        
                 />
+
+
+
+
             </div>
         </div>
 
