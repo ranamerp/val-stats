@@ -217,14 +217,17 @@
         // Swap Team Data
         const blue_team = selection[value].blue_team;
         const red_team = selection[value].red_team;
+        const tempbtname = btname;
 
         selection[value].blue_team = red_team;
+        btname = rtname;
         selection[value].blue_team.team_id = red_team.team_id;
         for (const player of selection[value].blue_team.players) {
             player.team = red_team.team_id;
         }
 
         selection[value].red_team = blue_team;
+        rtname = tempbtname;
         selection[value].red_team.team_id = blue_team.team_id;
         for (const player of selection[value].red_team.players) {
             player.team = blue_team.team_id;
@@ -246,7 +249,7 @@
 
     <LoadingPopup {showPopup} message= {popupMessage} />
     <!-- Top Div -->
-    <div class="flex justify-between items-center px-4 bg-slate-600 gap-3">
+    <div class="flex justify-between items-center px-4 bg-slate-500 gap-3">
         <!-- Match Selection -->
         <div class="flex-[1.5] min-w-[150px]">
             <h1 class="text-white"> Choose a match :</h1>
@@ -271,17 +274,8 @@
             </select>
         </div>
         
-
-        <!-- Add Match Reload Button -->
-        <div class="flex-1 min-w-[120px]">
-            <div class="text-white text-lg">
-                Current Player: {player}
-            </div>
-            <button type="submit" onclick={() => searchPlayers("reload")} class="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-6 py-3 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">Reload Matches</button>
-        </div>
-
         <!-- Region Selection -->
-        <div class="flex-1 min-w-[50px]">
+        <div class="flex-1 min-w-[30px]">
             <label for="region" class="block mb-2 px-2 text-sm font-medium text-gray-900 dark:text-white">Region</label>
             <select 
             id="region" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
@@ -295,6 +289,15 @@
                 <option value="kr">KR</option>
             </select>
         </div>
+
+        <!-- Add Match Reload Button -->
+        <div class="flex-1 min-w-[120px]">
+            <div class="text-white text-lg">
+                Current Player: {player}
+            </div>
+            <button type="submit" onclick={() => searchPlayers("reload")} class="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-6 py-3 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">Reload Matches</button>
+        </div>
+
 
         
 
@@ -314,18 +317,27 @@
         </form>
 
         <div class="flex flex-row gap-2">
-
             <!-- Update Output -->
-            <div class="flex-1 min-w-[120px]">
-                <button type="submit" onclick={() => outputMatch(selection[value], colors)} class="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-6 py-3 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">Update Output</button>
+            <div class="flex-1 min-w-[150px]">
+                <button 
+                    type="submit" 
+                    onclick={() => outputMatch(selection[value], colors)} 
+                    class="w-full text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-6 py-3 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800"
+                >
+                    Update Output
+                </button>
             </div>
-
 
             <!-- Goto Page -->
-            <div class="flex-1 min-w-[120px]">
-                <button type="submit" onclick={() => gotoOutput(selection[value], colors)} class="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-6 py-3 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">Export to Page</button>
+            <div class="flex-1 min-w-[150px]">
+                <button 
+                    type="submit" 
+                    onclick={() => gotoOutput(selection[value], colors)} 
+                    class="w-full text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-6 py-3 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800"
+                >
+                    Export to Page
+                </button>
             </div>
-
         </div>
 
 
@@ -344,7 +356,7 @@
 
     <!-- <div class="w-[1280px] h-[720px]"> -->
     <!-- Main Bottom Div -->
-    <div class="flex flex-row py-5 bg-slate-600">
+    <div class="flex flex-row py-5 bg-slate-500">
         <!-- Colors -->
         <div class="bg-slate-600 flex flex-col min-w-[10%] z-20">
             <!-- Edit Players Name -->
