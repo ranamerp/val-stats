@@ -199,6 +199,39 @@
         }, 5000);
     }
 
+    function swapColors() {
+        //This basically needs to take blue team and make it red team, and vice versa
+        const tempLeft = colors.leftbgcolor;
+        const tempLeftBig = colors.leftbigtextcolor;
+        const tempLeftSmall = colors.leftsmalltextcolor;
+
+        colors.leftbgcolor = colors.rightbgcolor;
+        colors.leftbigtextcolor = colors.rightbigtextcolor;
+        colors.leftsmalltextcolor = colors.rightsmalltextcolor;
+        colors.rightbgcolor = tempLeft;
+        colors.rightbigtextcolor = tempLeftBig;
+        colors.rightsmalltextcolor = tempLeftSmall;
+    }
+
+    function swapSides() {
+        // Swap Team Data
+        const blue_team = selection[value].blue_team;
+        const red_team = selection[value].red_team;
+
+        selection[value].blue_team = red_team;
+        selection[value].blue_team.team_id = red_team.team_id;
+        for (const player of selection[value].blue_team.players) {
+            player.team = red_team.team_id;
+        }
+
+        selection[value].red_team = blue_team;
+        selection[value].red_team.team_id = blue_team.team_id;
+        for (const player of selection[value].red_team.players) {
+            player.team = blue_team.team_id;
+        }
+        
+    }
+
     let isLoading = false;
 
 </script>
@@ -213,7 +246,7 @@
 
     <LoadingPopup {showPopup} message= {popupMessage} />
     <!-- Top Div -->
-    <div class="flex justify-between items-center w-full px-4 bg-purple-500 gap-3">
+    <div class="flex justify-between items-center px-4 bg-purple-500 gap-3">
         <!-- Match Selection -->
         <div class="flex-[1.5] min-w-[150px]">
             <h1> Choose a match :</h1>
@@ -244,7 +277,7 @@
             <div class="text-black text-lg">
                 Current Player: {player}
             </div>
-            <button type="submit" onclick={() => searchPlayers("reload")} class="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">Reload Matches</button>
+            <button type="submit" onclick={() => searchPlayers("reload")} class="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-6 py-3 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">Reload Matches</button>
         </div>
 
         <!-- Region Selection -->
@@ -266,7 +299,7 @@
         
 
         <!-- Search Bar -->
-        <form class="flex-[3] min-w-[200px]">   
+        <form class="flex-[3] min-w-[400px]">   
             <label for="default-search" class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>
             <div class="relative">
                 <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
@@ -280,20 +313,23 @@
             </div>
         </form>
 
+        <div class="flex flex-row gap-2">
 
-        <!-- Update Output -->
-        <div class="flex-1 min-w-[120px]">
-            <button type="submit" onclick={() => outputMatch(selection[value], colors)} class="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">Update Output</button>
-        </div>
+            <!-- Update Output -->
+            <div class="flex-1 min-w-[120px]">
+                <button type="submit" onclick={() => outputMatch(selection[value], colors)} class="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-6 py-3 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">Update Output</button>
+            </div>
 
-        <!-- Goto Page -->
-        <div class="flex-1 min-w-[120px]">
-            <button type="submit" onclick={() => gotoOutput(selection[value], colors)} class="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">Export to Page</button>
+
+            <!-- Goto Page -->
+            <div class="flex-1 min-w-[120px]">
+                <button type="submit" onclick={() => gotoOutput(selection[value], colors)} class="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-6 py-3 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">Export to Page</button>
+            </div>
+
         </div>
 
 
         <div>
-
             <PresetPopup 
                 supabase = {supabase}
                 userid = {user?.id}
@@ -429,6 +465,22 @@
             hex = {colors.globaltextcolor}
     
             />
+
+            <br>
+
+            <!-- Swap Colors -->
+            <div class="flex w-[120px] items-center">
+                <button 
+                    type="submit" 
+                    onclick={() => swapColors()} 
+                    class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition">
+                    Swap Colors
+                </button>
+            </div>
+
+
+
+
 
 
 
@@ -569,7 +621,16 @@
                 hex = {colors.globaltextcolor}
                 />
 
+                <br>
 
+                <div class="flex w-[120px] items-center">
+                    <button 
+                        type="submit" 
+                        onclick={() => swapSides()} 
+                        class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition">
+                        Swap Sides
+                    </button>
+                </div>
 
 
             </div>
