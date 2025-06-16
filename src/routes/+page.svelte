@@ -246,10 +246,10 @@
 
     <LoadingPopup {showPopup} message= {popupMessage} />
     <!-- Top Div -->
-    <div class="flex justify-between items-center px-4 bg-purple-500 gap-3">
+    <div class="flex justify-between items-center px-4 bg-slate-600 gap-3">
         <!-- Match Selection -->
         <div class="flex-[1.5] min-w-[150px]">
-            <h1> Choose a match :</h1>
+            <h1 class="text-white"> Choose a match :</h1>
             
             <select
             class="py-3 px-4 pe-9 block w-full border-gray-200 
@@ -274,7 +274,7 @@
 
         <!-- Add Match Reload Button -->
         <div class="flex-1 min-w-[120px]">
-            <div class="text-black text-lg">
+            <div class="text-white text-lg">
                 Current Player: {player}
             </div>
             <button type="submit" onclick={() => searchPlayers("reload")} class="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-6 py-3 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">Reload Matches</button>
@@ -344,7 +344,7 @@
 
     <!-- <div class="w-[1280px] h-[720px]"> -->
     <!-- Main Bottom Div -->
-    <div class="flex flex-row py-5 bg-purple-500">
+    <div class="flex flex-row py-5 bg-slate-600">
         <!-- Colors -->
         <div class="bg-slate-600 flex flex-col min-w-[10%] z-20">
             <!-- Edit Players Name -->
