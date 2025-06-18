@@ -70,6 +70,10 @@
 
     async function searchPlayers(origin?: string) {
         let terms = searchTerm.split("#");
+        if (terms.length !== 2) {
+            triggerError("Player tag must be in 'Name#Tag' format (e.g., 'Player#1234').");
+            return;
+        }
 
 
         showPopup = true;
@@ -105,6 +109,11 @@
     }
 
     async function gotoOutput(currentmatch: App.LocalMatch, colors: App.ColorPreset) {
+        if (!currentmatch) {
+            triggerError("No match data available to export.");
+            return;
+        }
+
         const stat = await outputMatch(currentmatch, colors)
         //If provider is discord, lets use their discord username instead of the id
         let username = ''
@@ -119,6 +128,11 @@
     }
 
     async function outputMatch(currentmatch: App.LocalMatch, colors: App.ColorPreset) {
+        if (!currentmatch) {
+            triggerError("No match data available to update.");
+            return { status: 400, error: 'No match data' };
+        }
+
         const finalobject = {
             current_match: currentmatch,
             current_preset: colors
@@ -211,27 +225,34 @@
         colors.rightbgcolor = tempLeft;
         colors.rightbigtextcolor = tempLeftBig;
         colors.rightsmalltextcolor = tempLeftSmall;
+
+        // Trigger reactivity for the entire object
+        colors = { ...colors };
     }
 
     function swapSides() {
-        // Swap Team Data
-        const blue_team = selection[value].blue_team;
-        const red_team = selection[value].red_team;
-        const tempbtname = btname;
+        // Create copies to ensure Svelte detects the change
+        const blue_team_copy = { ...selection[value].blue_team };
+        const red_team_copy = { ...selection[value].red_team };
+        const tempbtname = btname; 
 
-        selection[value].blue_team = red_team;
-        btname = rtname;
-        selection[value].blue_team.team_id = red_team.team_id;
-        for (const player of selection[value].blue_team.players) {
-            player.team = red_team.team_id;
+        // Swap team data
+        selection[value].blue_team = red_team_copy;
+        btname = rtname; // Update blue team display name
+        selection[value].blue_team.team_id = red_team_copy.team_id;
+        for (const p of selection[value].blue_team.players) {
+            p.team = red_team_copy.team_id;
         }
 
-        selection[value].red_team = blue_team;
-        rtname = tempbtname;
-        selection[value].red_team.team_id = blue_team.team_id;
-        for (const player of selection[value].red_team.players) {
-            player.team = blue_team.team_id;
+        selection[value].red_team = blue_team_copy;
+        rtname = tempbtname; // Update red team display name
+        selection[value].red_team.team_id = blue_team_copy.team_id;
+        for (const p of selection[value].red_team.players) {
+            p.team = blue_team_copy.team_id;
         }
+
+        // Trigger reactivity for the `selection` array to ensure re-render
+        selection = [...selection];
         
     }
 
