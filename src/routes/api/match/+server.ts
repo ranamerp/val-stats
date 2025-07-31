@@ -10,7 +10,9 @@ export async function GET({ url }) {
     const name = url.searchParams.get('name');
     const tag = url.searchParams.get('tag');
 
-    const apiUrl = `https://api.henrikdev.xyz/valorant/v4/matches/${region}/pc/${name}/${tag}?mode=custom`;
+    // The custom parameter is causing issues, we may do no custom parameter. 
+    // ?mode=custom
+    const apiUrl = `https://api.henrikdev.xyz/valorant/v4/matches/${region}/pc/${name}/${tag}`;
 
     try {
         
