@@ -12,7 +12,8 @@ export async function GET({ url }) {
 
     // The custom parameter is causing issues, we may do no custom parameter. 
     // ?mode=custom
-    const apiUrl = `https://api.henrikdev.xyz/valorant/v4/matches/${region}/pc/${name}/${tag}`;
+    // Need a fallback url for when custom doesnt work. Just use normal. 
+    const apiUrl = `https://api.henrikdev.xyz/valorant/v4/matches/${region}/pc/${name}/${tag}?mode=custom`;
 
     try {
         
@@ -31,6 +32,7 @@ export async function GET({ url }) {
         if (data.data.length === 0) throw new Error('Unable to find custom match, please try again later!')
 
         const selection: App.LocalMatch[] = processMatches(data);
+        if (selection.length === 0) throw new Error('No matches found for the specified player.');
         return json(selection);
         //Need an error for when data is empty or player can't be found.
     } catch (error: unknown) {

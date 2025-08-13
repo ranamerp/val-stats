@@ -51,7 +51,6 @@ export function processMatch(match: App.ValorantMatch) {
         const filteredPlayers = team.players?.filter(player => player.team.toLowerCase() === team.team_id.toLowerCase());
         team.players = filteredPlayers;
     }
-
     return {
         index: 0,
         match_id: match.metadata.match_id,
@@ -73,7 +72,12 @@ export function processMatches(data: App.APIResponse) {
             idx++;
             selection.push(m);
         }
+        else {
+            //this means that the match is not a standard match, so we skip it.
+            console.warn(`Skipping match with ID ${valorantMatch.metadata.match_id} due to unsupported queue mode: ${valorantMatch.metadata.queue.mode_type}`);
+        }
     });
+    
     
     return selection;
 }
