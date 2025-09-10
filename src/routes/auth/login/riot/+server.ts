@@ -12,6 +12,8 @@ export const GET = async ({ url, cookies }) => {
     let redirectUri: string
     const httpsOrigin = url.origin.replace('http://', 'https://')
     redirectUri = `${httpsOrigin}/auth/callback`
+
+    console.log('Redirect URI:', redirectUri)
     
     // Generate state and PKCE parameters for security
     const state = crypto.randomUUID()
