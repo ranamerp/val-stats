@@ -35,6 +35,11 @@
         })
     }
 
+	function signInWithRiot() {
+		// Redirect to your Riot OAuth server route
+		goto('/auth/login/riot');
+	}
+
 
 	async function signOut() {
 		const { error } = await supabase.auth.signOut();
@@ -101,13 +106,13 @@
 	{:else}
 		<div class = "flex flex-row gap-x-3">
 			{#if optionMenu}
-				<!-- <div class="bg-[#f12b15] text-white hover:bg-[#a41d0e] rounded-md px-4">
+				<div class="bg-[#f12b15] text-white hover:bg-[#a41d0e] rounded-md px-4">
 					<button 
 						class="w-full text-left p-2 rounded-md transition"
-						onclick={signInWithDiscord}>
+						onclick={signInWithRiot}>
 					Riot
 					</button>
-				</div> -->
+				</div>
 				
 				<div class=" bg-[#7289DA] text-white hover:bg-[#5768a6] rounded-md px-4">
 					<button 
