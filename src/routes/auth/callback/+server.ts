@@ -3,6 +3,7 @@ import { env } from '$env/dynamic/private';
 import type { RequestHandler } from './$types'
 
 export const GET: RequestHandler = async ({ url, cookies, locals: { supabase } }) => {
+    console.log(url.toString())
     const code = url.searchParams.get('code')
     const state = url.searchParams.get('state')
     const error = url.searchParams.get('error')
@@ -39,6 +40,10 @@ async function handleRiotCallback({ url, cookies, supabase }: { url: URL, cookie
     // Clear temporary cookies
     cookies.delete('riot_state', { path: '/' })
     cookies.delete('riot_code_verifier', { path: '/' })
+
+    let redirectUri: string
+    const httpsOrigin = url.origin.replace('http://', 'https://')
+    redirectUri = `${httpsOrigin}/auth/callback`
     
     if (!codeVerifier) {
         redirect(307, "/auth/error?message=missing_verifier")
@@ -56,7 +61,7 @@ async function handleRiotCallback({ url, cookies, supabase }: { url: URL, cookie
                 client_id: env.RIOT_CLIENT_ID!,
                 client_secret: env.RIOT_CLIENT_SECRET!,
                 code,
-                redirect_uri: `${url.origin}/auth/callback`,
+                redirect_uri: redirectUri,
                 code_verifier: codeVerifier
             })
         })
