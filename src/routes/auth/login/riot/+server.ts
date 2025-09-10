@@ -7,6 +7,12 @@ export const GET = async ({ url, cookies }) => {
     console.log('RIOT_CLIENT_ID:', env.RIOT_CLIENT_ID)
     console.log('RIOT_CLIENT_SECRET exists:', !!env.RIOT_CLIENT_SECRET)
     console.log('URL origin:', url.origin)
+
+    // Force HTTPS for redirect URI
+    let redirectUri: string
+    const httpsOrigin = url.origin.replace('http://', 'https://')
+    redirectUri = `${httpsOrigin}/auth/callback`
+    
     // Generate state and PKCE parameters for security
     const state = crypto.randomUUID()
     const codeVerifier = generateCodeVerifier()
@@ -33,7 +39,7 @@ export const GET = async ({ url, cookies }) => {
     const params = new URLSearchParams({
         client_id: env.RIOT_CLIENT_ID!,
         response_type: 'code',
-        redirect_uri: `${url.origin}/auth/callback`,
+        redirect_uri: redirectUri,
         scope: 'openid email profile',
         state,
         code_challenge: codeChallenge,
