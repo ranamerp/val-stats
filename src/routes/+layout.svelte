@@ -106,7 +106,7 @@
 	{:else}
 		<div class = "flex flex-row gap-x-3">
 			{#if optionMenu}
-				<div class="bg-[#f12b15] text-white hover:bg-[#a41d0e] rounded-md px-4">
+				<div class="bg-[#f12b15] opacity-0 text-white hover:bg-[#a41d0e] rounded-md px-4">
 					<button 
 						class="w-full text-left p-2 rounded-md transition"
 						onclick={signInWithRiot}>
