@@ -1,6 +1,7 @@
-import { redirect } from "@sveltejs/kit"
+import { redirect, type Cookies } from "@sveltejs/kit"
 import { env } from '$env/dynamic/private';
 import type { RequestHandler } from './$types'
+import type { SupabaseClient, User } from '@supabase/supabase-js';
 
 export const GET: RequestHandler = async ({ url, cookies, locals: { supabase } }) => {
     console.log(url.toString())
@@ -32,7 +33,7 @@ export const GET: RequestHandler = async ({ url, cookies, locals: { supabase } }
     redirect(307, returnUrl)
 }
 
-async function handleRiotCallback({ url, cookies, supabase }: { url: URL, cookies: any, supabase: any }) {
+async function handleRiotCallback({ url, cookies, supabase }: { url: URL, cookies: Cookies, supabase: SupabaseClient }) {
     const code = url.searchParams.get('code')!
     const state = url.searchParams.get('state')!
     const codeVerifier = cookies.get('riot_code_verifier')
@@ -73,7 +74,7 @@ async function handleRiotCallback({ url, cookies, supabase }: { url: URL, cookie
         const tokens = await tokenResponse.json()
         
         // Get user info from Riot
-        const userResponse = await fetch('https://auth.riotgames.com/userinfo', {
+        const userResponse: Response = await fetch('https://auth.riotgames.com/userinfo', {
             headers: {
                 'Authorization': `Bearer ${tokens.access_token}`
             }
@@ -84,11 +85,12 @@ async function handleRiotCallback({ url, cookies, supabase }: { url: URL, cookie
         }
         
         const riotUser = await userResponse.json()
+        let existingUser: User | undefined
         
         // Try to create user in Supabase
         const { data: userData, error: createError } = await supabase.auth.admin.createUser({
             email: riotUser.email,
-            email_confirm: true,
+            email_confirm: false,
             user_metadata: {
                 provider: 'riot',
                 riot_puuid: riotUser.sub,
@@ -120,20 +122,21 @@ async function handleRiotCallback({ url, cookies, supabase }: { url: URL, cookie
             }
         }
         
-        // Store Riot tokens in your database
-        const userId = userData?.user?.id || existingUser?.id
-        if (userId) {
-            await supabase
-                .from('user_accounts')
-                .upsert({
-                    user_id: userId,
-                    provider: 'riot',
-                    provider_id: riotUser.sub,
-                    access_token: tokens.access_token,
-                    refresh_token: tokens.refresh_token,
-                    expires_at: new Date(Date.now() + tokens.expires_in * 1000).toISOString()
-                })
-        }
+        // Store Riot tokens in database
+        // Gonna see if we actually need this
+        // const userId = userData?.user?.id || existingUser?.id
+        // if (userId) {
+        //     await supabase
+        //         .from('user_accounts')
+        //         .upsert({
+        //             user_id: userId,
+        //             provider: 'riot',
+        //             provider_id: riotUser.sub,
+        //             access_token: tokens.access_token,
+        //             refresh_token: tokens.refresh_token,
+        //             expires_at: new Date(Date.now() + tokens.expires_in * 1000).toISOString()
+        //         })
+        // }
         
         redirect(307, "/")
         
