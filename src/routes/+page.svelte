@@ -13,15 +13,15 @@
     
 
     export let data;
-    const { stats, supabase, user } = data;
-    let player = data.player.split('#')[0]
+    const { supabase, user } = data;
+    let stats: App.LocalMatch[] = [];
+    let player = '';
     let value = 0;
     let btname = "ATK";
     let rtname = "DEF";
-    let searchTerm = data.player;
-    let selection = stats as App.LocalMatch[];
-    selection[value].red_team.team_name = rtname;
-    selection[value].blue_team.team_name = btname;
+    let searchTerm = '';
+    let selection: App.LocalMatch[] = [];
+
 
     let showPopup = false;
     let showError = true;
@@ -67,6 +67,8 @@
     }
     
     currentColor.set(colors)
+
+
 
     async function searchPlayers(origin?: string) {
         let terms = searchTerm.split("#");
@@ -260,336 +262,195 @@
 
 </script>
 <div>
-{#if isLoading}
-   <p> Loading...</p>
-{:else}
-    
-    {#if showError}
-        <ErrorComp message = {errorMessage}/>
-    {/if}
+{#await data.statsPromise}
 
-    <LoadingPopup {showPopup} message= {popupMessage} />
-    <!-- Top Div -->
-    <div class="flex justify-between items-center px-4 bg-slate-500 gap-3">
-        <!-- Match Selection -->
-        <div class="flex-[1.5] min-w-[150px]">
-            <h1 class="text-white"> Choose a match :</h1>
-            
-            <select
-            class="py-3 px-4 pe-9 block w-full border-gray-200 
-            rounded-lg text-sm text-black focus:border-blue-500 focus:ring-blue-500 
-            disabled:opacity-50 disabled:pointer-events-none" 
-            value={value}
-            onchange={(event) => {
-                value = (event.target as any).selectedIndex;
+    <div class="flex justify-center items-center h-screen bg-slate-500">
+        <p class="text-white text-2xl">Loading match data...</p>
+    </div>
+{:then result}
+        {#if (() => {      
+            // Initialize data when promise resolves
+            stats = result.stats;
+            player = result.player.split('#')[0];
+            searchTerm = result.player;
+            selection = stats;
+            if (selection.length > 0) {
                 selection[value].red_team.team_name = rtname;
                 selection[value].blue_team.team_name = btname;
-                }
             }
-            >
-            {#each selection as item}
-                <option value={item.index}>
-                    {item.mapName} ({getTimeAgo(item.startTime)})
-                </option>
-            {/each}
-            </select>
-        </div>
-        
-        <!-- Region Selection -->
-        <div class="flex-1 min-w-[30px]">
-            <label for="region" class="block mb-2 px-2 text-sm font-medium text-gray-900 dark:text-white">Region</label>
-            <select 
-            id="region" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-            onchange={(event) => {
-                region = (event.target as any).value;
-            }}
-            >
-                <option value="na">NA</option>
-                <option value="eu">EU</option>
-                <option value="ap">AP</option>
-                <option value="kr">KR</option>
-            </select>
-        </div>
+            return true;
+        })()}
+    
+        {#if showError}
+            <ErrorComp message = {errorMessage}/>
+        {/if}
 
-        <!-- Add Match Reload Button -->
-        <div class="flex-1 min-w-[120px]">
-            <div class="text-white text-lg">
-                Current Player: {player}
-            </div>
-            <button type="submit" onclick={() => searchPlayers("reload")} class="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-6 py-3 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">Reload Matches</button>
-        </div>
-
-
-        
-
-        <!-- Search Bar -->
-        <form class="flex-[3] min-w-[400px]">   
-            <label for="default-search" class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>
-            <div class="relative">
-                <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
-                    <!-- This is the search icon -->
-                    <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
-                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
-                    </svg>
-                </div>
-                <input type="search"  bind:value={searchTerm} id="default-search" class="block w-full p-4 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Search Players..." required />
-                <button onclick={() => searchPlayers("search")} type="submit" class="text-white absolute end-2.5 bottom-2.5 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Search</button>
-            </div>
-        </form>
-
-        <div class="flex flex-row gap-2">
-            <!-- Update Output -->
-            <div class="flex-1 min-w-[150px]">
-                <button 
-                    type="submit" 
-                    onclick={() => outputMatch(selection[value], colors)} 
-                    class="w-full text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-6 py-3 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800"
+        <LoadingPopup {showPopup} message= {popupMessage} />
+        <!-- Top Div -->
+        <div class="flex justify-between items-center px-4 bg-slate-500 gap-3">
+            <!-- Match Selection -->
+            <div class="flex-[1.5] min-w-[150px]">
+                <h1 class="text-white"> Choose a match :</h1>
+                
+                <select
+                class="py-3 px-4 pe-9 block w-full border-gray-200 
+                rounded-lg text-sm text-black focus:border-blue-500 focus:ring-blue-500 
+                disabled:opacity-50 disabled:pointer-events-none" 
+                value={value}
+                onchange={(event) => {
+                    value = (event.target as any).selectedIndex;
+                    selection[value].red_team.team_name = rtname;
+                    selection[value].blue_team.team_name = btname;
+                    }
+                }
                 >
-                    Update Output
-                </button>
+                {#each selection as item}
+                    <option value={item.index}>
+                        {item.mapName} ({getTimeAgo(item.startTime)})
+                    </option>
+                {/each}
+                </select>
             </div>
-
-            <!-- Goto Page -->
-            <div class="flex-1 min-w-[150px]">
-                <button 
-                    type="submit" 
-                    onclick={() => gotoOutput(selection[value], colors)} 
-                    class="w-full text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-6 py-3 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800"
-                >
-                    Export to Page
-                </button>
-            </div>
-        </div>
-
-
-        <div>
-            <PresetPopup 
-                supabase = {supabase}
-                userid = {user?.id}
-            />
-        </div>
-
-
-
-
             
-    </div>
-
-    <!-- <div class="w-[1280px] h-[720px]"> -->
-    <!-- Main Bottom Div -->
-    <div class="flex flex-row py-5 bg-slate-500">
-        <!-- Colors -->
-        <div class="bg-slate-600 flex flex-col min-w-[10%] z-20">
-            <!-- Edit Players Name -->
-            <div class = "mx-2 py-2">
-                <label for="blue_team" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Left Team Name</label>
-                <input type="text" bind:value={btname} oninput={() => {
-                    selection[value].blue_team.team_name = btname.substring(0,5);
-                }} id="blue_team" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="John" required />
-            </div>
-
-            <!-- We can make this custom, refer to doc for creating custom components. -->
-            <ColorPicker
-                on:input={(event) => {
-                    colors.leftbgcolor = event.detail.hex as string;
-                    currentColor.set(colors);
+            <!-- Region Selection -->
+            <div class="flex-1 min-w-[30px]">
+                <label for="region" class="block mb-2 px-2 text-sm font-medium text-gray-900 dark:text-white">Region</label>
+                <select 
+                id="region" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                onchange={(event) => {
+                    region = (event.target as any).value;
                 }}
-                label = "Left BG"
-                components={ChromeVariant} 
-                sliderDirection="horizontal"
-                hex = {colors.leftbgcolor}
-                --cp-bg-color="{colors.leftbgcolor}"
-                --cp-text-color="black"
-                --picker-indicator-size="10px"
-                --input-size="25px"
-    
-            />
-    
-            <ColorPicker
-            on:input={(event) => {
-                
-                colors.leftbigtextcolor = event.detail.hex as string;
-                currentColor.set(colors);
-            }}
-            label = "Left Text"
-            components={ChromeVariant} 
-            sliderDirection="horizontal"
-            hex = {colors.leftbigtextcolor}
-    
-            />
-    
-            <ColorPicker
-            on:input={(event) => {
-                
-                colors.leftsmalltextcolor = event.detail.hex as string;
-                currentColor.set(colors);
-            }}
-            label = "Left Accent"
-            components={ChromeVariant} 
-            sliderDirection="horizontal"
-            hex = {colors.leftsmalltextcolor}
-    
-            />
+                >
+                    <option value="na">NA</option>
+                    <option value="eu">EU</option>
+                    <option value="ap">AP</option>
+                    <option value="kr">KR</option>
+                </select>
+            </div>
 
-            <br>
-
-    
-            <ColorPicker
-            on:input={(event) => {
-                
-                colors.mvpbannerbgcolor = event.detail.hex as string;
-                currentColor.set(colors);
-            }}
-            label = "MVP Banner BG"
-            components={ChromeVariant} 
-            sliderDirection="horizontal"
-            hex = {colors.mvpbannerbgcolor}
-    
-            />
-
-            <ColorPicker
-            on:input={(event) => {
-                
-                colors.mvpbannertextcolor = event.detail.hex as string;
-                currentColor.set(colors);
-            }}
-            label = "MVP Banner Text"
-            components={ChromeVariant} 
-            sliderDirection="horizontal"
-            hex = {colors.mvpbannertextcolor}
-    
-            />
-
-            <ColorPicker
-            on:input={(event) => {
-                
-                colors.mvpagentcolor = event.detail.hex as string;
-                currentColor.set(colors);
-            }}
-            label = "MVP Agent Text"
-            components={ChromeVariant} 
-            sliderDirection="horizontal"
-            hex = {colors.mvpagentcolor}
-    
-            />
-
-            <ColorPicker
-            on:input={(event) => {
-                
-                colors.mvptextcolor = event.detail.hex as string;
-                currentColor.set(colors);
-            }}
-            label = "MVP Name"
-            components={ChromeVariant} 
-            sliderDirection="horizontal"
-            hex = {colors.mvptextcolor}
-    
-            />
-
-            <ColorPicker
-            on:input={(event) => {
-                
-                colors.globaltextcolor = event.detail.hex as string;
-                currentColor.set(colors);
-            }}
-            label = "General Text"
-            components={ChromeVariant} 
-            sliderDirection="horizontal"
-            hex = {colors.globaltextcolor}
-    
-            />
-
-            <br>
-
-            <!-- Swap Colors -->
-            <div class="flex w-[120px] items-center">
-                <button 
-                    type="submit" 
-                    onclick={() => swapColors()} 
-                    class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition">
-                    Swap Colors
-                </button>
+            <!-- Add Match Reload Button -->
+            <div class="flex-1 min-w-[120px]">
+                <div class="text-white text-lg">
+                    Current Player: {player}
+                </div>
+                <button type="submit" onclick={() => searchPlayers("reload")} class="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-6 py-3 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">Reload Matches</button>
             </div>
 
 
-
-
-
-
-
-
-        </div>
-        
-        <!-- Stats -->
-            <div class="flex flex-col">
-                    <Stats 
-                        playerData={selection[value]}
-                        colors = {colors}
-                    />
-            </div>
-
-        <!-- Other Dropdowns -->
-        <div class="bg-slate-600 flex flex-col min-w-[10%] z-20">
             
-            <!-- <FontPopup/> -->
-            <div class ="mx-2 py-1">
-                <label for="red_team" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Right Team</label>
-                <input type="text" bind:value={rtname} oninput={() => {
-                        selection[value].red_team.team_name = rtname.substring(0,5);
-                }} id="red_team" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="John" required />
+
+            <!-- Search Bar -->
+            <form class="flex-[3] min-w-[400px]">   
+                <label for="default-search" class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>
+                <div class="relative">
+                    <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+                        <!-- This is the search icon -->
+                        <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
+                        </svg>
+                    </div>
+                    <input type="search"  bind:value={searchTerm} id="default-search" class="block w-full p-4 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Search Players..." required />
+                    <button onclick={() => searchPlayers("search")} type="submit" class="text-white absolute end-2.5 bottom-2.5 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Search</button>
+                </div>
+            </form>
+
+            <div class="flex flex-row gap-2">
+                <!-- Update Output -->
+                <div class="flex-1 min-w-[150px]">
+                    <button 
+                        type="submit" 
+                        onclick={() => outputMatch(selection[value], colors)} 
+                        class="w-full text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-6 py-3 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800"
+                    >
+                        Update Output
+                    </button>
+                </div>
+
+                <!-- Goto Page -->
+                <div class="flex-1 min-w-[150px]">
+                    <button 
+                        type="submit" 
+                        onclick={() => gotoOutput(selection[value], colors)} 
+                        class="w-full text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-6 py-3 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800"
+                    >
+                        Export to Page
+                    </button>
+                </div>
+            </div>
+
+
+            <div>
+                <PresetPopup 
+                    supabase = {supabase}
+                    userid = {user?.id}
+                />
             </div>
 
 
 
-            <!-- Right colors -->
-            <div class="flex flex-col">
+
+                
+        </div>
+
+        <!-- <div class="w-[1280px] h-[720px]"> -->
+        <!-- Main Bottom Div -->
+        <div class="flex flex-row py-5 bg-slate-500">
+            <!-- Colors -->
+            <div class="bg-slate-600 flex flex-col min-w-[10%] z-20">
+                <!-- Edit Players Name -->
+                <div class = "mx-2 py-2">
+                    <label for="blue_team" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Left Team Name</label>
+                    <input type="text" bind:value={btname} oninput={() => {
+                        selection[value].blue_team.team_name = btname.substring(0,5);
+                    }} id="blue_team" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="John" required />
+                </div>
+
                 <!-- We can make this custom, refer to doc for creating custom components. -->
                 <ColorPicker
+                    on:input={(event) => {
+                        colors.leftbgcolor = event.detail.hex as string;
+                        currentColor.set(colors);
+                    }}
+                    label = "Left BG"
+                    components={ChromeVariant} 
+                    sliderDirection="horizontal"
+                    hex = {colors.leftbgcolor}
+                    --cp-bg-color="{colors.leftbgcolor}"
+                    --cp-text-color="black"
+                    --picker-indicator-size="10px"
+                    --input-size="25px"
+        
+                />
+        
+                <ColorPicker
                 on:input={(event) => {
-                    colors.rightbgcolor = event.detail.hex as string;
+                    
+                    colors.leftbigtextcolor = event.detail.hex as string;
                     currentColor.set(colors);
                 }}
-                label = "Right BG"
+                label = "Left Text"
                 components={ChromeVariant} 
                 sliderDirection="horizontal"
-                hex = {colors.rightbgcolor}
-                --cp-bg-color="{colors.rightbgcolor}"
-                --cp-text-color="black"
-                --picker-indicator-size="10px"
-                --input-size="25px"
-                --position="responsive-x"
+                hex = {colors.leftbigtextcolor}
+        
+                />
+        
+                <ColorPicker
+                on:input={(event) => {
+                    
+                    colors.leftsmalltextcolor = event.detail.hex as string;
+                    currentColor.set(colors);
+                }}
+                label = "Left Accent"
+                components={ChromeVariant} 
+                sliderDirection="horizontal"
+                hex = {colors.leftsmalltextcolor}
+        
+                />
 
-                
-    
-                />
-    
-                <ColorPicker
-                on:input={(event) => {
-                    
-                    colors.rightbigtextcolor = event.detail.hex as string;
-                    currentColor.set(colors);
-                }}
-                label = "Right Text"
-                components={ChromeVariant} 
-                sliderDirection="horizontal"
-                hex = {colors.rightbigtextcolor}
-        
-                />
-        
-                <ColorPicker
-                on:input={(event) => {
-                    
-                    colors.rightsmalltextcolor = event.detail.hex as string;
-                    currentColor.set(colors);
-                }}
-                label = "Right Accent"
-                components={ChromeVariant} 
-                sliderDirection="horizontal"
-                hex = {colors.rightsmalltextcolor}
-        
-                />
                 <br>
-                
+
+        
                 <ColorPicker
                 on:input={(event) => {
                     
@@ -652,24 +513,185 @@
                 components={ChromeVariant} 
                 sliderDirection="horizontal"
                 hex = {colors.globaltextcolor}
+        
                 />
 
                 <br>
 
+                <!-- Swap Colors -->
                 <div class="flex w-[120px] items-center">
                     <button 
                         type="submit" 
-                        onclick={() => swapSides()} 
+                        onclick={() => swapColors()} 
                         class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition">
-                        Swap Sides
+                        Swap Colors
                     </button>
                 </div>
 
 
-            </div>
-        </div>
 
-    </div>
+
+
+
+
+
+            </div>
+            
+            <!-- Stats -->
+                <div class="flex flex-col">
+                        <Stats 
+                            playerData={selection[value]}
+                            colors = {colors}
+                        />
+                </div>
+
+            <!-- Other Dropdowns -->
+            <div class="bg-slate-600 flex flex-col min-w-[10%] z-20">
+                
+                <!-- <FontPopup/> -->
+                <div class ="mx-2 py-1">
+                    <label for="red_team" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Right Team</label>
+                    <input type="text" bind:value={rtname} oninput={() => {
+                            selection[value].red_team.team_name = rtname.substring(0,5);
+                    }} id="red_team" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="John" required />
+                </div>
+
+
+
+                <!-- Right colors -->
+                <div class="flex flex-col">
+                    <!-- We can make this custom, refer to doc for creating custom components. -->
+                    <ColorPicker
+                    on:input={(event) => {
+                        colors.rightbgcolor = event.detail.hex as string;
+                        currentColor.set(colors);
+                    }}
+                    label = "Right BG"
+                    components={ChromeVariant} 
+                    sliderDirection="horizontal"
+                    hex = {colors.rightbgcolor}
+                    --cp-bg-color="{colors.rightbgcolor}"
+                    --cp-text-color="black"
+                    --picker-indicator-size="10px"
+                    --input-size="25px"
+                    --position="responsive-x"
+
+                    
+        
+                    />
+        
+                    <ColorPicker
+                    on:input={(event) => {
+                        
+                        colors.rightbigtextcolor = event.detail.hex as string;
+                        currentColor.set(colors);
+                    }}
+                    label = "Right Text"
+                    components={ChromeVariant} 
+                    sliderDirection="horizontal"
+                    hex = {colors.rightbigtextcolor}
+            
+                    />
+            
+                    <ColorPicker
+                    on:input={(event) => {
+                        
+                        colors.rightsmalltextcolor = event.detail.hex as string;
+                        currentColor.set(colors);
+                    }}
+                    label = "Right Accent"
+                    components={ChromeVariant} 
+                    sliderDirection="horizontal"
+                    hex = {colors.rightsmalltextcolor}
+            
+                    />
+                    <br>
+                    
+                    <ColorPicker
+                    on:input={(event) => {
+                        
+                        colors.mvpbannerbgcolor = event.detail.hex as string;
+                        currentColor.set(colors);
+                    }}
+                    label = "MVP Banner BG"
+                    components={ChromeVariant} 
+                    sliderDirection="horizontal"
+                    hex = {colors.mvpbannerbgcolor}
+            
+                    />
+
+                    <ColorPicker
+                    on:input={(event) => {
+                        
+                        colors.mvpbannertextcolor = event.detail.hex as string;
+                        currentColor.set(colors);
+                    }}
+                    label = "MVP Banner Text"
+                    components={ChromeVariant} 
+                    sliderDirection="horizontal"
+                    hex = {colors.mvpbannertextcolor}
+            
+                    />
+
+                    <ColorPicker
+                    on:input={(event) => {
+                        
+                        colors.mvpagentcolor = event.detail.hex as string;
+                        currentColor.set(colors);
+                    }}
+                    label = "MVP Agent Text"
+                    components={ChromeVariant} 
+                    sliderDirection="horizontal"
+                    hex = {colors.mvpagentcolor}
+            
+                    />
+
+                    <ColorPicker
+                    on:input={(event) => {
+                        
+                        colors.mvptextcolor = event.detail.hex as string;
+                        currentColor.set(colors);
+                    }}
+                    label = "MVP Name"
+                    components={ChromeVariant} 
+                    sliderDirection="horizontal"
+                    hex = {colors.mvptextcolor}
+            
+                    />
+
+                    <ColorPicker
+                    on:input={(event) => {
+                        
+                        colors.globaltextcolor = event.detail.hex as string;
+                        currentColor.set(colors);
+                    }}
+                    label = "General Text"
+                    components={ChromeVariant} 
+                    sliderDirection="horizontal"
+                    hex = {colors.globaltextcolor}
+                    />
+
+                    <br>
+
+                    <div class="flex w-[120px] items-center">
+                        <button 
+                            type="submit" 
+                            onclick={() => swapSides()} 
+                            class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition">
+                            Swap Sides
+                        </button>
+                    </div>
+
+
+                </div>
+            </div>
+
+        </div>
 {/if}
+{:catch error}
+    <div class="flex justify-center items-center h-screen bg-slate-500">
+        <p class="text-white text-2xl">Error loading data: {error.message}</p>
+    </div>
+{/await}
 </div>
 
