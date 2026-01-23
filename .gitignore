@@ -16,3 +16,4 @@ bun.lockb
 src/routes/test/+page.svelte
 start_app.sh
 app.log
+bun.lockb
