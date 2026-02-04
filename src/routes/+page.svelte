@@ -270,7 +270,7 @@
 {:then result}
         {#if (() => {      
             // Initialize data when promise resolves
-            stats = result.stats;
+            stats = result.stats as App.LocalMatch[];
             player = result.player.split('#')[0];
             searchTerm = result.player;
             selection = stats;

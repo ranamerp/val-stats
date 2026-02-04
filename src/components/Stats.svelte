@@ -158,6 +158,7 @@
             const redDivRect = red_div.getBoundingClientRect();
             await updateCanvas(red_canvas, mapData.agentData[red_team.players[0].agent].fullPortrait, redDivRect.width, redDivRect.height, true); // Flip the red canvas
         }
+
     });
 </script>
 

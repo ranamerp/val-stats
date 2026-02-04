@@ -52,9 +52,6 @@ async function updateMaps() {
 }
 
 
-//Want this to only run when theres a diff in maps
-await updateMaps();
-
 
 export default maps;
 export { updateMaps };

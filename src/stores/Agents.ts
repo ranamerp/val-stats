@@ -54,10 +54,6 @@ async function updateAgents() {
     }
 }
 
-//Want this to only run when theres a diff in agents
-await updateAgents()
-
-
 
 export default agents;
 export { updateAgents };

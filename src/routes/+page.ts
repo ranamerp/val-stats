@@ -1,8 +1,14 @@
 import { processMatches } from '../utils/match';
 import type { PageLoad } from './$types'
+import { updateAgents } from '../stores/Agents';
+import { updateMaps } from '../stores/Maps';
 
 
 export const load: PageLoad = async ({ fetch, parent }) => {
+
+    await updateMaps();
+
+    await updateAgents();
 
     const statsPromise = (async () => {
         // Match fetching logic
@@ -13,6 +19,11 @@ export const load: PageLoad = async ({ fetch, parent }) => {
         const tag = '777';
         //Potential improvement: check if user is logged in and get their current match from db. 
         const { supabase, user } = await parent();
+
+        if (!user?.id) {
+            console.log('No user logged in, using default name.');
+            name = 'zeek';
+        } else {
         try {
             const { data, error } = await supabase
                 .schema('stats')
@@ -22,7 +33,7 @@ export const load: PageLoad = async ({ fetch, parent }) => {
                 .single();
             
             const playerlist = data?.current_match.red_team.players;
-            puuids = playerlist.map(p => p.puuid);
+            puuids = playerlist?.map((p: { puuid: string }) => p.puuid) ?? [];
             if (error) {
                 //return { status: 404, error: error.message };
                 //This acts as a fallback
@@ -35,7 +46,7 @@ export const load: PageLoad = async ({ fetch, parent }) => {
                 //return { status: 500, error: 'Internal Server Error' };
             }
 
-
+        }
 
         let matchResponse: Response | null = null;
         if (puuids) {
@@ -63,8 +74,11 @@ export const load: PageLoad = async ({ fetch, parent }) => {
 
             name = 'sen z#5193';
         } else {
-            const d: App.LocalMatch[] = await matchResponse?.json();
-            const players = [...d[0].red_team.players, ...d[0].blue_team.players];
+            const d: App.LocalMatch[] = await matchResponse?.json() ?? [];
+            
+            const players = d[0] 
+                ? [...d[0].red_team.players, ...d[0].blue_team.players]
+                : [];
             const player = players.find(p => p.puuid === final_puuid);
             name = player ? player.name + '#' + tag : name;
             matchData = {status: 200, data: d}
