@@ -8,7 +8,12 @@ export default {
 	content: ['./src/**/*.{html,js,svelte,ts}'],
 
 	theme: {
-		extend: {}
+		extend: {
+			fontFamily: {
+				// You can name this whatever you like
+				foundry: ['Foundry', 'sans-serif'],
+			},
+		}
 	},
 
 	plugins: [typography, forms, containerQueries, aspectRatio]
