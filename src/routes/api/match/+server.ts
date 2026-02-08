@@ -9,11 +9,24 @@ export async function GET({ url }) {
     const region = url.searchParams.get('region');
     const name = url.searchParams.get('name');
     const tag = url.searchParams.get('tag');
+    const puuid = url.searchParams.get('puuid')
 
     // The custom parameter is causing issues, we may do no custom parameter. 
     // ?mode=custom
-    // Need a fallback url for when custom doesnt work. Just use normal. 
-    const apiUrl = `https://api.henrikdev.xyz/valorant/v4/matches/${region}/pc/${name}/${tag}?mode=custom`;
+    // Need a fallback url for when custom doesnt work. Just use normal.
+    let apiUrl: string = ''
+    if (puuid) {
+        apiUrl = `https://api.henrikdev.xyz/valorant/v4/by-puuid/matches/${region}/pc/${puuid}?mode=custom`;
+
+    }
+    else if (name && tag) {
+        apiUrl = `https://api.henrikdev.xyz/valorant/v4/matches/${region}/pc/${name}/${tag}?mode=custom`;
+
+    }
+    else {
+        throw new Error(`Unable to parse API ${404}`);
+    }
+    
 
     try {
         

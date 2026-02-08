@@ -232,6 +232,7 @@ declare global {
 			startTime: Date;
 			red_team: LocalTeam;
 			blue_team: LocalTeam;
+			region: string;
 
 		}
 
@@ -247,6 +248,7 @@ declare global {
 		interface LocalPlayer {
 			puuid: string;
 			name: string;
+			tag: string;
 			team: string;
 			agent: string;
 			kd: number;

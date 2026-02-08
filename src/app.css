@@ -2,6 +2,21 @@
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
 
+
+/* app.css */
+@font-face {
+  font-family: 'Foundry';
+  src: url('/fonts/FoundryGridnik/FoundryGridnikW03/Foundry Gridnik W03 Bold.ttf') format('ttf'),
+       url('/fonts/FoundryGridnik/FoundryGridnikW03/FoundryGridnikW03-ExtraBold.ttf') format('ttf');
+  font-weight: 700;
+  font-style: normal;
+}
+
+/* @layer base {
+  body {
+    @apply font-Impact;
+  }
+} */
 * {
-    font-family: 'Impact';
+    font-family: 'Impact', sans-serif;
 }

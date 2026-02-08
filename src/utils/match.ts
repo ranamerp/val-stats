@@ -23,6 +23,7 @@ export function processMatch(match: App.ValorantMatch) {
             const playerData = {
                 puuid: player.puuid,
                 name: player.name,
+                tag: player.tag,
                 team: player.team_id,
                 agent: player.agent.name,
                 kd: kd,
@@ -56,6 +57,7 @@ export function processMatch(match: App.ValorantMatch) {
         match_id: match.metadata.match_id,
         mapName: match.metadata.map.name,
         startTime: match.metadata.started_at,
+        region: match.metadata.region,
         red_team: teams?.find(team => team.team_id.toLowerCase() === 'red') as App.LocalTeam,
         blue_team: teams?.find(team => team.team_id.toLowerCase() === 'blue') as App.LocalTeam
     }
