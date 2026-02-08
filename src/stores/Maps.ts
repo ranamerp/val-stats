@@ -51,7 +51,7 @@ async function updateMaps() {
   }
 }
 
-
+await updateMaps();
 
 export default maps;
 export { updateMaps };

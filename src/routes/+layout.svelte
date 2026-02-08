@@ -143,7 +143,7 @@
   		</header>
 
   	{/if}
-	<main class="flex-1 overflow-hidden bg-slate-500">
+	<main class="flex-1 overflow-hidden">
 		{@render children()}
 	</main>
 	{#if !$page.data.hideHeader}

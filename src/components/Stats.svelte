@@ -31,6 +31,17 @@
 
     let div_height = 0;
     let stats_height = 0;
+
+    let mapData: {
+        agentData: Record<string, App.ValorantAgent>;
+        mapData: Record<string, App.ValorantMap>;
+    };
+    
+    $: mapData = {
+        agentData: $agents,
+        mapData: $maps
+    };
+
     
 
     async function cropImage(imageUrl: string, cropWidth: number, cropHeight: number, flip: boolean = false): Promise<HTMLCanvasElement | null> {
@@ -117,37 +128,25 @@
         blue_team = playerData.blue_team;
         red_team = playerData.red_team;
 
-        if (blue_div) {
-            const blueDivRect = blue_div.getBoundingClientRect();
-            updateCanvas(blue_canvas, mapData.agentData[blue_team.players[0].agent].fullPortrait, blueDivRect.width, blueDivRect.height);
-            div_height = blueDivRect.height;
-        }
-        if (red_div) {
-            const redDivRect = red_div.getBoundingClientRect();
-            updateCanvas(red_canvas, mapData.agentData[red_team.players[0].agent].fullPortrait, redDivRect.width, redDivRect.height, true); // Flip the red canvas
+
+        if (Object.keys(mapData.agentData).length > 0) {
+            if (blue_canvas && blue_div) {
+                const blueDivRect = blue_div.getBoundingClientRect();
+                updateCanvas(blue_canvas, mapData.agentData[blue_team.players[0].agent].fullPortrait, blueDivRect.width, blueDivRect.height);
+                div_height = blueDivRect.height;
+            }
+            if (red_canvas && red_div) {
+                const redDivRect = red_div.getBoundingClientRect();
+                updateCanvas(red_canvas, mapData.agentData[red_team.players[0].agent].fullPortrait, redDivRect.width, redDivRect.height, true); // Flip the red canvas
+            }
         }
         //console.log(statsHeight);
     }
-
-
-    let mapData: {
-        agentData: Record<string, App.ValorantAgent>;
-        mapData: Record<string, App.ValorantMap>;
-    } = {
-        agentData: {},
-        mapData: {}
-    };
-
     
-    agents.subscribe(value => { 
-        mapData['agentData'] = value; 
-    });
+    
 
-    maps.subscribe(value => { 
-        mapData['mapData'] = value; 
-    });
 
-        
+
     onMount(async () => {
         if (blue_div) {
             const blueDivRect = blue_div.getBoundingClientRect();
@@ -160,6 +159,8 @@
         }
 
     });
+    
+
 </script>
 
 

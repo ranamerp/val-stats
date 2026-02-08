@@ -54,6 +54,7 @@ async function updateAgents() {
     }
 }
 
+await updateAgents();
 
 export default agents;
 export { updateAgents };
