@@ -41,10 +41,36 @@ export async function GET({ url }) {
         
 
         const data: App.APIResponse = await response.json();
+
         
         if (data.data.length === 0) throw new Error('Unable to find custom match, please try again later!')
+        
+        const matchDataArray: App.ValorantMatch[] = await Promise.all(
+            (data.data as App.ValorantMatch[]).map(async (match) => {
+                const id = match.metadata.match_id;
+                const url = `https://api.henrikdev.xyz/valorant/v4/match/${region}/${id}`;
 
-        const selection: App.LocalMatch[] = processMatches(data);
+                const response = await fetch(url, {
+                    headers: {
+                        'Authorization': env.VALORANT_API_KEY,
+                    },
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Failed to fetch match ${id}: ${response.status}`);
+                }
+
+                const rawmatchData: App.APIResponse = await response.json();
+                
+                // Return the specific match data to the new array
+                return rawmatchData.data as unknown as App.ValorantMatch; 
+            })
+        );
+
+        //console.log('Fetched match data array:', matchDataArray);
+
+        const selection: App.LocalMatch[] = processMatches({status: 200, data: matchDataArray});
+        //const selection: App.LocalMatch[] = processMatches(data);
         if (selection.length === 0) throw new Error('No matches found for the specified player.');
         return json(selection);
         //Need an error for when data is empty or player can't be found.

@@ -9,6 +9,7 @@
     import { presets, currentColor } from "../stores/Presets";
     import ColorPicker, { ChromeVariant } from 'svelte-awesome-color-picker';
     import { error } from "@sveltejs/kit";
+    import { onMount } from "svelte";
     
     
 
@@ -101,9 +102,11 @@
                 player = terms[0];
                 selection[value].red_team.team_name = rtname;
                 selection[value].blue_team.team_name = btname;
+                console.log(selection);
 
             }
         } catch (err: any) {
+            console.log(err);
             triggerError(err.message);
         } finally {
             showPopup = false;
@@ -258,7 +261,21 @@
         
     }
 
-    let isLoading = false;
+    let initialized = false;
+    onMount(async () => {
+        const result = await data.statsPromise;
+        stats = result.stats as App.LocalMatch[];
+        player = result.player.split('#')[0];
+        searchTerm = result.player;
+        selection = stats;
+        if (selection.length > 0) {
+            selection[value].red_team.team_name = rtname;
+            selection[value].blue_team.team_name = btname;
+        }
+
+        initialized = true;
+    });
+
 
 </script>
 <div>
@@ -268,19 +285,8 @@
         <p class="text-white text-2xl">Loading match data...</p>
     </div>
 {:then result}
-        {#if (() => {      
-            // Initialize data when promise resolves
-            stats = result.stats as App.LocalMatch[];
-            player = result.player.split('#')[0];
-            searchTerm = result.player;
-            selection = stats;
-            if (selection.length > 0) {
-                selection[value].red_team.team_name = rtname;
-                selection[value].blue_team.team_name = btname;
-            }
-            return true;
-        })()}
-    
+    {#if initialized}
+        
         {#if showError}
             <ErrorComp message = {errorMessage}/>
         {/if}
@@ -298,6 +304,7 @@
                 disabled:opacity-50 disabled:pointer-events-none" 
                 value={value}
                 onchange={(event) => {
+                    console.log(selection);
                     value = (event.target as any).selectedIndex;
                     selection[value].red_team.team_name = rtname;
                     selection[value].blue_team.team_name = btname;
@@ -687,7 +694,7 @@
             </div>
 
         </div>
-{/if}
+    {/if}
 {:catch error}
     <div class="flex justify-center items-center h-screen bg-slate-500">
         <p class="text-white text-2xl">Error loading data: {error.message}</p>
